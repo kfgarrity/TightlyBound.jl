@@ -23,6 +23,10 @@ jobs:
   exclude:
     - arch: x86
       os: osx
+
+codecov: true
+coveralls: true
+
 after_success:
   - |
     julia -e '

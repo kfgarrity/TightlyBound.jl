@@ -1,6 +1,6 @@
-using packageexample
+using TightlyBound
 using Test
 
-@testset "packageexample.jl" begin
-    # Write your tests here.
+@testset "TightlyBound.jl" begin
+    @test 3 == 2+1
 end
