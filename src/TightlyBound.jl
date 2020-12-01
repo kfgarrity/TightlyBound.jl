@@ -1,5 +1,9 @@
 module TightlyBound
 
-println("helloworld")
+println("helloworld2")
+
+function f()
+    println("function f")
+end
 
 end #end module
