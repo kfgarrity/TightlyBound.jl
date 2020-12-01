@@ -14,4 +14,8 @@ function h()
     println("function h")
 end
 
+function i()
+    println("function i")
+end
+
 end #end module
