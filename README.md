@@ -3,4 +3,4 @@ Three-body tight-binding package. Run accurate TB calculations in seconds, or fi
 
 NOT WORKING YET.
 
-https://travis-ci.com/kfgarrity/TightlyBound.jl.svg?branch=main
+[![Build Status](https://travis-ci.com/kfgarrity/TightlyBound.jl.svg?branch=main)](https://travis-ci.com/kfgarrity/TightlyBound.jl)
