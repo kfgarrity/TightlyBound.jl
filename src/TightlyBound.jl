@@ -19,7 +19,7 @@ function i()
 end
 
 function j()
-    println("function ji")
+    println("function j")
 end
 
 end #end module
