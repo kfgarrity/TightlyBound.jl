@@ -1,4 +1,4 @@
-name = "TightlyBound.jl"
+name = "TightlyBound"
 uuid = "4ec59724-bd80-486e-b9ec-b0e0be6a6029"
 authors = ["Kevin F. Garrity"]
 version = "0.1.0"
