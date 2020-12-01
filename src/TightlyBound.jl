@@ -18,4 +18,8 @@ function i()
     println("function i")
 end
 
+function j()
+    println("function ji")
+end
+
 end #end module
