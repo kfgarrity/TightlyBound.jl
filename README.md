@@ -1,4 +1,4 @@
-https://github.com/kfgarrity/TightlyBound.jl/workflows/CI/badge.svg
+[https://github.com/kfgarrity/TightlyBound.jl/workflows/CI/badge.svg]
 [![Build Status](https://travis-ci.com/kfgarrity/TightlyBound.jl.svg?branch=main)](https://travis-ci.com/kfgarrity/TightlyBound.jl)
 [![codecov](https://codecov.io/gh/kfgarrity/TightlyBound.jl/branch/main/graph/badge.svg?token=U8COIKIWG6)](https://codecov.io/gh/kfgarrity/TightlyBound.jl)
 <!--  
