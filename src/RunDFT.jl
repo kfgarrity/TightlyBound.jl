@@ -414,7 +414,7 @@ end
 
 function loadXML(savedir)
 
-    println("start loadXML")
+#    println("start loadXML")
     convert_ha_ryd = 2.0
     
     d= makedict(savedir)
@@ -502,7 +502,7 @@ function loadXML(savedir)
     
     d = DFToutMod.makedftout(A, coords_crys, types, energy, energy_smear, forces, stress, bs, prefix=prefix, outdir=outdir, tot_charge=tot_charge)
 
-    println("end loadXML")
+#    println("end loadXML")
 
     return d
     

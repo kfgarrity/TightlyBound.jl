@@ -73,7 +73,7 @@ Solve for scf energy, also stores the updated electron density and h1 inside the
 #        energy, efermi, eden, VECTS, VALS =  calc_energy_charge_fft(tbc; grid=grid, smearing=smearing)
 #        error_flag = false
         dq = get_dq(tbc.crys, eden)
-        return energy, efermi, eden, dq, VECTS, VALS, error_flag
+        return energy, efermi, eden, dq, VECTS, VALS, error_flag, tbc
     end
 
     if verbose
