@@ -15,7 +15,7 @@ using SpecialFunctions
 #using EzXML
 #using XMLDict
 using Printf
-using Statistics
+#using Statistics
 
 using Base.Threads
 #using Base.lock
