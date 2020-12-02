@@ -1,5 +1,5 @@
-test/data_forces/dimer.in_vnscf_coords_3
-test/data_forces/dimer.in_vnscf_coords_4
-test/data_forces/dimer.in_vnscf_coords_5
-test/data_forces/dimer.in_vnscf_coords_6
-test/data_forces/dimer.in_vnscf_coords_7
+./data_forces/dimer.in_vnscf_coords_3
+./data_forces/dimer.in_vnscf_coords_4
+./data_forces/dimer.in_vnscf_coords_5
+./data_forces/dimer.in_vnscf_coords_6
+./data_forces/dimer.in_vnscf_coords_7
