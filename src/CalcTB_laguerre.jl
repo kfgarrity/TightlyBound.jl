@@ -37,7 +37,8 @@ using ..TB:trim
 using ..TB:tb_crys
 using ..Utility:cutoff_fn
 
-using PyPlot
+#using PyPlot
+using Plots
 
 
 #include("Atomdata.jl")

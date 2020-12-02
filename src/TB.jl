@@ -16,7 +16,8 @@ using SpecialFunctions
 using XMLDict
 using GZip
 using Printf
-using PyPlot
+#using PyPlot
+using Plots
 using FFTW
 #using JLD
 using Base.Threads

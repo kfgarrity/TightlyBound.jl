@@ -3,7 +3,8 @@ module FitTB
 Fit tight binding using Laguere polynomials times decaying exponentials
 """
 
-using PyPlot
+#using PyPlot
+using Plots
 #using JLD
 using LinearAlgebra
 #using Statistics

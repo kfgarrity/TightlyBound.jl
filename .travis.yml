@@ -9,6 +9,7 @@ os:
 arch:
   - x64
   - x86
+
 cache:
   directories:
     - ~/.julia/artifacts
