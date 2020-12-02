@@ -1,0 +1,9 @@
+&projwfc
+   outdir = '/wrk/kfg/julia_data/MgS/dimer.in_vnscf_coords_5'
+   prefix = 'qe.nscf'
+   filpdos='t'
+   lwrite_overlaps = .true.
+   lbinary_data  = .false.
+   pawproj = .false.
+/
+
