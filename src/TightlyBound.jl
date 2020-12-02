@@ -18,7 +18,9 @@ export makecrys
 include("Ewald.jl")
 include("DFToutMod.jl")
 using .DFToutMod:dftout
+using .DFToutMod:makedftout
 export dftout
+export makedftout
 
 include("TB.jl")
 
@@ -38,6 +40,8 @@ export plot_bandstr
 export plot_compare_dft
 
 include("RunDFT.jl")
+
+
 #include("RunWannier90.jl")
 include("AtomicProj.jl")
 include("CalcTB_laguerre.jl")
