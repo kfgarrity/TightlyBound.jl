@@ -14,10 +14,10 @@ using Suppressor
     @test c.coords == pos
     @test c.types == types
 
-    c2=makecrys("test/POSCAR_testing")
+    c2=makecrys("./test/POSCAR_testing")
     @test c2.types == ["Cl", "N","N","Sr", "Sr"]
 
-    c3=makecrys("test/qe_testing.in")
+    c3=makecrys("./test/qe_testing.in")
     @test c3.types == ["Si", "C"]
 
     
@@ -37,7 +37,7 @@ using Suppressor
         @test_throws ErrorException("Error forces") makedftout(c, energy,energy_smear, forces2, zeros(3,3))
     end
 
-    dft_out = TightlyBound.QE.loadXML("test/dimer.save/")
+    dft_out = TightlyBound.QE.loadXML("./test/dimer.save/")
 
     convert_ryd_ha = 2.0
 
