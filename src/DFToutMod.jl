@@ -14,7 +14,7 @@ using Printf
 ##using Formatting
 
 export dftout
-#export makedftout
+export makedftout
 #export test
 export test2
 #export crystal

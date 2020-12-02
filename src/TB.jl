@@ -18,7 +18,7 @@ using GZip
 using Printf
 using PyPlot
 using FFTW
-using JLD
+#using JLD
 using Base.Threads
 
 #include("Atomdata.jl")

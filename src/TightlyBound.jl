@@ -18,6 +18,7 @@ export makecrys
 include("Ewald.jl")
 include("DFToutMod.jl")
 using .DFToutMod:dftout
+export dftout
 
 include("TB.jl")
 

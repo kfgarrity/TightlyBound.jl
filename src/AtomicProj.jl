@@ -15,7 +15,7 @@ using DelimitedFiles
 
 #include("Atomdata.jl")
 using ..Atomdata:atoms
-using JLD
+#using JLD
 #using ExXML
 using XMLDict
 using GZip
