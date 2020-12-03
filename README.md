@@ -5,6 +5,13 @@
 [![Coverage Status](https://coveralls.io/repos/github/kfgarrity/TightlyBound.jl/badge.svg?branch=main)](https://coveralls.io/github/kfgarrity/TightlyBound.jl?branch=main)
 -->
 # TightlyBound.jl
-Three-body tight-binding package. Run accurate TB calculations in seconds, or fit your own coefficients!
 
-NOT WORKING YET.
+**NOT WORKING YET.**
+
+Three-body tight-binding package. Run TB calculations with nearly DFT (pbesol) accuracy in seconds, using a pre-fit and tested model with two-body and three-body interactions between atoms.
+
+Or fit your own coefficients!
+
+Calculate energies, forces, and band structures.
+
+**NOT WORKING YET.**

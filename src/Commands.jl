@@ -19,7 +19,7 @@ and mpi commands (if any)
     w90bin= "/users/kfg/codes/wannier90-2.1.0/"
 
 
-    juiladir = "/home/kfg/codes/tb_ml/julia/"
+    juiladir = "/home/kfg/codes/TightlyBound.jl/"
     
 
     
