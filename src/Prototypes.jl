@@ -27,268 +27,270 @@ end
 
 function setup_proto_data()
 
+    STRUCTDIR = TightlyBound.STRUCTDIR
+
     CalcD = Dict()
 
 
-    CalcD["atom"] = ["../reference_structures/atom.in", "scf", "all", "scf", "nscf"]
-    CalcD["sc"] = ["../reference_structures/sc.in.up", "vc-relax", "all", "vol-big", "nscf"]
-    CalcD["sc_inv"] = ["../reference_structures/sc.in.up", "vc-relax", "all", "break_inv", "nscf"]
-    CalcD["bcc"] = ["../reference_structures/bcc.in.up", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["bcc_inv"] = ["../reference_structures/bcc_atom2.in", "vc-relax", "all", "break_inv", "nscf"]
-    CalcD["fcc"] = ["../reference_structures/fcc.in.up", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["atom"] = ["$STRUCTDIR/atom.in", "scf", "all", "scf", "nscf"]
+    CalcD["sc"] = ["$STRUCTDIR/sc.in.up", "vc-relax", "all", "vol-big", "nscf"]
+    CalcD["sc_inv"] = ["$STRUCTDIR/sc.in.up", "vc-relax", "all", "break_inv", "nscf"]
+    CalcD["bcc"] = ["$STRUCTDIR/bcc.in.up", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["bcc_inv"] = ["$STRUCTDIR/bcc_atom2.in", "vc-relax", "all", "break_inv", "nscf"]
+    CalcD["fcc"] = ["$STRUCTDIR/fcc.in.up", "vc-relax", "all", "vol-mid", "nscf"]
 
-    CalcD["line"] = ["../reference_structures/line.in.up", "vc-relax", "z", "vol", "nscf"]
-    CalcD["line_rumple"] = ["../reference_structures/line.in.rumple.up", "vc-relax", "z", "vol", "nscf"]
+    CalcD["line"] = ["$STRUCTDIR/line.in.up", "vc-relax", "z", "vol", "nscf"]
+    CalcD["line_rumple"] = ["$STRUCTDIR/line.in.rumple.up", "vc-relax", "z", "vol", "nscf"]
 
 
-    CalcD["sc_verydense"] = ["../reference_structures/sc.in.up", "vc-relax", "all", "vol-verydense", "nscf"]
+    CalcD["sc_verydense"] = ["$STRUCTDIR/sc.in.up", "vc-relax", "all", "vol-verydense", "nscf"]
 
-    CalcD["fcc_verydense"] = ["../reference_structures/fcc.in.up", "vc-relax", "all", "vol-verydense", "nscf"]
-    CalcD["bcc_verydense"] = ["../reference_structures/bcc.in.up", "vc-relax", "all", "vol-verydense", "nscf"]
-    CalcD["diamond_verydense"] = ["../reference_structures/diamond.in.up", "vc-relax", "all", "vol-verydense", "nscf"]
+    CalcD["fcc_verydense"] = ["$STRUCTDIR/fcc.in.up", "vc-relax", "all", "vol-verydense", "nscf"]
+    CalcD["bcc_verydense"] = ["$STRUCTDIR/bcc.in.up", "vc-relax", "all", "vol-verydense", "nscf"]
+    CalcD["diamond_verydense"] = ["$STRUCTDIR/diamond.in.up", "vc-relax", "all", "vol-verydense", "nscf"]
 
 
-    CalcD["fcc_dense"] = ["../reference_structures/fcc.in.up", "vc-relax", "all", "vol-dense", "nscf"]
-    CalcD["bcc_dense"] = ["../reference_structures/bcc.in.up", "vc-relax", "all", "vol-dense", "nscf"]
+    CalcD["fcc_dense"] = ["$STRUCTDIR/fcc.in.up", "vc-relax", "all", "vol-dense", "nscf"]
+    CalcD["bcc_dense"] = ["$STRUCTDIR/bcc.in.up", "vc-relax", "all", "vol-dense", "nscf"]
 
-    CalcD["hcp"] = ["../reference_structures/hcp.in.up", "vc-relax", "all", "vol", "nscf"]
-    CalcD["diamond"] = ["../reference_structures/diamond.in.up", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["graphene"] = ["../reference_structures/fake_graphene.in", "vc-relax", "2Dxy", "2D-mid", "nscf"]
-    CalcD["hex"] = ["../reference_structures/hex.in.up", "vc-relax", "2Dxy", "2D-mid", "nscf"]
-    CalcD["hex_short"] = ["../reference_structures/hex.in.up", "vc-relax", "2Dxy", "2D-short", "nscf"]
-    CalcD["square"] = ["../reference_structures/square.in.up", "vc-relax", "2Dxy", "2D", "nscf"]
-    CalcD["dimer"] =       ["../reference_structures/dimer.in", "relax", "2Dxy", "coords", "nscf"]
-    CalcD["dimer_short"] = ["../reference_structures/dimer.in", "relax", "2Dxy", "coords-short", "nscf"]
-    CalcD["dimer_small"] = ["../reference_structures/dimer_small.in", "relax", "2Dxy", "coords", "nscf"]
-    CalcD["dimer_super"] = ["../reference_structures/dimer.in", "relax", "2Dxy", "coords_super", "nscf"]
-    CalcD["hcp_shape"] = ["../reference_structures/hcp.in.up", "vc-relax", "all", "shape", "nscf"]
+    CalcD["hcp"] = ["$STRUCTDIR/hcp.in.up", "vc-relax", "all", "vol", "nscf"]
+    CalcD["diamond"] = ["$STRUCTDIR/diamond.in.up", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["graphene"] = ["$STRUCTDIR/fake_graphene.in", "vc-relax", "2Dxy", "2D-mid", "nscf"]
+    CalcD["hex"] = ["$STRUCTDIR/hex.in.up", "vc-relax", "2Dxy", "2D-mid", "nscf"]
+    CalcD["hex_short"] = ["$STRUCTDIR/hex.in.up", "vc-relax", "2Dxy", "2D-short", "nscf"]
+    CalcD["square"] = ["$STRUCTDIR/square.in.up", "vc-relax", "2Dxy", "2D", "nscf"]
+    CalcD["dimer"] =       ["$STRUCTDIR/dimer.in", "relax", "2Dxy", "coords", "nscf"]
+    CalcD["dimer_short"] = ["$STRUCTDIR/dimer.in", "relax", "2Dxy", "coords-short", "nscf"]
+    CalcD["dimer_small"] = ["$STRUCTDIR/dimer_small.in", "relax", "2Dxy", "coords", "nscf"]
+    CalcD["dimer_super"] = ["$STRUCTDIR/dimer.in", "relax", "2Dxy", "coords_super", "nscf"]
+    CalcD["hcp_shape"] = ["$STRUCTDIR/hcp.in.up", "vc-relax", "all", "shape", "nscf"]
 
-    CalcD["hex_2lay"] = ["../reference_structures/hex_2layers.in.up", "vc-relax", "2Dxy", "2D", "nscf"]
-    CalcD["bcc_2lay"] = ["../reference_structures/bcc_2layers.in.up", "vc-relax", "2Dxy", "2D", "nscf"]
+    CalcD["hex_2lay"] = ["$STRUCTDIR/hex_2layers.in.up", "vc-relax", "2Dxy", "2D", "nscf"]
+    CalcD["bcc_2lay"] = ["$STRUCTDIR/bcc_2layers.in.up", "vc-relax", "2Dxy", "2D", "nscf"]
 
-    CalcD["fcc_huge"] = ["../reference_structures/fcc.in.up", "vc-relax", "all", "vol-huge", "nscf"]
+    CalcD["fcc_huge"] = ["$STRUCTDIR/fcc.in.up", "vc-relax", "all", "vol-huge", "nscf"]
 
-    CalcD["bcc_tet"] = ["../reference_structures/bcc_tet.in", "vc-relax", "all", "vol", "nscf"]
+    CalcD["bcc_tet"] = ["$STRUCTDIR/bcc_tet.in", "vc-relax", "all", "vol", "nscf"]
 
 
-    CalcD["trimer"] =       ["../reference_structures/trimer.in", "none", "2Dxy", "coords_trimer", "nscf"]
-    CalcD["trimer_dense"] =       ["../reference_structures/trimer.in", "none", "2Dxy", "coords_trimer_dense", "nscf"]
-    CalcD["trimer2"] =       ["../reference_structures/trimer.in2", "none", "2Dxy", "coords_trimer2", "nscf"]
-
-    CalcD["trimer_ab2"] =       ["../reference_structures/binary/trimer.in.ab2", "none", "2Dxy", "coords_trimer_ab", "nscf"]
-    CalcD["trimer2_ab2"] =       ["../reference_structures/binary/trimer.in2.ab2", "none", "2Dxy", "coords_trimer_ab", "nscf"]
-
-    CalcD["trimer_ba2"] =       ["../reference_structures/binary/trimer.in.ba2", "none", "2Dxy", "coords_trimer_ab", "nscf"]
-    CalcD["trimer2_ba2"] =       ["../reference_structures/binary/trimer.in2.ba2", "none", "2Dxy", "coords_trimer_ab", "nscf"]
-
+    CalcD["trimer"] =       ["$STRUCTDIR/trimer.in", "none", "2Dxy", "coords_trimer", "nscf"]
+    CalcD["trimer_dense"] =       ["$STRUCTDIR/trimer.in", "none", "2Dxy", "coords_trimer_dense", "nscf"]
+    CalcD["trimer2"] =       ["$STRUCTDIR/trimer.in2", "none", "2Dxy", "coords_trimer2", "nscf"]
+
+    CalcD["trimer_ab2"] =       ["$STRUCTDIR/binary/trimer.in.ab2", "none", "2Dxy", "coords_trimer_ab", "nscf"]
+    CalcD["trimer2_ab2"] =       ["$STRUCTDIR/binary/trimer.in2.ab2", "none", "2Dxy", "coords_trimer_ab", "nscf"]
+
+    CalcD["trimer_ba2"] =       ["$STRUCTDIR/binary/trimer.in.ba2", "none", "2Dxy", "coords_trimer_ab", "nscf"]
+    CalcD["trimer2_ba2"] =       ["$STRUCTDIR/binary/trimer.in2.ba2", "none", "2Dxy", "coords_trimer_ab", "nscf"]
+
 
-    CalcD["trimer_ab2_dense"] =       ["../reference_structures/binary/trimer.in.ab2", "none", "2Dxy", "coords_trimer_ab_dense", "nscf"]
-    CalcD["trimer2_ab2_dense"] =       ["../reference_structures/binary/trimer.in2.ab2", "none", "2Dxy", "coords_trimer_ab_dense", "nscf"]
+    CalcD["trimer_ab2_dense"] =       ["$STRUCTDIR/binary/trimer.in.ab2", "none", "2Dxy", "coords_trimer_ab_dense", "nscf"]
+    CalcD["trimer2_ab2_dense"] =       ["$STRUCTDIR/binary/trimer.in2.ab2", "none", "2Dxy", "coords_trimer_ab_dense", "nscf"]
 
-    CalcD["trimer_ba2_dense"] =       ["../reference_structures/binary/trimer.in.ba2", "none", "2Dxy", "coords_trimer_ab_dense", "nscf"]
-    CalcD["trimer2_ba2_dense"] =       ["../reference_structures/binary/trimer.in2.ba2", "none", "2Dxy", "coords_trimer_ab_dense", "nscf"]
+    CalcD["trimer_ba2_dense"] =       ["$STRUCTDIR/binary/trimer.in.ba2", "none", "2Dxy", "coords_trimer_ab_dense", "nscf"]
+    CalcD["trimer2_ba2_dense"] =       ["$STRUCTDIR/binary/trimer.in2.ba2", "none", "2Dxy", "coords_trimer_ab_dense", "nscf"]
 
 
-    CalcD["trimer_ba2_big"] =       ["../reference_structures/binary/trimer.in.ba2.big", "none", "2Dxy", "coords_trimer_ab_big", "nscf"]
+    CalcD["trimer_ba2_big"] =       ["$STRUCTDIR/binary/trimer.in.ba2.big", "none", "2Dxy", "coords_trimer_ab_big", "nscf"]
 
 
-    CalcD["as_221"] = ["../reference_structures/POSCAR_As_221", "vc-relax", "all", "vol", "nscf"]
-    CalcD["as_orth"] = ["../reference_structures/POSCAR_As_ortho", "vc-relax", "all", "vol", "nscf"]
-    CalcD["ga_tet"] = ["../reference_structures/POSCAR_ga_tet", "vc-relax", "all", "vol", "nscf"]
-    CalcD["ge_wurtz"] = ["../reference_structures/POSCAR_ge_wurtz", "vc-relax", "all", "vol", "nscf"]
-    CalcD["pb_r3m"] = ["../reference_structures/POSCAR_pb_r3m_2atom", "vc-relax", "all", "vol", "nscf"]
-    CalcD["beta_sn"] = ["../reference_structures/beta_sn.in", "vc-relax", "all", "vol", "nscf"]
-    CalcD["n"] = ["../reference_structures/n.in", "vc-relax", "all", "vol", "nscf"]
-    CalcD["f"] = ["../reference_structures/f.in", "vc-relax", "all", "vol", "nscf"]
-    CalcD["ga"] = ["../reference_structures/POSCAR_ga", "vc-relax", "all", "vol", "nscf"]
-    CalcD["bi"] = ["../reference_structures/bi.in", "vc-relax", "all", "vol", "nscf"]
-    CalcD["te"] = ["../reference_structures/te.in", "vc-relax", "all", "vol", "nscf"]
-    CalcD["in"] = ["../reference_structures/in.in", "vc-relax", "all", "vol", "nscf"]
-    CalcD["i2"] = ["../reference_structures/i2.in", "vc-relax", "all", "vol", "nscf"]
-    CalcD["li_p6mmm"] = ["../reference_structures/POSCAR_li_p6mmm", "vc-relax", "all", "vol", "nscf"]
+    CalcD["as_221"] = ["$STRUCTDIR/POSCAR_As_221", "vc-relax", "all", "vol", "nscf"]
+    CalcD["as_orth"] = ["$STRUCTDIR/POSCAR_As_ortho", "vc-relax", "all", "vol", "nscf"]
+    CalcD["ga_tet"] = ["$STRUCTDIR/POSCAR_ga_tet", "vc-relax", "all", "vol", "nscf"]
+    CalcD["ge_wurtz"] = ["$STRUCTDIR/POSCAR_ge_wurtz", "vc-relax", "all", "vol", "nscf"]
+    CalcD["pb_r3m"] = ["$STRUCTDIR/POSCAR_pb_r3m_2atom", "vc-relax", "all", "vol", "nscf"]
+    CalcD["beta_sn"] = ["$STRUCTDIR/beta_sn.in", "vc-relax", "all", "vol", "nscf"]
+    CalcD["n"] = ["$STRUCTDIR/n.in", "vc-relax", "all", "vol", "nscf"]
+    CalcD["f"] = ["$STRUCTDIR/f.in", "vc-relax", "all", "vol", "nscf"]
+    CalcD["ga"] = ["$STRUCTDIR/POSCAR_ga", "vc-relax", "all", "vol", "nscf"]
+    CalcD["bi"] = ["$STRUCTDIR/bi.in", "vc-relax", "all", "vol", "nscf"]
+    CalcD["te"] = ["$STRUCTDIR/te.in", "vc-relax", "all", "vol", "nscf"]
+    CalcD["in"] = ["$STRUCTDIR/in.in", "vc-relax", "all", "vol", "nscf"]
+    CalcD["i2"] = ["$STRUCTDIR/i2.in", "vc-relax", "all", "vol", "nscf"]
+    CalcD["li_p6mmm"] = ["$STRUCTDIR/POSCAR_li_p6mmm", "vc-relax", "all", "vol", "nscf"]
 
-    CalcD["sc_shape"] = ["../reference_structures/sc.in.up", "vc-relax", "all", "shape", "nscf"]
-    CalcD["diamond_shear"] = ["../reference_structures/diamond.in.up", "vc-relax", "all", "shear", "nscf"]
+    CalcD["sc_shape"] = ["$STRUCTDIR/sc.in.up", "vc-relax", "all", "shape", "nscf"]
+    CalcD["diamond_shear"] = ["$STRUCTDIR/diamond.in.up", "vc-relax", "all", "shear", "nscf"]
 
-    CalcD["hh_mono"] = ["../reference_structures/POSCAR_hh_mono", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["hh_mono"] = ["$STRUCTDIR/POSCAR_hh_mono", "vc-relax", "all", "vol-mid", "nscf"]
 
 
-    CalcD["cscl"] = ["../reference_structures/binary/cscl.in", "vc-relax", "all", "vol-big", "nscf"]
-    CalcD["cscl_layers"] = ["../reference_structures/binary/cscl_layers.in", "vc-relax", "all", "vol", "nscf"]
-    CalcD["cscl_inv"] = ["../reference_structures/binary/cscl.in", "vc-relax", "all", "break_inv", "nscf"]
-    CalcD["rocksalt"] = ["../reference_structures/binary/rocksalt.in", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["rocksalt_inv"] = ["../reference_structures/binary/rocksalt.in", "vc-relax", "all", "break_inv", "nscf"]
+    CalcD["cscl"] = ["$STRUCTDIR/binary/cscl.in", "vc-relax", "all", "vol-big", "nscf"]
+    CalcD["cscl_layers"] = ["$STRUCTDIR/binary/cscl_layers.in", "vc-relax", "all", "vol", "nscf"]
+    CalcD["cscl_inv"] = ["$STRUCTDIR/binary/cscl.in", "vc-relax", "all", "break_inv", "nscf"]
+    CalcD["rocksalt"] = ["$STRUCTDIR/binary/rocksalt.in", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["rocksalt_inv"] = ["$STRUCTDIR/binary/rocksalt.in", "vc-relax", "all", "break_inv", "nscf"]
 
-    CalcD["rocksalt_dense"] = ["../reference_structures/binary/rocksalt.in", "vc-relax", "all", "vol-dense", "nscf"]
-    CalcD["hcp_v2_dense"] = ["../reference_structures/binary/hcp.in2", "vc-relax", "all", "vol-dense", "nscf"]
-    CalcD["znse_dense"] = ["../reference_structures/binary/znse.in", "vc-relax", "all", "vol-dense", "nscf"]
+    CalcD["rocksalt_dense"] = ["$STRUCTDIR/binary/rocksalt.in", "vc-relax", "all", "vol-dense", "nscf"]
+    CalcD["hcp_v2_dense"] = ["$STRUCTDIR/binary/hcp.in2", "vc-relax", "all", "vol-dense", "nscf"]
+    CalcD["znse_dense"] = ["$STRUCTDIR/binary/znse.in", "vc-relax", "all", "vol-dense", "nscf"]
 
-    CalcD["nias"] = ["../reference_structures/binary/POSCAR_nias_hex", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["227"] = ["../reference_structures/binary/POSCAR_227", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["laga"] = ["../reference_structures/binary/POSCAR_laga_63", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["nias"] = ["$STRUCTDIR/binary/POSCAR_nias_hex", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["227"] = ["$STRUCTDIR/binary/POSCAR_227", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["laga"] = ["$STRUCTDIR/binary/POSCAR_laga_63", "vc-relax", "all", "vol-mid", "nscf"]
 
-    CalcD["distort"] = ["../reference_structures/binary/POSCAR_distort", "vc-relax", "all", "vol", "nscf"]
-    CalcD["distort_ab2"] = ["../reference_structures/binary/POSCAR_distort_ab2", "vc-relax", "all", "vol", "nscf"]
-    CalcD["distort_ba2"] = ["../reference_structures/binary/POSCAR_distort_ba2", "vc-relax", "all", "vol", "nscf"]
+    CalcD["distort"] = ["$STRUCTDIR/binary/POSCAR_distort", "vc-relax", "all", "vol", "nscf"]
+    CalcD["distort_ab2"] = ["$STRUCTDIR/binary/POSCAR_distort_ab2", "vc-relax", "all", "vol", "nscf"]
+    CalcD["distort_ba2"] = ["$STRUCTDIR/binary/POSCAR_distort_ba2", "vc-relax", "all", "vol", "nscf"]
 
-##    CalcD["227_BA"] = ["../reference_structures/binary/POSCAR_227_BA", "vc-relax", "all", "vol-mid", "nscf"]
+##    CalcD["227_BA"] = ["$STRUCTDIR/binary/POSCAR_227_BA", "vc-relax", "all", "vol-mid", "nscf"]
 
 
-    CalcD["znse_shear"] = ["../reference_structures/binary/znse.in", "vc-relax", "all", "shear", "nscf"]
-    CalcD["hbn"] = ["../reference_structures/binary/hbn.in", "vc-relax", "2Dxy", "2D-mid", "nscf"]
-    CalcD["znse"] = ["../reference_structures/binary/znse.in", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["dimer2"] = ["../reference_structures/binary/dimer.in", "relax", "all", "coords", "nscf"]
-    CalcD["dimer2_rev"] = ["../reference_structures/binary/dimer_rev.in", "relax", "all", "coords", "nscf"]
-    CalcD["square2"] = ["../reference_structures/binary/square.in", "vc-relax", "2Dxy", "2D", "nscf"]
-    CalcD["caf2"] = ["../reference_structures/binary/POSCAR_caf2", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["co2"] = ["../reference_structures/binary/co2.in", "relax", "all", "coords-small", "nscf"]
-    CalcD["square_ab2"] = ["../reference_structures/binary/square_ab2.in", "vc-relax", "2Dxy", "2D", "nscf"]
-    CalcD["mgf2"] = ["../reference_structures/binary/POSCAR_mgf2", "vc-relax", "all", "vol", "nscf"]
-    CalcD["hcp_v2"] = ["../reference_structures/binary/hcp.in2", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["znse_shear"] = ["$STRUCTDIR/binary/znse.in", "vc-relax", "all", "shear", "nscf"]
+    CalcD["hbn"] = ["$STRUCTDIR/binary/hbn.in", "vc-relax", "2Dxy", "2D-mid", "nscf"]
+    CalcD["znse"] = ["$STRUCTDIR/binary/znse.in", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["dimer2"] = ["$STRUCTDIR/binary/dimer.in", "relax", "all", "coords", "nscf"]
+    CalcD["dimer2_rev"] = ["$STRUCTDIR/binary/dimer_rev.in", "relax", "all", "coords", "nscf"]
+    CalcD["square2"] = ["$STRUCTDIR/binary/square.in", "vc-relax", "2Dxy", "2D", "nscf"]
+    CalcD["caf2"] = ["$STRUCTDIR/binary/POSCAR_caf2", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["co2"] = ["$STRUCTDIR/binary/co2.in", "relax", "all", "coords-small", "nscf"]
+    CalcD["square_ab2"] = ["$STRUCTDIR/binary/square_ab2.in", "vc-relax", "2Dxy", "2D", "nscf"]
+    CalcD["mgf2"] = ["$STRUCTDIR/binary/POSCAR_mgf2", "vc-relax", "all", "vol", "nscf"]
+    CalcD["hcp_v2"] = ["$STRUCTDIR/binary/hcp.in2", "vc-relax", "all", "vol-mid", "nscf"]
 
-    CalcD["p2ca3"] = ["../reference_structures/binary/POSCAR_p2ca3", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["p2ca3"] = ["$STRUCTDIR/binary/POSCAR_p2ca3", "vc-relax", "all", "vol-mid", "nscf"]
 
-    CalcD["triangle"] = ["../reference_structures/binary/triangle.in", "relax", "all", "coords-small", "nscf"]
-    CalcD["triangle2"] = ["../reference_structures/binary/triangle2.in", "relax", "all", "coords-small", "nscf"]
+    CalcD["triangle"] = ["$STRUCTDIR/binary/triangle.in", "relax", "all", "coords-small", "nscf"]
+    CalcD["triangle2"] = ["$STRUCTDIR/binary/triangle2.in", "relax", "all", "coords-small", "nscf"]
 
 
-    CalcD["beta_sn2"] = ["../reference_structures/binary/beta_sn.in.up", "vc-relax", "all", "vol", "nscf"]
-    CalcD["hbn_real"] = ["../reference_structures/binary/hbn_real.in", "vc-relax", "all", "vol", "nscf"]
-    CalcD["znseAAAB"] = ["../reference_structures/binary/znse.in.super.AAAB", "vc-relax", "all", "vol", "nscf"]
-    CalcD["rocksaltAAAB"] = ["../reference_structures/binary/rocksalt.in.super.AAAB", "vc-relax", "all", "vol", "nscf"]
-    CalcD["znseABBB"] = ["../reference_structures/binary/znse.in.super.ABBB", "vc-relax", "all", "vol", "nscf"]
-    CalcD["rocksaltABBB"] = ["../reference_structures/binary/rocksalt.in.super.ABBB", "vc-relax", "all", "vol", "nscf"]
-    CalcD["al2o3"] = ["../reference_structures/binary/POSCAR_al2o3", "vc-relax", "all", "vol", "nscf"]
-    CalcD["sis2"] = ["../reference_structures/binary/POSCAR_sis2", "vc-relax", "all", "vol", "nscf"]
-    CalcD["tio2_rutile"] = ["../reference_structures/binary/POSCAR_tio2_rutile", "vc-relax", "all", "vol", "nscf"]
-    CalcD["bi2se3"] = ["../reference_structures/binary/POSCAR_bi2se3", "vc-relax", "all", "vol", "nscf"]
-    CalcD["sis_2d"] = ["../reference_structures/binary/sis_2d.in", "vc-relax", "all", "vol", "nscf"]
-    CalcD["sio2_224"] = ["../reference_structures/binary/sio2.224.in", "vc-relax", "all", "vol", "nscf"]
-    CalcD["ges"] = ["../reference_structures/binary/POSCAR_ges", "vc-relax", "all", "vol", "nscf"]
-    CalcD["alf3"] = ["../reference_structures/binary/POSCAR_alf3", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["mgf2_v2"] = ["../reference_structures/binary/POSCAR_mgf2_v2", "vc-relax", "all", "vol", "nscf"]
-    CalcD["sns"] = ["../reference_structures/binary/POSCAR_sns", "vc-relax", "all", "vol", "nscf"]
-    CalcD["sns2"] = ["../reference_structures/binary/POSCAR_sns2", "vc-relax", "all", "vol", "nscf"]
-    CalcD["y2o3"] = ["../reference_structures/binary/POSCAR_y2o3", "vc-relax", "all", "vol", "nscf"]
-    CalcD["wurtz"] = ["../reference_structures/binary/POSCAR_wurtz", "vc-relax", "all", "vol", "nscf"]
-    CalcD["mgcl2"] = ["../reference_structures/binary/POSCAR_mgcl2", "vc-relax", "all", "vol", "nscf"]
-    CalcD["mgcl2_tet"] = ["../reference_structures/binary/POSCAR_mgcl2_tet", "vc-relax", "all", "vol", "nscf"]
-    CalcD["asna3_2d"] = ["../reference_structures/binary/POSCAR_asna3", "vc-relax", "2Dxy", "2D", "nscf"]
-    CalcD["gain3"] = ["../reference_structures/binary/POSCAR_gain3", "vc-relax", "all", "vol", "nscf"]
+    CalcD["beta_sn2"] = ["$STRUCTDIR/binary/beta_sn.in.up", "vc-relax", "all", "vol", "nscf"]
+    CalcD["hbn_real"] = ["$STRUCTDIR/binary/hbn_real.in", "vc-relax", "all", "vol", "nscf"]
+    CalcD["znseAAAB"] = ["$STRUCTDIR/binary/znse.in.super.AAAB", "vc-relax", "all", "vol", "nscf"]
+    CalcD["rocksaltAAAB"] = ["$STRUCTDIR/binary/rocksalt.in.super.AAAB", "vc-relax", "all", "vol", "nscf"]
+    CalcD["znseABBB"] = ["$STRUCTDIR/binary/znse.in.super.ABBB", "vc-relax", "all", "vol", "nscf"]
+    CalcD["rocksaltABBB"] = ["$STRUCTDIR/binary/rocksalt.in.super.ABBB", "vc-relax", "all", "vol", "nscf"]
+    CalcD["al2o3"] = ["$STRUCTDIR/binary/POSCAR_al2o3", "vc-relax", "all", "vol", "nscf"]
+    CalcD["sis2"] = ["$STRUCTDIR/binary/POSCAR_sis2", "vc-relax", "all", "vol", "nscf"]
+    CalcD["tio2_rutile"] = ["$STRUCTDIR/binary/POSCAR_tio2_rutile", "vc-relax", "all", "vol", "nscf"]
+    CalcD["bi2se3"] = ["$STRUCTDIR/binary/POSCAR_bi2se3", "vc-relax", "all", "vol", "nscf"]
+    CalcD["sis_2d"] = ["$STRUCTDIR/binary/sis_2d.in", "vc-relax", "all", "vol", "nscf"]
+    CalcD["sio2_224"] = ["$STRUCTDIR/binary/sio2.224.in", "vc-relax", "all", "vol", "nscf"]
+    CalcD["ges"] = ["$STRUCTDIR/binary/POSCAR_ges", "vc-relax", "all", "vol", "nscf"]
+    CalcD["alf3"] = ["$STRUCTDIR/binary/POSCAR_alf3", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["mgf2_v2"] = ["$STRUCTDIR/binary/POSCAR_mgf2_v2", "vc-relax", "all", "vol", "nscf"]
+    CalcD["sns"] = ["$STRUCTDIR/binary/POSCAR_sns", "vc-relax", "all", "vol", "nscf"]
+    CalcD["sns2"] = ["$STRUCTDIR/binary/POSCAR_sns2", "vc-relax", "all", "vol", "nscf"]
+    CalcD["y2o3"] = ["$STRUCTDIR/binary/POSCAR_y2o3", "vc-relax", "all", "vol", "nscf"]
+    CalcD["wurtz"] = ["$STRUCTDIR/binary/POSCAR_wurtz", "vc-relax", "all", "vol", "nscf"]
+    CalcD["mgcl2"] = ["$STRUCTDIR/binary/POSCAR_mgcl2", "vc-relax", "all", "vol", "nscf"]
+    CalcD["mgcl2_tet"] = ["$STRUCTDIR/binary/POSCAR_mgcl2_tet", "vc-relax", "all", "vol", "nscf"]
+    CalcD["asna3_2d"] = ["$STRUCTDIR/binary/POSCAR_asna3", "vc-relax", "2Dxy", "2D", "nscf"]
+    CalcD["gain3"] = ["$STRUCTDIR/binary/POSCAR_gain3", "vc-relax", "all", "vol", "nscf"]
 
-    CalcD["li3n_hex"] = ["../reference_structures/binary/POSCAR_li3n", "vc-relax", "all", "vol", "nscf"]
-    CalcD["nan3"] = ["../reference_structures/binary/POSCAR_nan3", "vc-relax", "all", "vol", "nscf"]
-    CalcD["rbo2"] = ["../reference_structures/binary/POSCAR_rbo2", "vc-relax", "all", "vol", "nscf"]
+    CalcD["li3n_hex"] = ["$STRUCTDIR/binary/POSCAR_li3n", "vc-relax", "all", "vol", "nscf"]
+    CalcD["nan3"] = ["$STRUCTDIR/binary/POSCAR_nan3", "vc-relax", "all", "vol", "nscf"]
+    CalcD["rbo2"] = ["$STRUCTDIR/binary/POSCAR_rbo2", "vc-relax", "all", "vol", "nscf"]
 
 
 
-    CalcD["nb2o5"] = ["../reference_structures/binary/POSCAR_nb2o5", "vc-relax", "all", "vol", "nscf"]
-    CalcD["sif4"] = ["../reference_structures/binary/POSCAR_sif4", "vc-relax", "all", "vol", "nscf"]
-    CalcD["ticl2"] = ["../reference_structures/binary/POSCAR_ticl2", "vc-relax", "all", "vol", "nscf"]
+    CalcD["nb2o5"] = ["$STRUCTDIR/binary/POSCAR_nb2o5", "vc-relax", "all", "vol", "nscf"]
+    CalcD["sif4"] = ["$STRUCTDIR/binary/POSCAR_sif4", "vc-relax", "all", "vol", "nscf"]
+    CalcD["ticl2"] = ["$STRUCTDIR/binary/POSCAR_ticl2", "vc-relax", "all", "vol", "nscf"]
 
-    CalcD["snf4"] = ["../reference_structures/binary/POSCAR_snf4", "vc-relax", "all", "vol", "nscf"]
-    CalcD["ga2s3"] = ["../reference_structures/binary/POSCAR_ga2s3", "vc-relax", "all", "vol", "nscf"]
+    CalcD["snf4"] = ["$STRUCTDIR/binary/POSCAR_snf4", "vc-relax", "all", "vol", "nscf"]
+    CalcD["ga2s3"] = ["$STRUCTDIR/binary/POSCAR_ga2s3", "vc-relax", "all", "vol", "nscf"]
 
-    CalcD["bcc_13"] = ["../reference_structures/binary/POSCAR_bcc_13", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["bcc_31"] = ["../reference_structures/binary/POSCAR_bcc_31", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["mg2si"] = ["../reference_structures/binary/POSCAR_mg2si", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["simg2"] = ["../reference_structures/binary/POSCAR_simg2", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["bcc_13"] = ["$STRUCTDIR/binary/POSCAR_bcc_13", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["bcc_31"] = ["$STRUCTDIR/binary/POSCAR_bcc_31", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["mg2si"] = ["$STRUCTDIR/binary/POSCAR_mg2si", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["simg2"] = ["$STRUCTDIR/binary/POSCAR_simg2", "vc-relax", "all", "vol-mid", "nscf"]
 
-    CalcD["fcc_12"] = ["../reference_structures/binary/fcc_12.in", "vc-relax", "all", "vol", "nscf"]
-    CalcD["fcc_21"] = ["../reference_structures/binary/fcc_21.in", "vc-relax", "all", "vol", "nscf"]
+    CalcD["fcc_12"] = ["$STRUCTDIR/binary/fcc_12.in", "vc-relax", "all", "vol", "nscf"]
+    CalcD["fcc_21"] = ["$STRUCTDIR/binary/fcc_21.in", "vc-relax", "all", "vol", "nscf"]
 
-    CalcD["fcc_conv_ABBB"] = ["../reference_structures/binary/fcc_conv_ABBB.in", "vc-relax", "all", "vol", "nscf"]
-    CalcD["fcc_conv_BAAA"] = ["../reference_structures/binary/fcc_conv_BAAA.in", "vc-relax", "all", "vol", "nscf"]
+    CalcD["fcc_conv_ABBB"] = ["$STRUCTDIR/binary/fcc_conv_ABBB.in", "vc-relax", "all", "vol", "nscf"]
+    CalcD["fcc_conv_BAAA"] = ["$STRUCTDIR/binary/fcc_conv_BAAA.in", "vc-relax", "all", "vol", "nscf"]
 
-    CalcD["mgb2_12"] = ["../reference_structures/binary/POSCAR_mgb2", "vc-relax", "all", "vol", "nscf"]
-    CalcD["mgb2_21"] = ["../reference_structures/binary/POSCAR_mgb2_21", "vc-relax", "all", "vol", "nscf"]
+    CalcD["mgb2_12"] = ["$STRUCTDIR/binary/POSCAR_mgb2", "vc-relax", "all", "vol", "nscf"]
+    CalcD["mgb2_21"] = ["$STRUCTDIR/binary/POSCAR_mgb2_21", "vc-relax", "all", "vol", "nscf"]
 
-    CalcD["mgb2_AB"] = ["../reference_structures/binary/POSCAR_mgb2_AB", "vc-relax", "all", "vol", "nscf"]
-    CalcD["mgb2_BA"] = ["../reference_structures/binary/POSCAR_mgb2_BA", "vc-relax", "all", "vol", "nscf"]
+    CalcD["mgb2_AB"] = ["$STRUCTDIR/binary/POSCAR_mgb2_AB", "vc-relax", "all", "vol", "nscf"]
+    CalcD["mgb2_BA"] = ["$STRUCTDIR/binary/POSCAR_mgb2_BA", "vc-relax", "all", "vol", "nscf"]
 
-    CalcD["ab2_71"] = ["../reference_structures/binary/POSCAR_ab2_71", "vc-relax", "all", "vol", "nscf"]
-    CalcD["ba2_71"] = ["../reference_structures/binary/POSCAR_ba2_71", "vc-relax", "all", "vol", "nscf"]
+    CalcD["ab2_71"] = ["$STRUCTDIR/binary/POSCAR_ab2_71", "vc-relax", "all", "vol", "nscf"]
+    CalcD["ba2_71"] = ["$STRUCTDIR/binary/POSCAR_ba2_71", "vc-relax", "all", "vol", "nscf"]
 
-    CalcD["irn2_38"] = ["../reference_structures/binary/POSCAR_irn2_38", "vc-relax", "all", "vol", "nscf"]
-    CalcD["cao2_12"] = ["../reference_structures/binary/POSCAR_cao2_12", "vc-relax", "all", "vol", "nscf"]
+    CalcD["irn2_38"] = ["$STRUCTDIR/binary/POSCAR_irn2_38", "vc-relax", "all", "vol", "nscf"]
+    CalcD["cao2_12"] = ["$STRUCTDIR/binary/POSCAR_cao2_12", "vc-relax", "all", "vol", "nscf"]
 
-    CalcD["p2o5"] = ["../reference_structures/binary/POSCAR_p2o5", "vc-relax", "all", "vol", "nscf"]
+    CalcD["p2o5"] = ["$STRUCTDIR/binary/POSCAR_p2o5", "vc-relax", "all", "vol", "nscf"]
 
 
-    CalcD["znseAABB"] = ["../reference_structures/binary/znse.AABB.in", "vc-relax", "all", "vol", "nscf"]
-    CalcD["squareAABB"] = ["../reference_structures/binary/square.in.AABB", "vc-relax", "2Dxy", "2D", "nscf"]
+    CalcD["znseAABB"] = ["$STRUCTDIR/binary/znse.AABB.in", "vc-relax", "all", "vol", "nscf"]
+    CalcD["squareAABB"] = ["$STRUCTDIR/binary/square.in.AABB", "vc-relax", "2Dxy", "2D", "nscf"]
 
 
-    CalcD["dimer_pair"] = ["../reference_structures/binary/POSCAR_dimer_pair", "vc-relax", "all", "vol", "nscf"]
+    CalcD["dimer_pair"] = ["$STRUCTDIR/binary/POSCAR_dimer_pair", "vc-relax", "all", "vol", "nscf"]
 
 
-    CalcD["mgb2_AB-mid"] = ["../reference_structures/binary/POSCAR_mgb2_AB", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["mgb2_BA-mid"] = ["../reference_structures/binary/POSCAR_mgb2_BA", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["mgb2_12-mid"] = ["../reference_structures/binary/POSCAR_mgb2", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["mgb2_21-mid"] = ["../reference_structures/binary/POSCAR_mgb2_21", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["mgb2_AB-mid"] = ["$STRUCTDIR/binary/POSCAR_mgb2_AB", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["mgb2_BA-mid"] = ["$STRUCTDIR/binary/POSCAR_mgb2_BA", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["mgb2_12-mid"] = ["$STRUCTDIR/binary/POSCAR_mgb2", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["mgb2_21-mid"] = ["$STRUCTDIR/binary/POSCAR_mgb2_21", "vc-relax", "all", "vol-mid", "nscf"]
 
 
-#    CalcD["i4mmm_tet_AB"] = ["../reference_structures/binary/POSCAR_i4mmm_4atom_AB", "vc-relax", "all", "vol", "nscf"]
-#    CalcD["i4mmm_tet_BA"] = ["../reference_structures/binary/POSCAR_i4mmm_4atom_BA", "vc-relax", "all", "vol", "nscf"]
+#    CalcD["i4mmm_tet_AB"] = ["$STRUCTDIR/binary/POSCAR_i4mmm_4atom_AB", "vc-relax", "all", "vol", "nscf"]
+#    CalcD["i4mmm_tet_BA"] = ["$STRUCTDIR/binary/POSCAR_i4mmm_4atom_BA", "vc-relax", "all", "vol", "nscf"]
 
 
 
-    CalcD["gei2"] = ["../reference_structures/binary/POSCAR_GeI2", "vc-relax", "all", "vol", "nscf"]
-    CalcD["gei4_mol"] = ["../reference_structures/binary/gei4_molecule.in", "relax", "all", "coords-small", "nscf"]
+    CalcD["gei2"] = ["$STRUCTDIR/binary/POSCAR_GeI2", "vc-relax", "all", "vol", "nscf"]
+    CalcD["gei4_mol"] = ["$STRUCTDIR/binary/gei4_molecule.in", "relax", "all", "coords-small", "nscf"]
 
-    CalcD["ab3_mol"] = ["../reference_structures/binary/ab3_molecule.in", "relax", "all", "coords-small", "nscf"]
+    CalcD["ab3_mol"] = ["$STRUCTDIR/binary/ab3_molecule.in", "relax", "all", "coords-small", "nscf"]
 
 
-    CalcD["tet"] = ["../reference_structures/binary/tet.in", "vc-relax", "all", "vol", "nscf"]
+    CalcD["tet"] = ["$STRUCTDIR/binary/tet.in", "vc-relax", "all", "vol", "nscf"]
 
 
-    CalcD["mof6"] = ["../reference_structures/binary/POSCAR_mof6", "vc-relax",  "all", "vol", "nscf"]
+    CalcD["mof6"] = ["$STRUCTDIR/binary/POSCAR_mof6", "vc-relax",  "all", "vol", "nscf"]
 
 
-    CalcD["ascl5"] = ["../reference_structures/binary/POSCAR_ascl5", "vc-relax",  "2Dxy", "2D", "nscf"]
-    CalcD["rocksalt_shape"] = ["../reference_structures/binary/rocksalt.in", "vc-relax", "all", "shape", "nscf"]
-    CalcD["rocksalt_2lay"] = ["../reference_structures/binary/rocksalt.in.2lay", "vc-relax", "2Dxy", "2D", "nscf"]
+    CalcD["ascl5"] = ["$STRUCTDIR/binary/POSCAR_ascl5", "vc-relax",  "2Dxy", "2D", "nscf"]
+    CalcD["rocksalt_shape"] = ["$STRUCTDIR/binary/rocksalt.in", "vc-relax", "all", "shape", "nscf"]
+    CalcD["rocksalt_2lay"] = ["$STRUCTDIR/binary/rocksalt.in.2lay", "vc-relax", "2Dxy", "2D", "nscf"]
 
-    CalcD["gas"] = ["../reference_structures/binary/POSCAR_gas", "vc-relax", "all", "vol", "nscf"]
+    CalcD["gas"] = ["$STRUCTDIR/binary/POSCAR_gas", "vc-relax", "all", "vol", "nscf"]
 
-    CalcD["hex12"] = ["../reference_structures/binary/hex_trim_12.in", "vc-relax",  "2Dxy", "2D", "nscf"]
-    CalcD["hex21"] = ["../reference_structures/binary/hex_trim_21.in", "vc-relax",  "2Dxy", "2D", "nscf"]
+    CalcD["hex12"] = ["$STRUCTDIR/binary/hex_trim_12.in", "vc-relax",  "2Dxy", "2D", "nscf"]
+    CalcD["hex21"] = ["$STRUCTDIR/binary/hex_trim_21.in", "vc-relax",  "2Dxy", "2D", "nscf"]
 
-    CalcD["hex12a"] = ["../reference_structures/binary/hex_trim_12.in", "vc-relax",  "2Dxy", "2D-mid", "nscf"]
-    CalcD["hex21a"] = ["../reference_structures/binary/hex_trim_21.in", "vc-relax",  "2Dxy", "2D-mid", "nscf"]
+    CalcD["hex12a"] = ["$STRUCTDIR/binary/hex_trim_12.in", "vc-relax",  "2Dxy", "2D-mid", "nscf"]
+    CalcD["hex21a"] = ["$STRUCTDIR/binary/hex_trim_21.in", "vc-relax",  "2Dxy", "2D-mid", "nscf"]
 
     #ternary
-    CalcD["abc_line"] = ["../reference_structures/ternary/abc_line.in", "relax", "all", "coords-small", "nscf"]
-    CalcD["bac_line"] = ["../reference_structures/ternary/bac_line.in", "relax", "all", "coords-small", "nscf"]
-    CalcD["cab_line"] = ["../reference_structures/ternary/cab_line.in", "relax", "all", "coords-small", "nscf"]
+    CalcD["abc_line"] = ["$STRUCTDIR/ternary/abc_line.in", "relax", "all", "coords-small", "nscf"]
+    CalcD["bac_line"] = ["$STRUCTDIR/ternary/bac_line.in", "relax", "all", "coords-small", "nscf"]
+    CalcD["cab_line"] = ["$STRUCTDIR/ternary/cab_line.in", "relax", "all", "coords-small", "nscf"]
 
-    CalcD["fcc_tern"] = ["../reference_structures/ternary/fcc_tern.in", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["hex_trim"] = ["../reference_structures/ternary/hex_trim_3.in", "vc-relax",  "2Dxy", "2D-mid", "nscf"]
+    CalcD["fcc_tern"] = ["$STRUCTDIR/ternary/fcc_tern.in", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["hex_trim"] = ["$STRUCTDIR/ternary/hex_trim_3.in", "vc-relax",  "2Dxy", "2D-mid", "nscf"]
 
-    CalcD["hh1"] = ["../reference_structures/ternary/POSCAR_hh1", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["hh2"] = ["../reference_structures/ternary/POSCAR_hh2", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["hh3"] = ["../reference_structures/ternary/POSCAR_hh3", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["hh1"] = ["$STRUCTDIR/ternary/POSCAR_hh1", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["hh2"] = ["$STRUCTDIR/ternary/POSCAR_hh2", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["hh3"] = ["$STRUCTDIR/ternary/POSCAR_hh3", "vc-relax", "all", "vol-mid", "nscf"]
 
-    CalcD["stuffhex_1"] = ["../reference_structures/ternary/POSCAR_mgb2_1", "vc-relax", "all", "vol", "nscf"]
-    CalcD["stuffhex_2"] = ["../reference_structures/ternary/POSCAR_mgb2_2", "vc-relax", "all", "vol", "nscf"]
-    CalcD["stuffhex_3"] = ["../reference_structures/ternary/POSCAR_mgb2_3", "vc-relax", "all", "vol", "nscf"]
+    CalcD["stuffhex_1"] = ["$STRUCTDIR/ternary/POSCAR_mgb2_1", "vc-relax", "all", "vol", "nscf"]
+    CalcD["stuffhex_2"] = ["$STRUCTDIR/ternary/POSCAR_mgb2_2", "vc-relax", "all", "vol", "nscf"]
+    CalcD["stuffhex_3"] = ["$STRUCTDIR/ternary/POSCAR_mgb2_3", "vc-relax", "all", "vol", "nscf"]
 
-    CalcD["stuffhex_z_1"] = ["../reference_structures/ternary/POSCAR_z_mgb2_1", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["stuffhex_z_2"] = ["../reference_structures/ternary/POSCAR_z_mgb2_2", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["stuffhex_z_3"] = ["../reference_structures/ternary/POSCAR_z_mgb2_3", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["stuffhex_z_1"] = ["$STRUCTDIR/ternary/POSCAR_z_mgb2_1", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["stuffhex_z_2"] = ["$STRUCTDIR/ternary/POSCAR_z_mgb2_2", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["stuffhex_z_3"] = ["$STRUCTDIR/ternary/POSCAR_z_mgb2_3", "vc-relax", "all", "vol-mid", "nscf"]
 
-    CalcD["rocksalt_2lay_abo2"] = ["../reference_structures/ternary/rocksalt.in.2lay_abo2", "vc-relax", "2Dxy", "2D", "nscf"]
-    CalcD["caf2_abc"] = ["../reference_structures/ternary/POSCAR_caf2_ABC", "vc-relax", "all", "vol", "nscf"]
+    CalcD["rocksalt_2lay_abo2"] = ["$STRUCTDIR/ternary/rocksalt.in.2lay_abo2", "vc-relax", "2Dxy", "2D", "nscf"]
+    CalcD["caf2_abc"] = ["$STRUCTDIR/ternary/POSCAR_caf2_ABC", "vc-relax", "all", "vol", "nscf"]
 
-    CalcD["perov"] = ["../reference_structures/ternary/POSCAR_abo3", "vc-relax", "all", "vol", "nscf"]
-    CalcD["perov2"] = ["../reference_structures/ternary/POSCAR_abo3_2", "vc-relax", "all", "vol", "nscf"]
-    CalcD["perov3"] = ["../reference_structures/ternary/POSCAR_abo3_3", "vc-relax", "all", "vol", "nscf"]
-    CalcD["perov4"] = ["../reference_structures/ternary/POSCAR_abo3_4", "vc-relax", "all", "vol", "nscf"]
-    CalcD["perov5"] = ["../reference_structures/ternary/POSCAR_abo3_5", "vc-relax", "all", "vol", "nscf"]
-    CalcD["perov6"] = ["../reference_structures/ternary/POSCAR_abo3_6", "vc-relax", "all", "vol", "nscf"]
+    CalcD["perov"] = ["$STRUCTDIR/ternary/POSCAR_abo3", "vc-relax", "all", "vol", "nscf"]
+    CalcD["perov2"] = ["$STRUCTDIR/ternary/POSCAR_abo3_2", "vc-relax", "all", "vol", "nscf"]
+    CalcD["perov3"] = ["$STRUCTDIR/ternary/POSCAR_abo3_3", "vc-relax", "all", "vol", "nscf"]
+    CalcD["perov4"] = ["$STRUCTDIR/ternary/POSCAR_abo3_4", "vc-relax", "all", "vol", "nscf"]
+    CalcD["perov5"] = ["$STRUCTDIR/ternary/POSCAR_abo3_5", "vc-relax", "all", "vol", "nscf"]
+    CalcD["perov6"] = ["$STRUCTDIR/ternary/POSCAR_abo3_6", "vc-relax", "all", "vol", "nscf"]
 
 
-    CalcD["simple_hex"] = ["../reference_structures/simple_hex.in", "vc-relax", "all", "flyaway", "nscf"]
+    CalcD["simple_hex"] = ["$STRUCTDIR/simple_hex.in", "vc-relax", "all", "flyaway", "nscf"]
 
 
 

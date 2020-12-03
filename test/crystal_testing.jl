@@ -3,6 +3,10 @@ using TightlyBound
 using Suppressor
 
 #basic loading
+
+#name of test directory
+TESTDIR=TightlyBound.TESTDIR
+
 @testset "basic crystal dftout tests" begin
     types=["Li"]
     pos=zeros((1,3))
@@ -14,10 +18,10 @@ using Suppressor
     @test c.coords == pos
     @test c.types == types
 
-    c2=makecrys("./POSCAR_testing")
+    c2=makecrys("$TESTDIR/POSCAR_testing")
     @test c2.types == ["Cl", "N","N","Sr", "Sr"]
 
-    c3=makecrys("./qe_testing.in")
+    c3=makecrys("$TESTDIR/qe_testing.in")
     @test c3.types == ["Si", "C"]
 
     
@@ -37,7 +41,7 @@ using Suppressor
         @test_throws ErrorException("Error forces") makedftout(c, energy,energy_smear, forces2, zeros(3,3))
     end
 
-    dft_out = TightlyBound.QE.loadXML("./dimer.save/")
+    dft_out = TightlyBound.QE.loadXML("$TESTDIR/dimer.save/")
 
     convert_ryd_ha = 2.0
 
@@ -46,6 +50,33 @@ using Suppressor
     @test convert_ryd_ha*-1.832485909355843e0 ≈ dft_out.bandstruct.eigs[1,1]
     
 end
+
+@testset "advanced crystal tests" begin
+    @suppress begin
+        types=["Li"]
+        pos=zeros((1,3))
+        A=[ [10.0 0 0]; [0 10.0 0]; [ 0 0 10.0]]
+        
+        c=makecrys(A, pos, types)
+        
+        println(c)
+        c2 = c * [2,2,2]
+     
+        TightlyBound.CrystalMod.generate_random(c2,0.01,0.01)
+        TightlyBound.CrystalMod.write_poscar(c2,"$TESTDIR/POSCAR_tmp")
+        rm("$TESTDIR/POSCAR_tmp")
+
+        TightlyBound.CrystalMod.write_efs(c, 0.0, zeros(1,3), zeros(3,3), "$TESTDIR/qe.out")
+        rm("$TESTDIR/qe.out")
+        
+
+        
+        @test 1 == 1
+
+        
+    end
+end
+
 
 
 if false

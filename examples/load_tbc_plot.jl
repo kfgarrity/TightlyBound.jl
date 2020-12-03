@@ -6,7 +6,9 @@ using Plots
 
 # load tb_crys from file
 
-filname = "../test/data_forces/znse.in_vnscf_vol_2/projham.xml.gz"
+TESTDIR = TightlyBound.TESTDIR
+
+filname = "$TESTDIR/data_forces/znse.in_vnscf_vol_2/projham.xml.gz"
 tbc = read_tb_crys(filname)
 
 println(tbc)

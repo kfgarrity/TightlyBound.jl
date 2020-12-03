@@ -52,7 +52,7 @@ and mpi commands (if any)
 
     command_dict = Dict()
 
-    command_dict["juliadir"] = juiladir
+#    command_dict["juliadir"] = juiladir
 
     if nprocs == 1
 

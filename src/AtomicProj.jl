@@ -105,9 +105,10 @@ function make_projwfcx(prefix, tmpdir)
 makes the proj input file
 """
     c_dict = make_commands(1)
-    julia_dir = c_dict["juliadir"]
 
-    template_file=open("$julia_dir/template_inputs/template.proj")
+    TEMPLATEDIR=TightlyBound.TEMPLATEDIR
+
+    template_file=open("$TEMPLATEDIR/template.proj")
     temp = read(template_file, String)
     close(template_file)
     

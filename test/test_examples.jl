@@ -2,11 +2,13 @@ using TightlyBound
 using Test
 using Suppressor
 
-for f in readdir("../examples")
+EXAMPLESDIR=TightlyBound.EXAMPLESDIR
+
+for f in readdir("$EXAMPLESDIR")
     if occursin(".jl", f) && !occursin("~", f)
         @testset "example $f" begin
             @suppress begin 
-                include("../examples/$f")
+                include("$EXAMPLESDIR/$f")
                 @test 1 == 1
             end
         end        

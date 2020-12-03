@@ -5,12 +5,15 @@ using Suppressor
 #include("../includes_laguerre.jl")
 #include("../Ewald.jl")
 
+TESTDIR=TightlyBound.TESTDIR
+
+
 function test_force()
 
     @testset "testing force dimer" begin
 
         @suppress begin
-            ft = open("./data_forces/fil_MgS_dimer", "r"); 
+            ft = open("$TESTDIR/data_forces/fil_MgS_dimer", "r"); 
             dirst = readlines(ft); 
             close(ft); 
 
@@ -82,7 +85,7 @@ function test_stress()
     @testset "testing force znse" begin
         @suppress begin
         
-            ft = open("./data_forces/fil_MgS_znse", "r"); 
+            ft = open("$TESTDIR/data_forces/fil_MgS_znse", "r"); 
             dirst = readlines(ft); 
             close(ft); 
 

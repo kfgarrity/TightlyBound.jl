@@ -202,9 +202,10 @@ Make inputfile for SCF calculation
     
 
     c_dict = make_commands(1)
-    julia_dir = c_dict["juliadir"]
 
-    template_file=open("$julia_dir/template_inputs/template_qe.in")
+    TEMPLATEDIR=TightlyBound.TEMPLATEDIR
+
+    template_file=open("$TEMPLATEDIR/template_qe.in")
     temp = read(template_file, String)
     close(template_file)
     
