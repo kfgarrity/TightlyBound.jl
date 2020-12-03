@@ -1267,8 +1267,8 @@ function compare_bands(h::tb, bs::bandstructure; energy_lim=missing, doplot=true
         end
     end
     if doplot
-        plot(vals1, "g.", MarkerSize=8)
-        plot(vals2, "y.", MarkerSize=4)
+        plot(vals1, color="green", seriestype=:scatter, marker=(:circle), MarkerSize=8)
+        plot(vals2, color="yellow", seriestype=:scatter, MarkerSize=4)
     end
     println("max abs diff $max_diff at kpoint $badk and value $badval")
     if max_diff > 1e-3
@@ -1324,7 +1324,7 @@ calculate band structure at group of points
 
 end    
 
-function plot_compare_tb(h1::tb_crys, h2::tb_crys; h3=missing, kpath=[0.5 0 0 ; 0 0 0; 0.5 0.0 0.5], names = missing, npts=30, efermi = missing, yrange=missing, plot_hk=false,  align=false)
+function plot_compare_tb(h1::tb_crys, h2::tb_crys; h3=missing, kpath=[0.5 0 0 ; 0 0 0; 0.5 0.0 0.5], names = missing, npts=30, efermi = missing, yrange=missing, plot_hk=false,  align=missing)
     if ismissing(h3)
         plot_compare_tb(h1.tb, h2.tb, h3=missing, kpath=kpath, names = names, npts=npts, efermi = efermi, yrange=yrange, plot_hk=plot_hk, align=align)
     else
@@ -1333,12 +1333,12 @@ function plot_compare_tb(h1::tb_crys, h2::tb_crys; h3=missing, kpath=[0.5 0 0 ; 
 end
 
 
-function plot_compare_tb(h1::tb, h2::tb; h3=missing, kpath=[0.5 0 0 ; 0 0 0; 0.5 0.0 0.5], names = missing, npts=30, efermi = missing, yrange=missing, plot_hk=false, align=false)
-#    println("kpath ", kpath)
-    plot_bandstr(h1, kpath=kpath, names = names, npts=npts, efermi = efermi, colors="-g.", MarkerSize=10, yrange=yrange, plot_hk=plot_hk, align=align)
-    plot_bandstr(h2, kpath=kpath, names = names, npts=npts, efermi = efermi, colors="--y.", MarkerSize=6, yrange=yrange, plot_hk=plot_hk, align=align)    
+function plot_compare_tb(h1::tb, h2::tb; h3=missing, kpath=[0.5 0 0 ; 0 0 0; 0.5 0.0 0.5], names = missing, npts=30, efermi = missing, yrange=missing, plot_hk=false, align=missing)
+    println("plot_compare_tb ")
+    plot_bandstr(h1, kpath=kpath, names = names, npts=npts, efermi = efermi, color="green", MarkerSize=4, yrange=yrange, plot_hk=plot_hk, align=align, clear_previous=true)
+    plot_bandstr(h2, kpath=kpath, names = names, npts=npts, efermi = efermi, color="yellow", MarkerSize=2, yrange=yrange, plot_hk=plot_hk, align=align, clear_previous=false)    
     if !ismissing(h3)
-        plot_bandstr(h3, kpath=kpath, names = names, npts=npts, efermi = efermi, colors="--m.", MarkerSize=4, yrange=yrange, plot_hk=plot_hk, align=align)
+        plot_bandstr(h3, kpath=kpath, names = names, npts=npts, efermi = efermi, color="magenta", MarkerSize=1, yrange=yrange, plot_hk=plot_hk, align=align, clear_previous=false)
     end
 
 end
@@ -1356,7 +1356,7 @@ function summarize_orb(orb::Symbol)
 end
 
     
-function plot_bandstr(h::tb_crys; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.0 0.5], names = missing, npts=30, efermi = missing, colors="-b.", MarkerSize=8, yrange=missing, plot_hk=false, align = false, proj_types = missing, proj_orbs = missing, proj_nums=missing)
+function plot_bandstr(h::tb_crys; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0 0 ;0 0 0.5], names = missing, npts=30, efermi = missing, color="blue", MarkerSize=missing, yrange=missing, plot_hk=false, align = missing, proj_types = missing, proj_orbs = missing, proj_nums=missing, clear_previous=true)
 
 
     if !ismissing(proj_types) || !ismissing(proj_orbs) || !ismissing(proj_nums)
@@ -1395,7 +1395,7 @@ function plot_bandstr(h::tb_crys; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.0 0.5], names = 
         proj_inds = missing
     end
 
-    plot_bandstr(h.tb; kpath=kpath, names = names, npts=npts, efermi = efermi, colors=colors, MarkerSize=MarkerSize, yrange=yrange, plot_hk=plot_hk, align=align, proj_inds=proj_inds)
+    plot_bandstr(h.tb; kpath=kpath, names = names, npts=npts, efermi = efermi, color=color, MarkerSize=MarkerSize, yrange=yrange, plot_hk=plot_hk, align=align, proj_inds=proj_inds, clear_previous=clear_previous)
     
 end
 
@@ -1440,8 +1440,23 @@ end
 
 
 
-function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0 0 ;0 0 0.5], names = missing, npts=30, efermi = missing, colors="-b.", MarkerSize=8, yrange=missing, plot_hk=false, align=false, proj_inds=missing)
+function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0 0 ;0 0 0.5], names = missing, npts=30, efermi = missing, color="blue", MarkerSize=missing, yrange=missing, plot_hk=false, align=missing, proj_inds=missing, clear_previous=true)
 #function plot_bandstr( kpath; names = missing, npts=30, efermi = missing)
+
+    println("plot_bandstr ", color)
+    if clear_previous
+        println("clear")
+        plot(legend=false, grid=false, box=true)
+    end
+
+    if ismissing(MarkerSize)
+        if ismissing(proj_inds)
+          MarkerSize = 3
+        else
+            MarkerSize = 5
+        end
+    end
+
 
     NK = size(kpath)[1]
 
@@ -1482,7 +1497,7 @@ function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0
     elseif !ismissing(proj_inds )
         vals = zeros(nk, h.nwan)
         temp = zeros(Complex{Float64}, h.nwan, h.nwan)
-        println("proj inds $proj_inds")
+#        println("proj inds $proj_inds")
         for i = 1:nk
             vect, vals_t, hk, sk, vals0 = Hk(h, K[i,:])
             for p in proj_inds
@@ -1506,17 +1521,35 @@ function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0
         vals = calc_bands(h, K)
     end
 
-    if align
-        vmin = minimum(vals)
-        vals = vals .- vmin
+    alignstr = "Energy (Ryd)"
+    if !ismissing(align)
+        println("align ", align)
+        align = lowercase(align)
+        if align == "min" || align == "minimum"
+            vmin = minimum(vals)
+            vals = vals .- vmin
+            alignstr = "Energy - E\$_{min}\$ (Ryd)"
+        elseif align == "fermi" || align == "ef" 
+            vals = vals .- efermi
+            alignstr = "Energy - E\$_F\$ (Ryd)"
+        elseif align == "vbm" || align == "valence"
+            vbm = maximum(vals[vals .< efermi])
+            vals = vals .- vbm
+            alignstr = "Energy - E\$_{VBM}\$ (Ryd)"
+        end            
     end
 
+    println("color = $color markersize = $MarkerSize")
+#    println("yyyyyyyyyyyyyyyyy")
     if ismissing(proj_inds)
-        plot(vals, colors, MarkerSize=MarkerSize)
+        plot!(vals, color=color, marker=(:circle), markersize=MarkerSize, markerstrokecolor=color, legend=false, grid=false)
+#        plot!(vals, color="red", marker=(:circle), markersize=MarkerSize, markeredgecolor=color, legend=false, grid=false)
+#        plot(vals, color=color, marker=(:circle), markersize=0.1)
     else
         X=repeat(0:(nk-1), 1,h.nwan)
-        plot(X, vals, Color="grey", zorder=1)
-        scatter(X, vals, 20.0*ones(size(vals)), proj, zorder=2, cmap="viridis", edgecolors="face", alpha=0.6)
+        plot!(X, vals, color="grey", grid=false, legend=false)
+        scatter!(X, vals, marker_z = proj,markersize=MarkerSize, markerstrokewidth=0.0, alpha=0.6, legend=false)
+
 #        @save "t.jld" vals proj
     end
 
@@ -1531,7 +1564,7 @@ function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0
         if size(yrange) == (1,2)
             yrange=yrange'
         end
-        ylim(yrange[1], yrange[2])
+        ylims!(yrange[1], yrange[2])
 
     end
 
@@ -1540,18 +1573,41 @@ function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0
         yrange = [minimum(vals)-0.05*r,  maximum(vals)+0.05*r]
     end
     
-    ylim(yrange[1], yrange[2])
-    xlim(1, NK)
+    ylims!(yrange[1], yrange[2])
+    xlims!(1, nk)
 
     if length(locs) < 10
         for l in locs
-            plot([l, l], yrange, "--k")
+            lt=l+1
+            if lt == 1
+                lt == lt + 1e-5
+            elseif lt == nk
+                lt = lt - 1e-5
+            end
+            plot!([lt, lt], yrange, linestyle=:dash, color="black")
         end
     end
 
-    println(locs)
-    println(names)    
-    xticks(locs, names)
+    if !ismissing(align) 
+#        println("nk ", nk)
+        if align == "vbm" || align == "valence"
+            plot!([0, nk+1], [efermi - vbm, efermi - vbm], color="gray", linestyle=:dot)
+        end
+        if align == "min" || align == "minimum"
+            plot!([0, nk+1], [efermi - vmin, efermi - vmin], color="gray", linestyle=:dot)
+        end
+        if align == "fermi" || align == "ef"
+            plot!([0, nk+1], [0.0, 0.0], color="black", linestyle=:dot)
+        end
+
+    end
+
+#    println(locs)
+#    println(names)    
+    xticks!(Float64.(locs).+1.0, names, xtickfontsize=12)
+
+    display(ylabel!(alignstr, fontsize=12))
+#    println("end plot")
     
 end
 
@@ -2577,7 +2633,11 @@ function symm_by_orbitals(crys::crystal, mat)
 end
 
 
-function plot_compare_dft(tbc, bs; tbc2=missing, align_min=true)
+function plot_compare_dft(tbc, bs; tbc2=missing)
+
+    if typeof(bs) == dftout
+        bs = bs.bandstruct
+    end
 
     kpts = bs.kpts
     kweights = bs.kweights
@@ -2600,18 +2660,18 @@ function plot_compare_dft(tbc, bs; tbc2=missing, align_min=true)
     if !ismissing(tbc2)
         vals2 = calc_bands(tbc2.tb, kpts)
         efermi_tbc2 = calc_fermi(vals2, kweights, nelec)
-        println("efermi_dft $efermi_dft efermi_tbc $efermi_tbc efermi_tbc2 $efermi_tbc2")
+#        println("efermi_dft $efermi_dft efermi_tbc $efermi_tbc efermi_tbc2 $efermi_tbc2")
 
         en_dft = band_energy(bs.eigs[:,1:end], kweights, nelec+nsemi)
         en_1 = band_energy(vals, kweights, nelec)
         en_2 = band_energy(vals2, kweights, nelec)
-        println("energy_dft $en_dft en_1 $en_1 en_2 $en_2")
+#        println("energy_dft $en_dft en_1 $en_1 en_2 $en_2")
 
         e_smear_dft  = smearing_energy(bs.eigs[:,nsemi+1:end], kweights, efermi_dft)
         e_smear_1  = smearing_energy(vals, kweights, efermi_tbc)
         e_smear_2  = smearing_energy(vals2, kweights, efermi_tbc2)
         
-        println("smear_dft $e_smear_dft sm_1 $e_smear_1 sm_2 $e_smear_2")
+#        println("smear_dft $e_smear_dft sm_1 $e_smear_1 sm_2 $e_smear_2")
 
     end
 
@@ -2620,43 +2680,62 @@ function plot_compare_dft(tbc, bs; tbc2=missing, align_min=true)
 
 #    wan, semicore, nwan, nsemi, wan_atom, atom_wan = tb_indexes(tbc.crys)
     println("nsemi ", nsemi)
+
     
-    if align_min
-        a = minimum(bs.eigs[:,nsemi+1:end])
-        b = minimum(vals)
-        plot(bs.eigs .- a, "-c", LineWidth=1.5)    
-        plot(vals .- b, "-b", LineWidth=1.0)
-
-        plot([0, nk], [efermi_tbc - b, efermi_tbc - b], "--r")
-        plot([0, nk], [efermi_dft - a, efermi_dft - a], ":c")
-
-        if !ismissing(tbc2)
-            c = minimum(vals2)
-            plot(vals2 .- c, "--m.", MarkerSize=3)
-        end
-
-
-    else
     
-        vbmD, cbmD = find_vbm_cbm(bs.eigs[:,1:end] , efermi_dft)
-        vbm, cbm = find_vbm_cbm(vals , efermi_tbc)
+#    if align_min
+#        a = minimum(bs.eigs[:,nsemi+1:end])
+#        b = minimum(vals)
+#        plot(bs.eigs .- a, color="orange",  LineWidth=1.5)    
+#        plot!(vals .- b, color="blue", LineWidth=1.0)
+#
+#        plot!([0, nk], [efermi_tbc - b, efermi_tbc - b], color="red", linesyle=:dash)
+#        if !ismissing(tbc2)
+#            c = minimum(vals2)
+#            plot!(vals2 .- c, color="magenta", linestyle=:dash, markersize=3)
+#        end
+#
+#        display(plot!([0, nk], [efermi_dft - a, efermi_dft - a], color="cyan", linesyle=:dot))
 
-        plot(bs.eigs[:,1:end] .- vbmD , "-c", LineWidth=1.5)    
-        plot(vals .- vbm, "-b", LineWidth=1.0)
 
 
-        if !ismissing(tbc2)
-            vbm2, cbm2 = find_vbm_cbm(vals2 , efermi_tbc2)
-            plot(vals2 .- vbm2,  "--m.", MarkerSize=3)
-        end
+#    else
+    
+    vbmD, cbmD = find_vbm_cbm(bs.eigs[:,1:end] , efermi_dft)
+    vbm, cbm = find_vbm_cbm(vals , efermi_tbc)
 
 
-        plot([0, nk], [efermi_tbc, efermi_tbc] .- vbm, "--k")
-        plot([0, nk], [efermi_dft, efermi_dft] .- vbmD, ":r")
 
-        ylim(minimum(vals .- vbm)*1.05, maximum(vals .- vbm) * 1.05)
 
+    plot(bs.eigs[:,1] .- vbmD , color="orange", lw=2, label="DFT", grid=false, box=true, legend=:topright)    
+    if bs.nbnd > 1
+        plot!(bs.eigs[:,2:end] .- vbmD , color="orange", lw=2, label=missing)    
     end
+
+    plot!(vals[:,1] .- vbm, color="blue",  lw=1, label="TB")
+    if tbc.tb.nwan > 1
+        plot!(vals[:,2:end] .- vbm, color="blue",  lw=1, label=missing)
+    end
+
+
+
+    if !ismissing(tbc2)
+        vbm2, cbm2 = find_vbm_cbm(vals2 , efermi_tbc2)
+        plot!(vals2[:,1] .- vbm2,  color="cyan", lw=0.5, label="TB2")
+        if tbc.tb.nwan > 1
+            plot!(vals2[:,2:end] .- vbm2, lw=0.5, color="cyan", label=missing)
+        end
+    end
+
+
+    plot!([0, nk], [efermi_dft, efermi_dft] .- vbmD, color="red", linestyle=:dot, label="E\$_F\$ DFT")
+    plot!([0, nk], [efermi_tbc, efermi_tbc] .- vbm, color="black", linestyle=:dash, label="E\$_F\$ TB")
+
+    ylabel!("Energy - E\$_{VBM}\$ (Ryd)", fontsize=12)
+    display(ylims!(minimum(vals .- vbm)*1.05, maximum(vals .- vbm) * 1.05))
+
+#    end
+
 
 end
 

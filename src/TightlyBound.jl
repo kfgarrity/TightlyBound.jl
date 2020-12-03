@@ -32,12 +32,14 @@ using .TB:calc_bands
 using .TB:plot_compare_tb
 using .TB:plot_bandstr
 using .TB:plot_compare_dft
+using .TB:read_tb_crys
 
 export Hk
 export calc_bands
 export plot_compare_tb
 export plot_bandstr
 export plot_compare_dft
+export read_tb_crys
 
 include("RunDFT.jl")
 
@@ -56,6 +58,10 @@ include("Force_Stress.jl")
 
 
 include("ManageDatabase.jl")
+
+export scf_energy
+export scf_energy_force_stress
+export relax_structure
 
 
 function relax_structure(c::crystal, database=missing, smearing = 0.01, grid = missing, mode="vc-relax", nsteps=100, update_grid=true)
@@ -176,6 +182,9 @@ function scf_energy(tbc::tb_crys; smearing=0.01, grid = missing, e_den0 = missin
     return energy_tot, tbc, conv_flag
 
 end
+
+
+
 
 end #end module
 

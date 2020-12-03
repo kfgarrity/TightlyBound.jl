@@ -1,7 +1,9 @@
+using TightlyBound
 using LinearAlgebra
-using ..Atomdata:atom_prefered_oxidation
-using ..Atomdata:min_dimer_dist_dict
-using ..QE:loadXML
+using ..TightlyBound.Atomdata:atom_prefered_oxidation
+using ..TightlyBound.Atomdata:min_dimer_dist_dict
+using ..TightlyBound.QE:loadXML
+
 struct proto_data
 
     CalcD::Dict
