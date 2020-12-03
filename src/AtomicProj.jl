@@ -9,6 +9,8 @@ module AtomicProj
 """
 Scripts to analyze atomic projections
 """
+
+
 #export load_xml
 using LinearAlgebra
 using DelimitedFiles
@@ -55,6 +57,8 @@ using ..TB:write_tb_crys_kspace
 
 
 include("Commands.jl")
+using ..TightlyBound:TEMPLATEDIR
+
 
 
 
@@ -106,7 +110,6 @@ makes the proj input file
 """
     c_dict = make_commands(1)
 
-    TEMPLATEDIR=TightlyBound.TEMPLATEDIR
 
     template_file=open("$TEMPLATEDIR/template.proj")
     temp = read(template_file, String)
@@ -153,7 +156,7 @@ function makeOG(prefix, tmpdir )
 """
 makes the OG file
 """
-    template_file=open("template_inputs/template_og.in")
+    template_file=open("$TEMPLATEDIR/template_og.in")
     temp = read(template_file, String)
     close(template_file)
     

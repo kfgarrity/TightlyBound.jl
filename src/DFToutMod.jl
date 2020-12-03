@@ -6,6 +6,7 @@ module DFToutMod
 """
 Holds Energy, Force, Stress, band structure, etc, from a DFT calculation
 """
+
 #using LinearAlgebra
 using ..CrystalMod:crystal
 using ..CrystalMod:makecrys

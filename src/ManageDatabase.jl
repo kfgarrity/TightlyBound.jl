@@ -6,7 +6,9 @@ module ManageDatabase
 using ..CrystalMod:crystal
 using ..CalcTB:coefs
 
-defaultdatdir = "dats/pbesol/"
+using ..TightlyBound:DATSDIR
+
+defaultdatdir = DATSDIR
 
 database_list = Set()
 

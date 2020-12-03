@@ -25,6 +25,11 @@ using ..CrystalMod:get_grid
 
 include("Commands.jl")
 
+using ..TightlyBound:TEMPLATEDIR
+
+
+
+
 function run_pwscf(inputstr, outputstr, nprocs=1, directory="./", use_backup=false)
 """
 run command
@@ -202,8 +207,6 @@ Make inputfile for SCF calculation
     
 
     c_dict = make_commands(1)
-
-    TEMPLATEDIR=TightlyBound.TEMPLATEDIR
 
     template_file=open("$TEMPLATEDIR/template_qe.in")
     temp = read(template_file, String)

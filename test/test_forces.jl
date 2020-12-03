@@ -7,6 +7,39 @@ using Suppressor
 
 TESTDIR=TightlyBound.TESTDIR
 
+function loaddata(dirs; scf=true)
+    tbc_list  = []
+    dft_list = []
+
+    for t in dirs
+        #                println(t*"/qe.save")
+        tfull = "$TESTDIR/"*t
+        dft = TightlyBound.QE.loadXML(tfull*"/qe.save")
+        tbc = []
+        tbc_scf = []
+        try
+            if scf
+                tbc_scf = TightlyBound.TB.read_tb_crys("projham_scf.xml.gz", directory=tfull)
+            else
+                tbc_scf = TightlyBound.TB.read_tb_crys("projham.xml.gz", directory=tfull)
+            end
+        catch
+            tbc = TightlyBound.AtomicProj.projwfx_workf(dft, directory=tfull, writefile="projham.xml", skip_og=true, skip_proj=true, freeze=true, localized_factor = 0.15)
+            if scf
+                tbc_scf = TightlyBound.SCF.remove_scf_from_tbc(tbc)
+                TightlyBound.TB.write_tb_crys(t*"/projham_scf.xml.gz", tbc_scf)
+            else
+                tbc_scf = tbc
+            end
+            
+        end
+        
+        push!(dft_list, dft)
+        push!(tbc_list, tbc_scf)
+    end
+    return     tbc_list, dft_list
+end
+
 
 function test_force()
 
@@ -19,37 +52,6 @@ function test_force()
 
             #        println(dirst)
 
-            function loaddata(dirs; scf=true)
-                tbc_list  = []
-                dft_list = []
-
-                for t in dirs
-                    #                println(t*"/qe.save")
-                    dft = TightlyBound.QE.loadXML(t*"/qe.save")
-                    tbc = []
-                    tbc_scf = []
-                    try
-                        if scf
-                            tbc_scf = TightlyBound.TB.read_tb_crys("projham_scf.xml.gz", directory=t)
-                        else
-                            tbc_scf = TightlyBound.TB.read_tb_crys("projham.xml.gz", directory=t)
-                        end
-                    catch
-                        tbc = TightlyBound.AtomicProj.projwfx_workf(dft, directory=t, writefile="projham.xml", skip_og=true, skip_proj=true, freeze=true, localized_factor = 0.15)
-                        if scf
-                            tbc_scf = TightlyBound.SCF.remove_scf_from_tbc(tbc)
-                            TightlyBound.TB.write_tb_crys(t*"/projham_scf.xml.gz", tbc_scf)
-                        else
-                            tbc_scf = tbc
-                        end
-                        
-                    end
-                    
-                    push!(dft_list, dft)
-                    push!(tbc_list, tbc_scf)
-                end
-                return     tbc_list, dft_list
-            end
 
             for scf = [false true]
                 
@@ -90,38 +92,6 @@ function test_stress()
             close(ft); 
 
             #        println(dirst)
-
-            function loaddata(dirs; scf=true)
-                tbc_list  = []
-                dft_list = []
-
-                for t in dirs
-                    dft = TightlyBound.QE.loadXML(t*"/qe.save")
-                    tbc = []
-                    tbc_scf = []
-                    try
-                        if scf
-                            tbc_scf = TightlyBound.TB.read_tb_crys("projham_scf.xml", directory=t)
-                        else
-                            tbc_scf = TightlyBound.TB.read_tb_crys("projham.xml", directory=t)
-                        end
-                    catch
-                        tbc = TightlyBound.AtomicProj.projwfx_workf(dft, directory=t, writefile="projham.xml", skip_og=true, skip_proj=true, freeze=true, localized_factor = 0.15)
-                        if scf
-                            tbc_scf = TightlyBound.SCF.remove_scf_from_tbc(tbc)
-                            TightlyBound.TB.write_tb_crys(t*"/projham_scf.xml", tbc_scf)
-                        else
-                            tbc_scf = tbc
-                        end
-                        
-                    end
-                    
-                    push!(dft_list, dft)
-                    push!(tbc_list, tbc_scf)
-                end
-                return     tbc_list, dft_list
-            end
-
 
 
             tbc_list, dft_list = loaddata(dirst, scf=false);
