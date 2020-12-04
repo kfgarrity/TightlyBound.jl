@@ -55,7 +55,7 @@ function test_force()
 
             for scf = [false true]
                 
-                tbc_list, dft_list = loaddata(dirst, scf=false);
+                tbc_list, dft_list = loaddata(dirst, scf=scf);
                 database_rec = TightlyBound.FitTB.do_fitting_recursive(tbc_list,dft_list = dft_list,  fit_threebody=false, fit_threebody_onsite=false);
 
 

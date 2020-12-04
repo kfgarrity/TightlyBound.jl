@@ -12,6 +12,7 @@ Scripts to run tight-binding from wannier90
 
 using LinearAlgebra
 using SpecialFunctions
+#using GZip
 #using EzXML
 #using XMLDict
 using Printf
@@ -36,6 +37,12 @@ using ..TB:myfft
 using ..TB:trim
 using ..TB:tb_crys
 using ..Utility:cutoff_fn
+using ..Utility:arr2str
+using ..Utility:str_w_spaces
+using ..Utility:parse_str_ARR_float
+using ..Utility:dict2str
+using ..Utility:str2dict
+
 
 #using PyPlot
 using Plots
@@ -121,6 +128,7 @@ cutoff_length = 0.5
 
 struct coefs
 
+    dim::Int64
     datH::Array{Float64,1}
     datS::Array{Float64,1}
     sizeH::Int64
@@ -134,8 +142,114 @@ struct coefs
 
     maxmin_val_train::Dict
     dist_frontier::Dict
-
+    
 end
+
+#=
+function write_coefs(filename, co::coefs)
+    """
+    write xml coefs object
+    """
+
+    doc = XMLDocument()
+    root = ElementNode("root")
+    setroot!(doc, root)
+
+    c = ElementNode("coefs")
+    link!(root, c)
+
+    addelement!(c, "dim", string(co.dim))
+    addelement!(c, "datH", arr2str(co.datH))
+    addelement!(c, "datS", arr2str(co.datS))
+    addelement!(c, "sizeH", string(co.sizeH))
+    addelement!(c, "sizeS", string(co.sizeS))
+
+    addelement!(c, "inds", string(co.inds))
+    addelement!(c, "names", str_w_spaces(co.names))
+#    addelement!(c, "orbs", str_w_spaces(co.orbs))
+    addelement!(c, "cutoff", string(co.cutoff))
+    addelement!(c, "min_dist", string(co.min_dist))
+#    addelement!(c, "maxmin_val_train", string(co.maxmin_val_train))
+#    addelement!(c, "dist_frontier", string(co.dist_frontier))
+
+    println(dict2str(co.maxmin_val_train))
+    println("type ", typeof(co.maxmin_val_train))
+    
+    addelement!(c, "maxmin_val_train", dict2str(co.maxmin_val_train))
+    addelement!(c, "dist_frontier", dict2str(co.dist_frontier))
+    
+
+    io=open(filename, "w")
+    prettyprint(io, doc);
+    close(io)
+
+    return Nothing
+    
+end
+
+
+
+function read_coefs(filename, directory = missing)
+    """
+    read xml coefs object
+    """
+    if !ismissing(directory)
+        filename=directory*"/"*filename
+    end
+    if !isfile(filename)
+        if isfile(filename*".xml")
+            filename=filename*".xml"
+        elseif isfile(filename*".gz")
+            filename=filename*".gz"
+        elseif isfile(filename*".xml.gz")
+            filename=filename*".xml.gz"
+        end
+    end
+    if !isfile(filename)
+        println("warning error read_coefs $filename $directory not found")
+    else
+        println("found $filename")
+    end
+#    try
+#        println("asdfasdfasdf $filename")
+        f = gzopen(filename, "r")
+#    catch
+#        println("error opening $filename")
+#    end
+
+    fs = read(f, String)
+    close(f)
+
+    d = xml_dict(fs)["root"]
+    
+    dim = parse(Int64, (d["coefs"]["dim"]))
+    datH = parse_str_ARR_float(d["coefs"]["datH"])
+    datS = parse_str_ARR_float(d["coefs"]["datS"])
+    sizeH = parse(Int64, d["coefs"]["sizeH"])
+    sizeS = parse(Int64, d["coefs"]["sizeS"])
+
+#    addelement!(c, "inds", string(co.inds))
+
+    names = Set(split(d["coefs"]["names"]))
+#    orbs = Symbol.(split(d["coefs"]["orbs"]))
+    cutoff = parse(Float64, d["coefs"]["cutoff"])
+    min_dist = parse(Float64, d["coefs"]["min_dist"])
+
+#    println(d["coefs"]["maxmin_val_train"])
+    
+    maxmin_val_train = eval(d["coefs"]["maxmin_val_train"])
+    dist_frontier = eval(d["coefs"]["dist_frontier"])
+
+    println(typeof(maxmin_val_train), " ", typeof(dist_frontier))
+    
+    co = make_coefs(names,dim, datH=datH, datS=datS, min_dist=min_dist,maxmin_val_train = maxmin_val_train, dist_frontier = dist_frontier)
+
+    return co
+    
+end
+=#
+
+
 
 function make_coefs(at_list, dim; datH=missing, datS=missing, cutoff=18.01, min_dist = 3.0, fillzeros=false, maxmin_val_train=missing, dist_frontier=missing)
 
@@ -183,7 +297,7 @@ function make_coefs(at_list, dim; datH=missing, datS=missing, cutoff=18.01, min_
 
 
 
-    return coefs(datH, datS, totH, totS, data_info, at_list, orbs, cutoff, min_dist, maxmin_val_train, dist_frontier2)
+    return coefs(dim, datH, datS, totH, totS, data_info, at_list, orbs, cutoff, min_dist, maxmin_val_train, dist_frontier2)
 
 end
     

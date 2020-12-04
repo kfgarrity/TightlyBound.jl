@@ -47,6 +47,17 @@ function arr2str(a::AbstractArray{<:Number,2})
 
 end
 
+#now matches all number arrays!!!
+function arr2str(a::AbstractArray{Any,2})
+    st=""
+    for i = 1:size(a,1)
+        t = str_w_spaces(a[i,:])
+        st=st*t*"\n"
+    end
+    return st
+
+end
+
 
 function str_w_spaces(a)
     st=""
@@ -54,6 +65,17 @@ function str_w_spaces(a)
         st= st*string(a[i])* "  "
     end
     st= st*string(a[size(a,1)])
+
+    return st
+
+end
+
+function str_w_spaces(a::Set)
+    st=""
+    for s in a
+        st= st*string(s)* "  "
+    end
+#    st= st*string(a[size(a,1)])
 
     return st
 
@@ -74,6 +96,23 @@ function parse_str_ARR_complex(sp)
     return t[1:2:end] + im*t[2:2:end]
 
 end
+
+#function dict2str(a::Dict)
+#    st=""
+#    for k in keys(a)
+#        st *= string(k) *" => "* string(a[k]) *"\n"
+#    end
+#    return st
+#end
+#
+#function str2dict(st::String, d::Dict)
+#    for line in st
+#        sp = split(line)
+#        d[sp[1]] = d[sp[2]]
+#    end
+#    return d
+#end
+
 
 
 

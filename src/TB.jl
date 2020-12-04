@@ -12,7 +12,7 @@ Scripts to run tight-binding from wannier90
 
 using LinearAlgebra
 using SpecialFunctions
-#using EzXML
+using EzXML
 using XMLDict
 using GZip
 using Printf
