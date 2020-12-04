@@ -228,11 +228,20 @@ function read_coefs(filename, directory = missing)
     d = xml_dict(fs)["root"]
     
     dim = parse(Int64, (d["coefs"]["dim"]))
-    datH = parse_str_ARR_float(d["coefs"]["datH"])
-    datS = parse_str_ARR_float(d["coefs"]["datS"])
     sizeH = parse(Int64, d["coefs"]["sizeH"])
     sizeS = parse(Int64, d["coefs"]["sizeS"])
 
+    if sizeH > 0
+        datH = parse_str_ARR_float(d["coefs"]["datH"])
+    else
+        datH = Float64[]
+    end
+    if sizeS > 0
+        datS = parse_str_ARR_float(d["coefs"]["datS"])
+    else
+        datS = Float64[]
+    end
+    
 #    addelement!(c, "inds", string(co.inds))
     
     names = Set(String.(split(d["coefs"]["names"])))
