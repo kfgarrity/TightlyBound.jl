@@ -37,9 +37,12 @@ using ..TB:myfft
 using ..TB:trim
 using ..TB:tb_crys
 using ..Utility:cutoff_fn
-#using ..Utility:arr2str
-#using ..Utility:str_w_spaces
-#using ..Utility:parse_str_ARR_float
+using ..Utility:arr2str
+using ..Utility:str_w_spaces
+using ..Utility:parse_str_ARR_float
+
+using ..Utility:dict2str
+using ..Utility:str2tuplesdict
 
 
 #using PyPlot
@@ -143,8 +146,8 @@ struct coefs
     
 end
 
-#=
-function write_coefs(filename, co::coefs)
+
+function write_coefs(filename, co::coefs, compress=true)
     """
     write xml coefs object
     """
@@ -177,7 +180,11 @@ function write_coefs(filename, co::coefs)
     addelement!(c, "dist_frontier", dict2str(co.dist_frontier))
     
 
-    io=open(filename, "w")
+    if compress
+        io=gzopen(filename*".gz", "w")
+    else
+        io=open(filename, "w")
+    end
     prettyprint(io, doc);
     close(io)
 
@@ -227,16 +234,16 @@ function read_coefs(filename, directory = missing)
     sizeS = parse(Int64, d["coefs"]["sizeS"])
 
 #    addelement!(c, "inds", string(co.inds))
-
-    names = Set(split(d["coefs"]["names"]))
+    
+    names = Set(String.(split(d["coefs"]["names"])))
 #    orbs = Symbol.(split(d["coefs"]["orbs"]))
     cutoff = parse(Float64, d["coefs"]["cutoff"])
     min_dist = parse(Float64, d["coefs"]["min_dist"])
 
 #    println(d["coefs"]["maxmin_val_train"])
     
-    maxmin_val_train = eval(d["coefs"]["maxmin_val_train"])
-    dist_frontier = eval(d["coefs"]["dist_frontier"])
+    maxmin_val_train = str2tuplesdict(d["coefs"]["maxmin_val_train"])
+    dist_frontier = str2tuplesdict(eval(d["coefs"]["dist_frontier"]))
 
     println(typeof(maxmin_val_train), " ", typeof(dist_frontier))
     
@@ -245,7 +252,7 @@ function read_coefs(filename, directory = missing)
     return co
     
 end
-=#
+
 
 
 

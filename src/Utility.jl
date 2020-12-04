@@ -19,7 +19,7 @@ end
 function arr2str(a::Array{Int,1})
     st=""
     for i = 1:size(a,1)
-        t= @sprintf(" % 2s", a[i])
+        t= @sprintf(" % 7s", a[i])
         st=st*t
     end
     return st
@@ -29,7 +29,7 @@ end
 function arr2str(a::Array{Float64,1})
     st=""
     for i = 1:size(a,1)
-        t= @sprintf(" % 2.10f", a[i])
+        t= @sprintf(" % 2.16e", a[i])
         st=st*t
     end
     return st
@@ -97,21 +97,29 @@ function parse_str_ARR_complex(sp)
 
 end
 
-#function dict2str(a::Dict)
-#    st=""
-#    for k in keys(a)
-#        st *= string(k) *" => "* string(a[k]) *"\n"
-#    end
-#    return st
-#end
-#
-#function str2dict(st::String, d::Dict)
-#    for line in st
-#        sp = split(line)
-#        d[sp[1]] = d[sp[2]]
-#    end
-#    return d
-#end
+function dict2str(a::Dict)
+    st=""
+    for k in keys(a)
+        st *= string(k) *" => "* string(a[k]) *"\n"
+    end
+    return st
+end
+
+function str2tuplesdict(st::String, d=missing)
+    if ismissing(d)
+        d = Dict()
+    end
+    
+    for line in split(st, "\n")
+        sp = split(line, " => ")
+        if length(sp) == 2
+            key = eval(Meta.parse(sp[1]))
+            val = eval(Meta.parse(sp[2]))        
+            d[key] = val
+        end
+    end
+    return d
+end
 
 
 
