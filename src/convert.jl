@@ -15,7 +15,7 @@ for f in fillist
 
         t = @load f
         savename=f[1:end-3]
-        c = TightlyBound.CalcTB.make_coefs(dat.names, 3, datH=dat.datH, datS=dat.datS, min_dist = dat.min_dist, maxmin_val_train=dat.maxmin_val_train, dist_frontier=dat.dist_frontier)
+        c = TightlyBound.CalcTB.make_coefs(dat.names, dim, datH=dat.datH, datS=dat.datS, min_dist = dat.min_dist, maxmin_val_train=dat.maxmin_val_train, dist_frontier=dat.dist_frontier)
         TightlyBound.CalcTB.write_coefs("$savename.xml", c)
 
     end
