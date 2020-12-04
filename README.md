@@ -6,7 +6,6 @@
 -->
 # TightlyBound.jl
 
-**NOT WORKING YET.**
 
 Three-body tight-binding package. Run TB calculations with nearly DFT (pbesol) accuracy in seconds, using a pre-fit and tested model with two-body and three-body interactions between atoms.
 
@@ -14,4 +13,4 @@ Or fit your own coefficients!
 
 Calculate energies, forces, and band structures.
 
-**NOT WORKING YET.**
+Very preliminary. Basic functionality **might** work.

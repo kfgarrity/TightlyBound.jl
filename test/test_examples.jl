@@ -23,6 +23,7 @@ end
     rm("mgs_compare_dft.pdf")
     rm("mgs_compare_self.pdf")
     rm("mgs_proj.pdf")
-
+    rm("ScP_rocksalt.pdf")
+    rm("al_fcc.pdf")
     @test 1 == 1
 end

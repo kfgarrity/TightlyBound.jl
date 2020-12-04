@@ -254,7 +254,7 @@ function read_coefs(filename, directory = missing)
     maxmin_val_train = str2tuplesdict(d["coefs"]["maxmin_val_train"])
     dist_frontier = str2tuplesdict(eval(d["coefs"]["dist_frontier"]))
 
-    println(typeof(maxmin_val_train), " ", typeof(dist_frontier))
+#    println(typeof(maxmin_val_train), " ", typeof(dist_frontier))
     
     co = make_coefs(names,dim, datH=datH, datS=datS, min_dist=min_dist,maxmin_val_train = maxmin_val_train, dist_frontier = dist_frontier)
 

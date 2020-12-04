@@ -142,10 +142,14 @@ function scf_energy(d::dftout; database = Dict(), smearing=0.01, grid = missing,
 end
 
 function scf_energy(c::crystal; database = missing, smearing=0.01, grid = missing, conv_thr = 1e-5, iters = 50, mix = -1.0, mixing_mode=:pulay)
-    
+    println()
+    println("Begin scf_energy-------------")
+    println()
     if ismissing(database)
+        println("Load TB parameters from file")
         ManageDatabase.prepare_database(c)
         database = ManageDatabase.database_cached
+        println()
     end
 
     energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbc = SCF.scf_energy(c, database, smearing=smearing, grid = grid, conv_thr = conv_thr, iters = iters, mix = mix,  mixing_mode=mixing_mode)
@@ -155,9 +159,9 @@ function scf_energy(c::crystal; database = missing, smearing=0.01, grid = missin
         conv_flag = false
     end
     if conv_flag == true
-        println("success, done")
+        println("scf_energy success, done")
     else
-        println("error detected!!!!!!!!!!, done")
+        println("scf_energy error detected somewhere!!!!!!!!!!, done")
     end
     println()
 

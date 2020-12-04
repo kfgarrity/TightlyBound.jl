@@ -112,6 +112,9 @@ mutable struct tb_crys{T}
     gamma::Array{T, 2}
     eden::Array{Float64,1}
     within_fit::Bool
+    energy::Float64
+    efermi::Float64
+    
 end
 
 
@@ -275,6 +278,19 @@ get tbc object from xml file, written by write_tb_crys (see below)
     nelec = parse(Float64,d["nelec"])
     dftenergy = parse(Float64,d["dftenergy"])        
 
+    if "energy" in keys(d)
+        energy = parse(Float64,d["energy"])
+    else
+        energy = -999.0
+    end
+
+    if "efermi" in keys(d)
+        efermi = parse(Float64,d["efermi"])
+    else
+        efermi = 0.0
+    end
+
+    
 
     #SCF stuff is optional
     scf = false
@@ -358,7 +374,7 @@ get tbc object from xml file, written by write_tb_crys (see below)
         tb = make_tb(H, ind_arr, r_dict, h1=h1)
     end    
 
-    tbc = make_tb_crys(tb, crys, nelec, dftenergy, scf=scf, eden=eden, gamma=gamma)
+    tbc = make_tb_crys(tb, crys, nelec, dftenergy, scf=scf, eden=eden, gamma=gamma, tb_energy=energy, fermi_energy=efermi)
 
     return tbc
         
@@ -573,6 +589,10 @@ function write_tb_crys(filename, tbc::tb_crys)
     addelement!(root, "gamma", arr2str(tbc.gamma))
     addelement!(root, "eden", arr2str(tbc.eden))
 
+    addelement!(root, "efermi", string(tbc.energy))
+    addelement!(root, "energy", string(tbc.efermi))
+
+    
     tightbinding = ElementNode("tightbinding")
     link!(root, tightbinding)
     
@@ -733,7 +753,7 @@ function write_tb_crys_kspace(filename, tbc::tb_crys_kspace)
     
 end
     
-function make_tb_crys(ham::tb,crys::crystal, nelec::Float64, dftenergy::Float64; scf=false, eden = missing, gamma=missing, within_fit=true, screening=1.0)
+function make_tb_crys(ham::tb,crys::crystal, nelec::Float64, dftenergy::Float64; scf=false, eden = missing, gamma=missing, within_fit=true, screening=1.0, tb_energy=-999, fermi_energy=0.0 )
 
     T = typeof(crys.coords[1,1])
 
@@ -755,7 +775,7 @@ function make_tb_crys(ham::tb,crys::crystal, nelec::Float64, dftenergy::Float64;
 #    println("type eden " , typeof(eden))
     
 #    return tb_crys{T}(ham,crys,nelec, dftenergy, scf, gamma, eden)
-    return tb_crys{T}(ham,crys,nelec, dftenergy, scf, gamma, eden, within_fit)
+    return tb_crys{T}(ham,crys,nelec, dftenergy, scf, gamma, eden, within_fit, tb_energy, fermi_energy)
 end
 
 function make_tb_crys_kspace(hamk::tb_k,crys::crystal, nelec::Float64, dftenergy::Float64; scf=false, eden = missing, gamma=missing, screening=1.0)
@@ -1324,7 +1344,7 @@ calculate band structure at group of points
 
 end    
 
-function plot_compare_tb(h1::tb_crys, h2::tb_crys; h3=missing, kpath=[0.5 0 0 ; 0 0 0; 0.5 0.0 0.5], names = missing, npts=30, efermi = missing, yrange=missing, plot_hk=false,  align=missing)
+function plot_compare_tb(h1::tb_crys, h2::tb_crys; h3=missing, kpath=[0.5 0 0 ; 0 0 0; 0.5 0.0 0.5], names = missing, npts=30, efermi = missing, yrange=missing, plot_hk=false,  align="vbm")
     if ismissing(h3)
         plot_compare_tb(h1.tb, h2.tb, h3=missing, kpath=kpath, names = names, npts=npts, efermi = efermi, yrange=yrange, plot_hk=plot_hk, align=align)
     else
@@ -1333,7 +1353,7 @@ function plot_compare_tb(h1::tb_crys, h2::tb_crys; h3=missing, kpath=[0.5 0 0 ; 
 end
 
 
-function plot_compare_tb(h1::tb, h2::tb; h3=missing, kpath=[0.5 0 0 ; 0 0 0; 0.5 0.0 0.5], names = missing, npts=30, efermi = missing, yrange=missing, plot_hk=false, align=missing)
+function plot_compare_tb(h1::tb, h2::tb; h3=missing, kpath=[0.5 0 0 ; 0 0 0; 0.5 0.0 0.5], names = missing, npts=30, efermi = missing, yrange=missing, plot_hk=false, align="vbm")
     println("plot_compare_tb ")
     plot_bandstr(h1, kpath=kpath, names = names, npts=npts, efermi = efermi, color="green", MarkerSize=4, yrange=yrange, plot_hk=plot_hk, align=align, clear_previous=true)
     plot_bandstr(h2, kpath=kpath, names = names, npts=npts, efermi = efermi, color="yellow", MarkerSize=2, yrange=yrange, plot_hk=plot_hk, align=align, clear_previous=false)    
@@ -1356,7 +1376,7 @@ function summarize_orb(orb::Symbol)
 end
 
     
-function plot_bandstr(h::tb_crys; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0 0 ;0 0 0.5], names = missing, npts=30, efermi = missing, color="blue", MarkerSize=missing, yrange=missing, plot_hk=false, align = missing, proj_types = missing, proj_orbs = missing, proj_nums=missing, clear_previous=true)
+function plot_bandstr(h::tb_crys; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0 0 ;0 0 0.5], names = missing, npts=30, efermi = missing, color="blue", MarkerSize=missing, yrange=missing, plot_hk=false, align = "vbm", proj_types = missing, proj_orbs = missing, proj_nums=missing, clear_previous=true)
 
 
     if !ismissing(proj_types) || !ismissing(proj_orbs) || !ismissing(proj_nums)
@@ -1395,6 +1415,12 @@ function plot_bandstr(h::tb_crys; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5
         proj_inds = missing
     end
 
+    if h.scf && (h.energy - -999.0) < 1e-5
+        println("WARNING - you have to do scf_energy before plotting to get accurate results")
+    end
+    if ismissing(efermi)
+        efermi = h.efermi
+    end
     plot_bandstr(h.tb; kpath=kpath, names = names, npts=npts, efermi = efermi, color=color, MarkerSize=MarkerSize, yrange=yrange, plot_hk=plot_hk, align=align, proj_inds=proj_inds, clear_previous=clear_previous)
     
 end
@@ -1440,9 +1466,10 @@ end
 
 
 
-function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0 0 ;0 0 0.5], names = missing, npts=30, efermi = missing, color="blue", MarkerSize=missing, yrange=missing, plot_hk=false, align=missing, proj_inds=missing, clear_previous=true)
+function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0 0 ;0 0 0.5], names = missing, npts=30, efermi = missing, color="blue", MarkerSize=missing, yrange=missing, plot_hk=false, align="vbm", proj_inds=missing, clear_previous=true)
 #function plot_bandstr( kpath; names = missing, npts=30, efermi = missing)
 
+                
     println("plot_bandstr ", color)
     if clear_previous
         println("clear")
@@ -1451,12 +1478,14 @@ function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0
 
     if ismissing(MarkerSize)
         if ismissing(proj_inds)
-          MarkerSize = 3
+          MarkerSize = 0
         else
             MarkerSize = 5
         end
     end
 
+
+                
 
     NK = size(kpath)[1]
 
@@ -1542,7 +1571,7 @@ function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0
     println("color = $color markersize = $MarkerSize")
 #    println("yyyyyyyyyyyyyyyyy")
     if ismissing(proj_inds)
-        plot!(vals, color=color, marker=(:circle), markersize=MarkerSize, markerstrokecolor=color, legend=false, grid=false)
+        plot!(vals, color=color, lw=1.5, marker=(:circle), markersize=MarkerSize, markerstrokecolor=color, legend=false, grid=false)
 #        plot!(vals, color="red", marker=(:circle), markersize=MarkerSize, markeredgecolor=color, legend=false, grid=false)
 #        plot(vals, color=color, marker=(:circle), markersize=0.1)
     else

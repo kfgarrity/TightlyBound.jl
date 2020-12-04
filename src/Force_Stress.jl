@@ -505,13 +505,13 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 #    println()
 
 
-    opts = Optim.Options(g_tol = 1e-3,f_tol = 1e-3, x_tol = 1e-3,
+    opts = Optim.Options(g_tol = 7e-4,f_tol = 7e-4, x_tol = 7e-4,
                          iterations = nsteps,
                          store_trace = true,
                          show_trace = false)
 
 
-    res = optimize(fn,grad, x0, ConjugateGradient())
+    res = optimize(fn,grad, x0, ConjugateGradient(), opts)
 
 #for testing !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #    storage = zeros(size(x0))

@@ -22,8 +22,8 @@ println(tbc)
 #plot_bandstr(tbc, efermi=-0.3, align="fermi") #align
 
 kpath=[0.0 0.0 0.0;0.5 0 0; 0.5 0.25 0.75; 0.0 0.0 0.0]
-
 knames=["Γ", "X", "W", "Γ"]
+
 plot_bandstr(tbc, kpath=kpath, names=knames, efermi=-0.3, align="vbm", proj_types=["Mg"], proj_orbs=[:s])
 
 savefig("mgs_proj.pdf")

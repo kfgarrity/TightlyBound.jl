@@ -371,6 +371,9 @@ Solve for scf energy, also stores the updated electron density and h1 inside the
     h1, dq = get_h1(tbc, e_den)
     tbc.tb.h1 = h1     #moar side effect
     tbc.tb.scf = true  #just double checking
+
+    tbc.efermi=efermi
+    tbc.energy=energy_tot
     
     return energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbc
 
