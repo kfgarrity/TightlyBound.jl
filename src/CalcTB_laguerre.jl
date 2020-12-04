@@ -173,8 +173,8 @@ function write_coefs(filename, co::coefs, compress=true)
 #    addelement!(c, "maxmin_val_train", string(co.maxmin_val_train))
 #    addelement!(c, "dist_frontier", string(co.dist_frontier))
 
-    println(dict2str(co.maxmin_val_train))
-    println("type ", typeof(co.maxmin_val_train))
+#    println(dict2str(co.maxmin_val_train))
+#    println("type ", typeof(co.maxmin_val_train))
     
     addelement!(c, "maxmin_val_train", dict2str(co.maxmin_val_train))
     addelement!(c, "dist_frontier", dict2str(co.dist_frontier))
