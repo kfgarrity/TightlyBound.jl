@@ -37,11 +37,9 @@ using ..TB:myfft
 using ..TB:trim
 using ..TB:tb_crys
 using ..Utility:cutoff_fn
-using ..Utility:arr2str
-using ..Utility:str_w_spaces
-using ..Utility:parse_str_ARR_float
-using ..Utility:dict2str
-using ..Utility:str2dict
+#using ..Utility:arr2str
+#using ..Utility:str_w_spaces
+#using ..Utility:parse_str_ARR_float
 
 
 #using PyPlot
