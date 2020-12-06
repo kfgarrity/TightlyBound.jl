@@ -3,6 +3,7 @@ using Plots
 
 #setup chosen backend
 #pyplot()
+#gr()
 
 # load tb_crys from file
 

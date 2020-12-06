@@ -1,4 +1,4 @@
-###include("Crystal.jl")
+###include("Crystal1563.jl")
 ###include("DFToutMod.jl")
 #using XMLDict
 
@@ -1470,10 +1470,10 @@ function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0
 #function plot_bandstr( kpath; names = missing, npts=30, efermi = missing)
 
                 
-    println("plot_bandstr ", color)
+    println("plot_bandstr ")
     if clear_previous
         println("clear")
-        plot(legend=false, grid=false, box=true)
+        plot(legend=false, grid=false, framestyle=:box)
     end
 
     if ismissing(MarkerSize)
@@ -1557,25 +1557,27 @@ function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0
         if align == "min" || align == "minimum"
             vmin = minimum(vals)
             vals = vals .- vmin
-            alignstr = "Energy - E\$_{min}\$ (Ryd)"
+            alignstr = "Energy - Emin (Ryd)"
         elseif align == "fermi" || align == "ef" 
             vals = vals .- efermi
-            alignstr = "Energy - E\$_F\$ (Ryd)"
+            alignstr = "Energy - E_F (Ryd)"
         elseif align == "vbm" || align == "valence"
             vbm = maximum(vals[vals .< efermi])
             vals = vals .- vbm
-            alignstr = "Energy - E\$_{VBM}\$ (Ryd)"
+            alignstr = "Energy - VBM (Ryd)"
         end            
     end
 
-    println("color = $color markersize = $MarkerSize")
-#    println("yyyyyyyyyyyyyyyyy")
+
+    #    println("yyyyyyyyyyyyyyyyy")
     if ismissing(proj_inds)
+        println("color = $color markersize = $MarkerSize")
         plot!(vals, color=color, lw=1.5, marker=(:circle), markersize=MarkerSize, markerstrokecolor=color, legend=false, grid=false)
 #        plot!(vals, color="red", marker=(:circle), markersize=MarkerSize, markeredgecolor=color, legend=false, grid=false)
 #        plot(vals, color=color, marker=(:circle), markersize=0.1)
     else
-        X=repeat(0:(nk-1), 1,h.nwan)
+        X=repeat(1:(nk), 1,h.nwan)
+        
         plot!(X, vals, color="grey", grid=false, legend=false)
         scatter!(X, vals, marker_z = proj,markersize=MarkerSize, markerstrokewidth=0.0, alpha=0.6, legend=false)
 
@@ -1605,7 +1607,7 @@ function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0
     ylims!(yrange[1], yrange[2])
     xlims!(1, nk)
 
-    if length(locs) < 10
+    if length(locs) < 15
         for l in locs
             lt=l+1
             if lt == 1
@@ -2757,10 +2759,10 @@ function plot_compare_dft(tbc, bs; tbc2=missing)
     end
 
 
-    plot!([0, nk], [efermi_dft, efermi_dft] .- vbmD, color="red", linestyle=:dot, label="E\$_F\$ DFT")
-    plot!([0, nk], [efermi_tbc, efermi_tbc] .- vbm, color="black", linestyle=:dash, label="E\$_F\$ TB")
+    plot!([0, nk], [efermi_dft, efermi_dft] .- vbmD, color="red", linestyle=:dot, label="E_F DFT")
+    plot!([0, nk], [efermi_tbc, efermi_tbc] .- vbm, color="black", linestyle=:dash, label="E_F TB")
 
-    ylabel!("Energy - E\$_{VBM}\$ (Ryd)", fontsize=12)
+    ylabel!("Energy - VBM (Ryd)", fontsize=12)
     display(ylims!(minimum(vals .- vbm)*1.05, maximum(vals .- vbm) * 1.05))
 
 #    end

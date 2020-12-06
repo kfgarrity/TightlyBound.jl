@@ -16,6 +16,7 @@ Scripts to calculate force and stress
 using LinearAlgebra
 using ForwardDiff
 using Optim
+#using LineSearches
 using ..CrystalMod:crystal
 using ..CrystalMod:makecrys
 
@@ -340,7 +341,24 @@ function finite_diff(crys::crystal, database, ind1, ind2; stress_mode=false, ste
 end
 
 
+function cell_force(A, stress)
 
+    stress = (stress + stress')/2.0
+
+#    println("cf stress ", stress)
+#    println("cf A      ", A)
+
+    Ainv = inv(A)
+    cf = zeros(3,3)
+    for j= 1:3
+        for i = 1:3
+            cf[i,j] = sum(Ainv[j,:].*stress[i,:])
+        end
+    end
+
+    return cf * abs(det(A))
+
+end
 
 
 
@@ -448,12 +466,19 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
         
         println("FCALL $fcall en:  $energy_tot  fsum:  $fsum  ssum:  $ssum    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 
-        stress_units = (stress * abs(det(crys_working.A)) *  inv(crys_working.A))'
+#        println("grad stress: ", stress)
+        
+        stress_units = cell_force( crys_working.A, stress)
+        #        stress_units = (stress * abs(det(crys_working.A)) *  inv(crys_working.A))'
+        #stress_units = (stress * abs(det(crys_working.A)) )'        
 
+#        println("grad stress units: ", -stress_units)
 
         f_crys = f_cart * inv(crys_working.A)
 
         g = inv_reshape_vec(-f_crys, -stress_units, crys_working.nat, strain_mode=false)
+
+#        println("g ", g)
         
         if mode != "vc-relax" #don't need stress
             g[3*nat+1:end] = zeros(9)
@@ -500,9 +525,9 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 
     
 
-#    println("starting vec ")
-#    println(x0)
-#    println()
+    println("starting vec ")
+    println(x0)
+    println()
 
 
     opts = Optim.Options(g_tol = 7e-4,f_tol = 7e-4, x_tol = 7e-4,
@@ -511,8 +536,55 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
                          show_trace = false)
 
 
-    res = optimize(fn,grad, x0, ConjugateGradient(), opts)
+    #res = optimize(fn,grad, x0, ConjugateGradient(), opts)
 
+
+    #preconditioner, guess for inv Hessian
+    function init(x)
+        num = 3*nat
+        if mode == "vc-relax"; num += 9;end
+
+        P = zeros(num, num)
+
+        for a = 1:nat
+            aa = (a-1)*3
+            P[aa+1 ,aa+1] = 0.05
+            P[aa+2 ,aa+2] = 0.05
+            P[aa+3 ,aa+3] = 0.05
+
+            P[aa+1 ,aa+2] = -0.05/3.0
+            P[aa+1 ,aa+3] = -0.05/3.0
+            P[aa+2 ,aa+1] = -0.05/3.0
+            P[aa+2 ,aa+3] = -0.05/3.0
+            P[aa+3 ,aa+1] = -0.05/3.0
+            P[aa+3 ,aa+2] = -0.05/3.0
+        end
+
+        if mode == "vc-relax"
+            for b = 1:3
+                bb = 3 * nat + (b - 1)*3
+                P[ bb + 1 ,  bb + 1 ] = 6.0
+                P[ bb + 2 ,  bb + 2 ] = 6.0
+                P[ bb + 3 ,  bb + 3 ] = 6.0
+
+                P[ bb + 1 ,  bb + 2 ] = 3.0
+                P[ bb + 1 ,  bb + 3 ] = 3.0
+                P[ bb + 2 ,  bb + 1 ] = 3.0
+                P[ bb + 2 ,  bb + 3 ] = 3.0
+                P[ bb + 3 ,  bb + 1 ] = 3.0
+                P[ bb + 3 ,  bb + 2 ] = 3.0
+            end
+        end
+                
+        return P
+    end
+
+
+#x -> Matrix{eltype(x)}(I, length(x), length(x))
+    res = optimize(fn,grad, x0, BFGS( initial_invH = init ), opts)
+
+#linesearch=LineSearches.BackTracking()
+    
 #for testing !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #    storage = zeros(size(x0))
 #    g  = grad(storage, x0)

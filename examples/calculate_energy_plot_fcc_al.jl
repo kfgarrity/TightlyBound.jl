@@ -3,7 +3,7 @@ using Plots
 
 #setup chosen Plots backend, i recommend pyplot
 #pyplot()
-
+#gr()
 
 #make the crystal object
 #here we choose fcc Al
@@ -23,7 +23,7 @@ println("The crystal is")
 println(c)
 
 # Do scf calculation for the energy
-# returns energy, tight-binding-crystal object, and a flag (0 is good)
+# returns energy, tight-binding-crystal object, and a flag (true is good)
 energy, tbc, flag = scf_energy(c)
 
 println()

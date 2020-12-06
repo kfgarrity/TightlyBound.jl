@@ -110,14 +110,14 @@ function scf_energy_force_stress(c::crystal; database = missing, smearing = 0.01
     println("done")
     println("----")
 
-    return energy_tot, f_cart, stress
+    return energy_tot, f_cart, stress, tbc
 
 end
 
 function scf_energy_force_stress(tbc::tb_crys; database = missing, smearing = 0.01, grid = missing, do_scf=false)
     
     if ismissing(database)
-        ManageDatabase.prepare_database(c)
+        ManageDatabase.prepare_database(tbc.crys)
         database = ManageDatabase.database_cached
     end
 
@@ -129,7 +129,7 @@ function scf_energy_force_stress(tbc::tb_crys; database = missing, smearing = 0.
     println("done")
     println("----")
 
-    return energy_tot, f_cart, stress
+    return energy_tot, f_cart, stress, tbc
 
 end
 
