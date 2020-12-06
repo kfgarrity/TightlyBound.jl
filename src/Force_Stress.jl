@@ -394,6 +394,10 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
     function fn(x)
 
         coords, A = reshape_vec(x, nat)
+
+#        println("coords ", coords)
+#        println("A ", A)
+
         crys_working.coords = coords
         if  mode == "vc-relax"
             crys_working.A = A
@@ -474,7 +478,8 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 
 #        println("grad stress units: ", -stress_units)
 
-        f_crys = f_cart * inv(crys_working.A)
+        #        f_crys = f_cart * inv(crys_working.A)
+        f_crys = f_cart * crys_working.A
 
         g = inv_reshape_vec(-f_crys, -stress_units, crys_working.nat, strain_mode=false)
 
@@ -539,51 +544,61 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
     #res = optimize(fn,grad, x0, ConjugateGradient(), opts)
 
 
-    #preconditioner, guess for inv Hessian
+    #preconditioner, guess for inv Hess is based on the  metric. see qe bfgs_module.f90
     function init(x)
-        num = 3*nat
-        if mode == "vc-relax"; num += 9;end
+        num = 3*nat + 9
+        
 
-        P = zeros(num, num)
+        P = zeros(eltype(x), num, num)
 
+        A = crys.A
+        g = A'*A
+        ginv = inv(g)
+        
         for a = 1:nat
             aa = (a-1)*3
-            P[aa+1 ,aa+1] = 0.05
-            P[aa+2 ,aa+2] = 0.05
-            P[aa+3 ,aa+3] = 0.05
-
-            P[aa+1 ,aa+2] = -0.05/3.0
-            P[aa+1 ,aa+3] = -0.05/3.0
-            P[aa+2 ,aa+1] = -0.05/3.0
-            P[aa+2 ,aa+3] = -0.05/3.0
-            P[aa+3 ,aa+1] = -0.05/3.0
-            P[aa+3 ,aa+2] = -0.05/3.0
-        end
-
-        if mode == "vc-relax"
-            for b = 1:3
-                bb = 3 * nat + (b - 1)*3
-                P[ bb + 1 ,  bb + 1 ] = 6.0
-                P[ bb + 2 ,  bb + 2 ] = 6.0
-                P[ bb + 3 ,  bb + 3 ] = 6.0
-
-                P[ bb + 1 ,  bb + 2 ] = 3.0
-                P[ bb + 1 ,  bb + 3 ] = 3.0
-                P[ bb + 2 ,  bb + 1 ] = 3.0
-                P[ bb + 2 ,  bb + 3 ] = 3.0
-                P[ bb + 3 ,  bb + 1 ] = 3.0
-                P[ bb + 3 ,  bb + 2 ] = 3.0
+            for i = 1:3
+                for j = 1:3
+                    P[aa+i ,aa+j] = g[i,j]
+                end
             end
         end
-                
-        return P
+
+        vol = abs(det(A))
+        
+#        if mode == "vc-relax"
+        for b = 1:3
+            bb = 3 * nat + (b - 1)*3
+            for i = 1:3
+                for j = 1:3
+                    P[bb+i,bb+j] = 0.04 * vol * ginv[i,j]
+                end
+            end
+        end
+#    end
+        
+        return inv(P)
     end
 
+#    P = init(x0)
+#    for i = 1:size(P)[1]
+#        for j = 1:size(P)[2]
+#            println("P $i $j ", P[i,j])
+#        end
+#    end
+#    println("P")
+#    println(P)
 
-#x -> Matrix{eltype(x)}(I, length(x), length(x))
-    res = optimize(fn,grad, x0, BFGS( initial_invH = init ), opts)
+    #x -> Matrix{eltype(x)}(I, length(x), length(x))
 
-#linesearch=LineSearches.BackTracking()
+    res = optimize(fn,grad, x0, BFGS(  initial_invH = init ), opts)
+
+    # bad : res = optimize(fn,grad, x0, ConjugateGradient(linesearch=LineSearches.BackTracking(order=3) ), opts)    
+    #linesearch=LineSearches.BackTracking(order=2),
+    #LineSearches.MoreThuente()
+    #LineSearches.HagerZhang()
+    #linesearch=LineSearches.BackTracking(order=2)
+    #linesearch=LineSearches.StrongWolfe()
     
 #for testing !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #    storage = zeros(size(x0))
@@ -744,6 +759,8 @@ function safe_mode_energy(crys::crystal, database; var_type=Float64)
     energy = 1.0
     tooshort = false
 
+    warned = zeros(Bool, crys.nat)
+    
     for a1 = 1:crys.nat
         t1 = crys.types[a1]
         for a2 = 1:crys.nat
@@ -753,9 +770,10 @@ function safe_mode_energy(crys::crystal, database; var_type=Float64)
                 cind = R_keep_ab[c,1]
                 if dist_arr[a1,a2,cind,1] < dmin && dist_arr[a1,a2,cind,1] > 1e-7
                     tooshort = true
-                    energy += (dist_arr[a1,a2,cind,1] - dmin)^2 + abs(dist_arr[a1,a2,cind,1] - dmin)
-                    if var_type == Float64
+                    energy += 0.01 * (dist_arr[a1,a2,cind,1] - dmin)^2 + 0.1 * abs(dist_arr[a1,a2,cind,1] - dmin)
+                    if var_type == Float64 && warned[a1] == false
                         println("WARNING, SAFE MODE $a1 $t1 $a2 $t2 $c ", dist_arr[a1,a2,cind,1])
+                        warned[a1] = true
                     end
                 end
             end

@@ -65,7 +65,7 @@ export scf_energy_force_stress
 export relax_structure
 
 
-function relax_structure(c::crystal, database=missing, smearing = 0.01, grid = missing, mode="vc-relax", nsteps=100, update_grid=true)
+function relax_structure(c::crystal; database=missing, smearing = 0.01, grid = missing, mode="vc-relax", nsteps=100, update_grid=true)
 
     if ismissing(database)
         ManageDatabase.prepare_database(c)

@@ -1597,7 +1597,8 @@ function calc_frontier(crys::crystal, frontier; var_type=Float64, test_frontier=
 
     if ismissing(diststuff)
 #        println("distances")
-        R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy(crys,cutoff2X, cutoff3bX,var_type=var_type)
+        #        R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy(crys,cutoff2X, cutoff3bX,var_type=var_type)
+        R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy(crys,cutoff2X, cutoff3bX,var_type=Float64)
     else
         R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = diststuff
     end
@@ -1790,8 +1791,10 @@ function calc_frontier(crys::crystal, frontier; var_type=Float64, test_frontier=
             if verbose println("CHECK FRONTIER - everything fine") end
         else
             println("CHECK FRONTIER WARNING- twobody $twobody_test threebody $threebody_test")
-            for v in violation_list
-                println(v)
+            if var_type == Float64
+                for v in violation_list
+                    println(v)
+                end
             end
 
         end
