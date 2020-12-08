@@ -1,5 +1,4 @@
 
-
 module CrystalMod
 
 
@@ -126,6 +125,23 @@ end
 
 
 #setup crystal
+"""
+    makecrys(A,coords,types)
+
+Return a crystal object from 3×3 lattice A (Bohr), nat × 3 coords in crystal units, and nat element strings
+
+Note: also export-ed directly from TightlyBound for convenience
+
+#Examples
+```julia-repl
+julia> makecrys([10.0 0 0; 0 10.0 0; 0 0 10.0], [0.0 0.0 0.0], ["H"])
+A1=     10.00000  0.00000  0.00000
+A2=     0.00000  10.00000  0.00000
+A3=     0.00000  0.00000  10.00000
+
+H    0.00000  0.00000  0.00000
+```
+"""
 function makecrys(A,coords,types)
     T = typeof(coords[1,1])
 
@@ -179,6 +195,14 @@ function makecrys(A,coords,types)
 end
 
 
+"""
+    makecrys(filename::String)
+
+Read filename, return crystal object.
+File can be POSCAR, or simple quantum espresso inputfile
+
+
+"""
 function makecrys(filename::String)
 
     if !isfile(filename)
@@ -194,6 +218,13 @@ function makecrys(filename::String)
     
 end
 
+
+"""
+    makecrys(lines::Array{String,1})
+
+Read string array, return crystal object.
+string array can be POSCAR, or simple quantum espresso inputfile
+"""
 function makecrys(lines::Array{String,1})
 
     intype="POSCAR"
