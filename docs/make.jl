@@ -29,4 +29,5 @@ makedocs(
 
 deploydocs(
     repo = "github.com/kfgarrity/TightlyBound.jl.git",
+    devbranch = "main"
 )
