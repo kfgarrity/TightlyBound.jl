@@ -1,11 +1,11 @@
 name: CI
 on:
   push:
-    branches:
-      - 'master'
-      - 'dev'
-      - 'release-'
-    tags: '*'
+#    branches:
+#      - 'master'
+#      - 'dev'
+#      - 'release-'
+#    tags: '*'
   pull_request:
 
 #  pull_request:
