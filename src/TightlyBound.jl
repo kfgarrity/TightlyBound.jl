@@ -1,7 +1,7 @@
-module TightlyBound
 """
 holds three body tight binding important stuff
 """
+module TightlyBound
 
 include("SetDir.jl")
 
@@ -65,6 +65,22 @@ export scf_energy_force_stress
 export relax_structure
 
 
+"""
+    relax_structure(c::crystal; mode="vc-relax")
+
+Find the lowest energy atomic configuration of crystal c.
+
+...
+# Arguments
+- `c::crystal`: the structure to relax, only required argument
+- `mode="vc-relax"`: Default (variable-cell relax) will relax structure and cell, anything else will relax structure only.
+- `database=missing`: coefficent database, default is to use the pre-fit pbesol database
+- `smearing=0.01`: smearing temperature (ryd), default = 0.01
+- `grid=missing`: k-point grid, e.g. [10,10,10], default chosen automatically
+- `nsteps=100`: maximum iterations
+- `update_grid=true`: update automatic k-point grid during relaxation
+...
+"""
 function relax_structure(c::crystal; database=missing, smearing = 0.01, grid = missing, mode="vc-relax", nsteps=100, update_grid=true)
 
     if ismissing(database)
