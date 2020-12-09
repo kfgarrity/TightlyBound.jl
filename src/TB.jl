@@ -1466,7 +1466,7 @@ end
 
 
 
-function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0 0 ;0 0 0.5], names = missing, npts=30, efermi = missing, color="blue", MarkerSize=missing, yrange=missing, plot_hk=false, align="vbm", proj_inds=missing, clear_previous=true)
+function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0 0 ;0 0 0.5], names = missing, npts=30, efermi = missing, color="blue", MarkerSize=missing, yrange=missing, plot_hk=false, align="vbm", proj_inds=missing, clear_previous=true, do_display=true)
 #function plot_bandstr( kpath; names = missing, npts=30, efermi = missing)
 
                 
@@ -1638,9 +1638,12 @@ function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0
 #    println(names)    
     xticks!(Float64.(locs).+1.0, names, xtickfontsize=12)
 
-    #    display(ylabel!(alignstr, fontsize=12))
-    ylabel!(alignstr, fontsize=12)
-
+    if do_display
+        display(ylabel!(alignstr, fontsize=12))
+    else
+        ylabel!(alignstr, fontsize=12)
+    end
+    
     #    println("end plot")
     
 end

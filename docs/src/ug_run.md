@@ -44,18 +44,20 @@ Using the tight-binding object from above. Note: SCF must be done first to get m
 ```@example 1
 using Plots #hide
 gr() #hide
-plot_bandstr(tbc_alp); 
+plot_bandstr(tbc_alp, do_display=false); 
 savefig("alp.png"); #hide
 ```
 
 ![AlP plot](alp.png)
+
+Use *do_display=true* to produce an interactive plot.
 
 The default just picks some random kpoints, but you can add your own kpath. We also project onto the *s* orbital of Al.
 
 ```@example 1
 kpath=[0.0 0.0 0.0; 0.5 0.5 0.5; 0.0 0.5 0.5];
 knames=["Γ", "X", "V"];
-plot_bandstr(tbc_alp, kpath=kpath, names=knames, npts=100, proj_orbs=[:s], proj_types=["Al"]);
+plot_bandstr(tbc_alp, kpath=kpath, names=knames, npts=100, proj_orbs=[:s], proj_types=["Al"], do_display=false);
 savefig("alp2.png"); #hide
 ```
 
