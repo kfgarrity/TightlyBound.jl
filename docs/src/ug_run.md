@@ -44,6 +44,7 @@ Using the tight-binding object from above. Note: SCF must be done first to get m
 ```@example 1
 using Plots #hide
 gr() #hide
+ENV["GKSwstype"] = "100" #hide
 plot_bandstr(tbc_alp, do_display=false); 
 savefig("alp.png"); #hide
 ```
