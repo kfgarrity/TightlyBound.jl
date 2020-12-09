@@ -7,7 +7,8 @@
 -->
 # TightlyBound.jl
 
-![alt text](https://github.com/kfgarrity/TightlyBound.jl/blob/main/docs/src/assets/logo.svg)
+<img src="https://github.com/kfgarrity/TightlyBound.jl/blob/main/docs/src/assets/logo.svg" alt="logo" width="200" >
+
 
 Three-body tight-binding package. Run TB calculations with nearly DFT (pbesol) accuracy in seconds, using a pre-fit and tested model with two-body and three-body interactions between atoms.
 
