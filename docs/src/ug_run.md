@@ -44,22 +44,22 @@ Using the tight-binding object from above. Note: SCF must be done first to get m
 ```@example 1
 using Plots #hide
 gr() #hide
-#plot_bandstr(tbc_alp); 
-#savefig("alp.png"); #hide
+plot_bandstr(tbc_alp); 
+savefig("alp.png"); #hide
 ```
 
-#![AlP plot](alp.png)
+![AlP plot](alp.png)
 
 The default just picks some random kpoints, but you can add your own kpath. We also project onto the *s* orbital of Al.
 
 ```@example 1
 kpath=[0.0 0.0 0.0; 0.5 0.5 0.5; 0.0 0.5 0.5];
 knames=["Γ", "X", "V"];
-#plot_bandstr(tbc_alp, kpath=kpath, names=knames, npts=100, proj_orbs=[:s], proj_types=["Al"]);
-#savefig("alp2.png"); #hide
+plot_bandstr(tbc_alp, kpath=kpath, names=knames, npts=100, proj_orbs=[:s], proj_types=["Al"]);
+savefig("alp2.png"); #hide
 ```
 
-#![AlP plot](alp2.png)
+![AlP plot](alp2.png)
 
 ## **Calculate force / stress**
 

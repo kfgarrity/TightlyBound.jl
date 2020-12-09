@@ -1473,7 +1473,8 @@ function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0
     println("plot_bandstr ")
     if clear_previous
         println("clear")
-        display(plot(legend=false, grid=false, framestyle=:box))
+        #        display(plot(legend=false, grid=false, framestyle=:box))
+        plot(legend=false, grid=false, framestyle=:box)
     end
 
     if ismissing(MarkerSize)
@@ -1637,8 +1638,10 @@ function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0
 #    println(names)    
     xticks!(Float64.(locs).+1.0, names, xtickfontsize=12)
 
-    display(ylabel!(alignstr, fontsize=12))
-#    println("end plot")
+    #    display(ylabel!(alignstr, fontsize=12))
+    ylabel!(alignstr, fontsize=12)
+
+    #    println("end plot")
     
 end
 
