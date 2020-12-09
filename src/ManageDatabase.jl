@@ -19,14 +19,14 @@ database_cached["scf"] = true
 
 
 function prepare_database(c::crystal)
-    println("prepare c ", c.types)
+#    println("prepare c ", c.types)
     prepare_database(c.types)
 end
 
 function prepare_database(at_list)
 
-    println("prepare at ", at_list)
-    println("database_list ", database_list)
+    println("prepare atoms ", at_list)
+#    println("database_list ", database_list)
     s = Set(at_list)
     for s1 in s
         for s2 in s
