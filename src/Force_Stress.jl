@@ -431,6 +431,9 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 
     end
 
+    f_cart_global = []
+    stress_global = []
+    
     function grad(storage, x)
 #        println("grad x ", x)
 #        println("typeof x ", typeof(x))
@@ -465,6 +468,9 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 
         energy_tmp,  f_cart, stress =  get_energy_force_stress(tbc, database; do_scf = false, smearing = smearing, grid = grid, vv=[VECTS, VALS, efermi] )
 
+        f_cart_global = f_cart
+        stress_global = stress
+        
         fsum = sum(abs.(f_cart))
         ssum= sum(abs.(stress))
         
@@ -593,6 +599,8 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 
     res = optimize(fn,grad, x0, BFGS(  initial_invH = init ), opts)
 
+    energy = res.minimum
+    
     # bad : res = optimize(fn,grad, x0, ConjugateGradient(linesearch=LineSearches.BackTracking(order=3) ), opts)    
     #linesearch=LineSearches.BackTracking(order=2),
     #LineSearches.MoreThuente()
@@ -649,7 +657,7 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 
     coords, A = reshape_vec(minvec, nat)
     cfinal = makecrys(A, coords, crys.types)
-    return cfinal
+    return cfinal, tbc, energy, f_cart_global, stress_global
 
 #    return res
 

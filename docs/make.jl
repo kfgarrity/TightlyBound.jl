@@ -18,8 +18,8 @@ makedocs(
   pages = [
         "Home" => "index.md",
         "User Guide" => Any[
-        "AA" =>  "A.md",
-        "BB" => "B.md",
+        "Running Calculations" =>  "ug_run.md",
+        "Fit Coefficients" => "ug_fit.md",
         ],
         "Index" => "theindex.md",
     ]

@@ -91,22 +91,22 @@ function relax_structure(c::crystal; database=missing, smearing = 0.01, grid = m
         update_grid = false
     end
 
-    cfinal = Force_Stress.relax_structure(c, database, smearing=smearing, grid=grid, mode=mode, nsteps=nsteps, update_grid=update_grid)
+    cfinal, tbc, energy, force, stress = Force_Stress.relax_structure(c, database, smearing=smearing, grid=grid, mode=mode, nsteps=nsteps, update_grid=update_grid)
 
     println("Final crystal")
     println(cfinal)
 
     println()
     println("Relax done")
-    println("Calculate final energy")
+#    println("Calculate final energy")
+#
+#    energy_tot, tbc, conv_flag = scf_energy(cfinal; database=database, smearing=0.01, grid = missing)
+#    energy_tot, f_cart, stress = scf_energy_force_stress(tbc, database=database, smearing=smearing, grid=grid)
+#
+#    println("done with all relax")
+#    println()
 
-    energy_tot, tbc, conv_flag = scf_energy(cfinal; database=database, smearing=0.01, grid = missing)
-    energy_tot, f_cart, stress = scf_energy_force_stress(tbc, database=database, smearing=smearing, grid=grid)
-
-    println("done with all relax")
-    println()
-
-    return cfinal, tbc, energy_tot, f_cart, stress
+    return cfinal, tbc, energy, force, stress
 
 end
 

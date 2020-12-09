@@ -132,7 +132,7 @@ Return a crystal object from 3×3 lattice A (Bohr), nat × 3 coords in crystal u
 
 Note: also export-ed directly from TightlyBound for convenience
 
-#Examples
+
 ```julia-repl
 julia> makecrys([10.0 0 0; 0 10.0 0; 0 0 10.0], [0.0 0.0 0.0], ["H"])
 A1=     10.00000  0.00000  0.00000

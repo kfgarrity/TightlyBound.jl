@@ -13,7 +13,7 @@
 
 - Run tight-binding calculations with near DFT level accuracy (PBEsol).
 - Get results in seconds based on pre-fit parameters from across periodic table.
-- Calculate bandstructures and total energies.
+- Calculate band structures and total energies.
 - Get forces, stresses, and relax structures.
 - Parameters based on two- and **three-body** interactions.
 - Includes self-consistent treatment of long-range Coulomb interaction.
@@ -31,12 +31,3 @@
 ```
 
 
-```@meta
-CurrentModule = TightlyBound
-```
-
-```@docs
-TightlyBound
-makecrys
-relax_structure
-```
