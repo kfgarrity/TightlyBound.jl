@@ -22,6 +22,7 @@ using ..Utility:str_w_spaces
 using ..Utility:parse_str_ARR_float
 #using ..TB:get_grid
 using ..CrystalMod:get_grid
+using ..Atomdata:atoms
 
 include("Commands.jl")
 
@@ -72,7 +73,7 @@ end
 
 
 
-function runSCF(atoms, crys::crystal, inputstr=missing, prefix=missing, tmpdir="./", directory="./", functional="PBESOL", wannier=0, nprocs=1, skip=false, calculation="scf", dofree="all", tot_charge = 0.0, smearing = 0.01, magnetic=false, cleanup=false, use_backup=false)
+function runSCF(crys::crystal, inputstr=missing, prefix=missing, tmpdir="./", directory="./", functional="PBESOL", wannier=0, nprocs=1, skip=false, calculation="scf", dofree="all", tot_charge = 0.0, smearing = 0.01, magnetic=false, cleanup=false, use_backup=false)
 """
 Run SCF calculation using QE
 """
@@ -110,7 +111,7 @@ Run SCF calculation using QE
 
     println("runSCF 2")
     
-    tmpdir, prefix, inputfile =  makeSCF(atoms, crys, directory, prefix, tmpdir, functional, wannier, calculation, dofree, tot_charge, smearing, magnetic)
+    tmpdir, prefix, inputfile =  makeSCF(crys, directory, prefix, tmpdir, functional, wannier, calculation, dofree, tot_charge, smearing, magnetic)
     
     f = open(directory*"/"*inputstr, "w")
     write(f, inputfile)
@@ -136,7 +137,7 @@ Run SCF calculation using QE
 
     if ret != 0 && updated == false
         println("failed DFT, trying with different mixing")
-        tmpdir, prefix, inputfile =  makeSCF(atoms, crys, directory, prefix, tmpdir, functional, wannier, calculation, dofree, tot_charge, smearing, magnetic, mixing="TF")
+        tmpdir, prefix, inputfile =  makeSCF(crys, directory, prefix, tmpdir, functional, wannier, calculation, dofree, tot_charge, smearing, magnetic, mixing="TF")
 
         f = open(directory*"/"*inputstr, "w")
         write(f, inputfile)
@@ -200,7 +201,7 @@ function doclean(d)
 end
 
                              
-function makeSCF(atoms, crys::crystal, directory="./", prefix=missing, tmpdir=missing, functional="PBESOL", wannier=0, calculation="scf", dofree="all", tot_charge = 0.0, smearing = 0.01, magnetic=false; mixing="local-TF")
+function makeSCF(crys::crystal, directory="./", prefix=missing, tmpdir=missing, functional="PBESOL", wannier=0, calculation="scf", dofree="all", tot_charge = 0.0, smearing = 0.01, magnetic=false; mixing="local-TF")
 """
 Make inputfile for SCF calculation
 """
@@ -582,7 +583,7 @@ using ..QE
 using ..CrystalMod:crystal
 
 #include("Atomdata.jl")
-using ..Atomdata:atoms
+#using ..Atomdata:atoms
 
 
 function runSCF(crys::crystal; inputstr=missing, prefix=missing, tmpdir="./", directory="./", functional="PBESOL", wannier=0, nprocs=1, code="QE", skip=false, calculation="scf", dofree="all", tot_charge = 0.0, smearing = missing, magnetic=false, cleanup=false, use_backup=false)
@@ -599,11 +600,11 @@ function runSCF(crys::crystal; inputstr=missing, prefix=missing, tmpdir="./", di
     if code == "QE"
         qeout = missing
         try
-            qeout = QE.runSCF(atoms, crys, inputstr, prefix, tmpdir, directory, functional, wannier, nprocs, skip, calculation, dofree, tot_charge, smearing, magnetic, cleanup, use_backup)
+            qeout = QE.runSCF(crys, inputstr, prefix, tmpdir, directory, functional, wannier, nprocs, skip, calculation, dofree, tot_charge, smearing, magnetic, cleanup, use_backup)
             return qeout
         catch
             println("WARNING failure, restart qe with higher smearing, hope that helps!!")
-            qeout = QE.runSCF(atoms, crys, inputstr, prefix, tmpdir, directory, functional, wannier, nprocs, skip, calculation, dofree, tot_charge, smearing*5, magnetic, cleanup, true)
+            qeout = QE.runSCF(crys, inputstr, prefix, tmpdir, directory, functional, wannier, nprocs, skip, calculation, dofree, tot_charge, smearing*5, magnetic, cleanup, true)
             return qeout
 
         end
