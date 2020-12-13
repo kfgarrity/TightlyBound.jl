@@ -121,7 +121,7 @@ function scf_energy_force_stress(c::crystal; database = missing, smearing = 0.01
     println()
     println("Calculate Force, Stress")
     
-    energy_tot, f_cart, stress = Force_Stress.get_energy_force_stress(tbc, database, do_scf=false, smearing=smearing, grid=grid)
+    energy_tot, f_cart, stress = Force_Stress.get_energy_force_stress_fft(tbc, database, do_scf=false, smearing=smearing, grid=grid)
 
     println("done")
     println("----")

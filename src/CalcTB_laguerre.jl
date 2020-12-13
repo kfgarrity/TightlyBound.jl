@@ -134,7 +134,7 @@ struct coefs
     datS::Array{Float64,1}
     sizeH::Int64
     sizeS::Int64
-    inds::Dict
+    inds::Dict{Tuple, Array{Int64,1}}
 #    names::Array{String,1}
     names::Set
     orbs::Array{Any,1}
@@ -502,7 +502,7 @@ end
 function get_data_info(at_set, dim)
 
     
-    data_info = Dict()
+    data_info = Dict{Tuple, Array{Int64,1}}()
     orbs = []
     if dim == 2 #2body
 
@@ -631,7 +631,7 @@ function get_data_info(at_set, dim)
         if same_at #true onsite terms
            for o in orbs1
 #                println("true onsite ", o)
-                data_info[(at1, o, :A)] = totH+1
+                data_info[(at1, o, :A)] = [totH+1]
                 totH += 1
             end
         end
@@ -725,7 +725,7 @@ function get_data_info(at_set, dim)
 #                        data_info[(at2, o2, at1, o1, at3,  symb)] = tot .+ [1 3 2 4 5 7 6]' #switch 2 4 and 3 6
 #                        data_info[(at2, o2, at1, o1, at3,  symb)] = tot .+ [1 3 2  4 6 5]' #switch 2 4 and 3 6
 #                        data_info[(at2, o2, at1, o1, at3,  symb)] = tot .+ [1 3 2 4 6 5  7 9 8 ]' #switch 2 4 and 3 6
-                        data_info[(at2, o2, at1, o1, at3,  symb)] = tot .+ [1 3 2 4 5  ]' #switch 2 4 and 3 6
+                        data_info[(at2, o2, at1, o1, at3,  symb)] = tot .+ [1, 3, 2, 4, 5  ] #switch 2 4 and 3 6
                     end
                     
                     
@@ -2428,7 +2428,7 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
 
                     if s1 == s2
                         coef = twobody_arrays[at_set][3]
-                        io = coef.inds[(t1, sum1,:A)]
+                        io = coef.inds[(t1, sum1,:A)][1]
                         twobody_arrays[at_set][1][ind,io] += 1.0
                     end
 
@@ -2972,7 +2972,7 @@ function calc_onsite(t1,s1,s2, database=missing)
             c=database[(t1,t1)]
             if (t1, summarize_orb(s1), :A) in keys(c.inds)
                 ind = c.inds[(t1, summarize_orb(s1), :A)] 
-                H += c.datH[ind]
+                H += c.datH[ind[1]]
             end
         end
 

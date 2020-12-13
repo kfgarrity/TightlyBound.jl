@@ -62,9 +62,13 @@ function test_force()
                 x = 4;
                 smearing = 0.01;  
                 en, f_cart,stress = TightlyBound.Force_Stress.get_energy_force_stress(tbc_list[x].crys, database_rec,   smearing = smearing);
+
                 enFD, f_cartFD = TightlyBound.Force_Stress.finite_diff(tbc_list[x].crys, database_rec,1, 3,   smearing = smearing);
 
+#                println(f_cartFD, "  ", f_cart[1,3])
+                
                 @test abs(f_cartFD - f_cart[1,3]) < 1e-3
+#                @test abs(f_cartFD - f_cart_fft[1,3]) < 1e-3
                 #            println("SCF $scf TEST1 finite diff: ", f_cartFD , " autodiff:   ", f_cart[1,3], " xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
                 #            println("TEST1 dft ref ", dft_list[x].forces[1,3])
 

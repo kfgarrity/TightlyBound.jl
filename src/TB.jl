@@ -1836,6 +1836,9 @@ function calc_energy_charge_fft_band(hk3, sk3, nelec; smearing=0.01, h1 = missin
         #    println("energy smear $energy_smear")
 
     energy0 = sum(occ .* VALS0) / nk * 2.0
+
+#    println("ENERGY 0 : $energy0")
+    
     energy0 += energy_smear
 
         #    println("sum occ ", sum(occ), "  ", sum(occ) / (grid[1]*grid[2]*grid[3]))#

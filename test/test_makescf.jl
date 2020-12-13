@@ -10,9 +10,7 @@ using Suppressor
         A=[ [10.0 0 0]; [0 10.0 0]; [ 0 0 10.0]]
         c=makecrys(A, pos, types)
 
-        atoms = TightlyBound.Atomdata.atoms
-
-        tmpdir, prefix, inputfile_str = TightlyBound.QE.makeSCF(atoms, c)
+        tmpdir, prefix, inputfile_str = TightlyBound.QE.makeSCF(c)
 
         @test occursin("Li", inputfile_str)
 
