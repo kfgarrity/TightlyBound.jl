@@ -13,6 +13,7 @@ Scripts to calculate force and stress
 #calc for testing non-autodiff forces only 
 #using Calculus
 
+using FFTW
 using LinearAlgebra
 using ForwardDiff
 using Optim
@@ -793,6 +794,125 @@ function safe_mode_energy(crys::crystal, database; var_type=Float64)
     return tooshort, energy
 
 end
+
+##############################################################################################################
+
+function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smearing = 0.01, grid = missing, e_den0=missing, vv = missing)
+
+    if ismissing(grid)
+        grid = get_grid(tbc.crys)
+    end
+    
+    kgrid, kweights = make_kgrid(grid)
+    nk = size(kgrid)[1]
+
+    tooshort, energy_tot = safe_mode_energy(tbc.crys, database)
+
+    if !(tooshort)
+        if !ismissing(vv)
+            VECTS, VALS, efermi = vv
+            energy_tot = 0.0
+        else
+            #prepare eigenvectors / values
+            error_flag = false
+            if do_scf
+                energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=e_den0, conv_thr = 1e-9)
+            else
+                energy_tot, efermi, e_den, VECTS, VALS, error_flag =  calc_energy_charge_fft(tbc, grid=grid, smearing=smearing)
+            end
+            if error_flag
+                println("warning, trouble with eigenvectors/vals in initial step get_energy_force_stress")
+            end
+        end
+        h1, dq = get_h1(tbc)
+        OCCS = gaussian.(VALS.-efermi, smearing)
+    end
+
+
+    ct = deepcopy(tbc.crys)
+
+
+    size_ret = tbc.tb.nwan * tbc.tb.nwan * tbc.tb.nr
+    
+    function ham(x::Vector)
+        T=typeof(x[1])
+        
+
+        x_r, x_r_strain = reshape_vec(x, ct.nat, strain_mode=true)
+        A = ct.A * (I(3) + x_r_strain)
+        crys_dual = makecrys( A , ct.coords + x_r, ct.types)
+
+        gamma_dual=zeros(T, ct.nat,ct.nat)
+        tbc_dual = calc_tb_fast(crys_dual, database; verbose=false, var_type=T, use_threebody=true, use_threebody_onsite=true , gamma=gamma_dual)
+
+        ret = zeros(T, size_ret * 2)
+
+        
+        ret[1:size_ret] = real.(tbc_dual.tb.H[:])
+        ret[size_ret+1:size_ret*2] = real.(tbc_dual.tb.S[:])
+
+        return ret
+    end
+
+    g = ForwardDiff.jacobian(ham, zeros(3*ct.nat + 6)  )
+
+    println("size of g ", size(g))
+    println("eltype ", eltype(g))
+
+    hr_g = zeros(Complex{eltype(g)}, 3*ct.nat+6, tbc.tb.nwan, tbc.tb.nwan,  grid[1], grid[2], grid[3])
+    sr_g = zeros(Complex{eltype(g)}, 3*ct.nat+6, tbc.tb.nwan, tbc.tb.nwan,  grid[1], grid[2], grid[3])
+
+    ind = zeros(Int64, 3)
+    new_ind = zeros(Int64, 3)
+
+    for c in 1:size(tbc.tb.ind_arr)[1]
+
+        ind[:] = tbc.tb.ind_arr[c,:]
+        
+        new_ind[1] = mod(ind[1], grid[1])+1
+        new_ind[2] = mod(ind[2], grid[2])+1
+        new_ind[3] = mod(ind[3], grid[3])+1
+
+        for na = 1:tbc.tb.nwan
+            for nb = 1:tbc.tb.nwan
+                hr_g[:,na,nb,new_ind[1], new_ind[2], new_ind[3]] += g[na + (nb-1) * tbc.tb.nwan + tbc.tb.nwan^2 * (c-1),: ]
+
+                sr_g[:,na,nb,new_ind[1], new_ind[2], new_ind[3]] += g[size_ret + na + (nb-1) * tbc.tb.nwan + tbc.tb.nwan^2 * (c-1),: ]
+                
+            end
+        end
+    end
+
+    hamK = fft(hr_g, [4,5,6])
+    SK = fft(sr_g, [4,5,6])
+    
+    
+        
+#    x, stress = reshape_vec(g, ct.nat)
+#    f_cart = -1.0 * x
+#    f_cart = f_cart * inv(ct.A)'
+#    stress = -stress / abs(det(ct.A))
+#
+#    for i = 1:3
+#        for j = 1:3
+#            if abs(stress[i,j]) < 1e-12
+#                stress[i,j] = 0.0
+#            end
+#        end
+#    end
+#
+#    return energy_tot,  f_cart, stress
+
+
+end
+
+
+#############################################################################################################
+
+
+
+
+
 
 
 end #end module
