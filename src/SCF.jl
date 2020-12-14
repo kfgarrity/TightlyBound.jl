@@ -44,7 +44,8 @@ export scf_energy
 
 function scf_energy(c::crystal, database::Dict; smearing=0.01, grid = missing, conv_thr = 1e-5, iters = 50, mix = -1.0, mixing_mode=:pulay, verbose=true)
 
-    tbc = calc_tb_fast(c, database);
+    println("construct")
+    @time tbc = calc_tb_fast(c, database);
     return scf_energy(tbc, smearing = smearing, grid=grid, conv_thr = conv_thr, iters=iters, mix=mix,mixing_mode=mixing_mode, verbose=verbose)
 end
 

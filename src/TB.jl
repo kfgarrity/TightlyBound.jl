@@ -1795,8 +1795,8 @@ function calc_energy_charge_fft_band(hk3, sk3, nelec; smearing=0.01, h1 = missin
             for k3 = 1:grid[3]
                 c += 1
                 try
-                    hk0[:,:] = 0.5*(hk3[:,:,k1,k2,k3] + hk3[:,:,k1,k2,k3]')
-                    sk[:,:] = 0.5*(sk3[:,:,k1,k2,k3] + sk3[:,:,k1,k2,k3]')
+                    hk0[:,:] = 0.5*( (@view hk3[:,:,k1,k2,k3]) + (@view hk3[:,:,k1,k2,k3])')
+                    sk[:,:] = 0.5*( (@view sk3[:,:,k1,k2,k3]) + (@view sk3[:,:,k1,k2,k3])')
 
                     if !ismissing(h1)
                         hk = hk0 + sk .* h1
@@ -1945,7 +1945,7 @@ function calc_energy_charge_fft_band(hk3, sk3, nelec; smearing=0.01, h1 = missin
 #                    TEMP[i,j] += sum(t_temp .* SK[:,i,j])
 
 #                t_temp[:] = 
-                    TEMP[i,j] += sum( sum(occ[:,:].* pVECTS_C[:,:,i]  .* pVECTS[:,:,j], dims=2) .* SK[:,i,j])
+                    TEMP[i,j] += sum( sum(  (@view occ[:,:]).* (@view pVECTS_C[:,:,i])  .* (@view pVECTS[:,:,j]), dims=2) .* (@view SK[:,i,j]))
 
 
 #                    t_temp[:] = sum(occ[:,:].* pVECTS_C[:,:,i]  .* pVECTS[:,:,j], dims=2)

@@ -4008,7 +4008,9 @@ function calc_threebody(c,ind, t1,t2,t3,orb1,orb2,dist,dist31,dist32,lmn12, lmn3
         s = length(ind)
 #        H = sum(memoryV[1:s] .* c.datH[ind])*10^3
 #        s=size(c.datH[ind])[1]
-        H = (memoryV[1:s]'* (c.datH[ind]))[1] * 10^3
+
+        #H = (memoryV[1:s]'* (c.datH[ind]))[1] * 10^3
+        H = ( (@view memoryV[1:s])'* (@view c.datH[ind]))[1] * 10^3        
 
     else
         H =  three_body_H(dist, dist31, dist32,t1==t2, c.datH[ind], memory0=memory0, memory1=memory1, memory2=memory2, memoryV=memoryV)

@@ -917,9 +917,16 @@ function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smear
             return ret
         end
 
+
         begin
-            cfg = ForwardDiff.JacobianConfig(ham, zeros(3*ct.nat + 6), ForwardDiff.Chunk{3*ct.nat + 6}())
+
+            ret = ham(zeros(3*ct.nat + 6))
+
+            chunksize=min(8, 3*ct.nat + 6)
+            
+            cfg = ForwardDiff.JacobianConfig(ham, zeros(3*ct.nat + 6), ForwardDiff.Chunk{chunksize}())
             g = ForwardDiff.jacobian(ham, zeros(3*ct.nat + 6) , cfg ) ::  Array{Float64,2}
+
         end
         
         #    function f_es(x::Vector)
@@ -1035,7 +1042,8 @@ function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smear
         #        hk0 = hk0 + h1 .* sk
         #    end
 
-        begin
+#        println("old vals")
+        if false
             pVECTS = permutedims(VECTS, [2,3,1])
 
             if scf
@@ -1062,6 +1070,12 @@ function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smear
                 end
             end
         end
+
+#        println("new vals")
+
+        psi_gradH_psi(VALS0, VECTS, hk_g, sk_g, h1, VALS, scf, tbc.tb.nwan, ct.nat, grid, OCCS)
+
+        #        @time psi_gradH_psi(VALS0, VECTS, hk_g, sk_g, h1, VALS, scf, tbc.tb.nwan, ct.nat, grid)        
         
         #    @time for gc = 1:3*ct.nat+6
         #        c=0
@@ -1125,7 +1139,91 @@ end
 
 
 
+function psi_gradH_psi(VALS0, VECTS, hk_g, sk_g, h1, VALS, scf, nwan, nat, grid, OCCS)
 
+    pVECTS = permutedims(VECTS, [2,3,1])
+
+    if scf
+        @threads for a1 = 1:nwan
+            for a2 = 1:nwan
+                hk_g[a2,a1,:,:,:,:] += h1[a2,a1]*sk_g[a2,a1,:,:,:,:]
+            end
+        end
+    end
+    occs_max = ones(Int64, prod(grid))*nwan
+
+    @threads for c = 1:prod(grid)
+        for a = 1:nwan
+            if OCCS[c,a] < 1e-4
+                occs_max[c] = max(a-1, 1)
+                break
+            end
+        end
+    end
+        
+    @threads for gc = 1:3*nat+6
+        c=0
+        for k1 = 1:grid[1]
+            for k2 = 1:grid[2]
+                for k3 = 1:grid[3]
+                    c += 1
+                    for a =1:occs_max[c]
+                        #                        hka[:,:] =  hk_g[:,:,k1,k2,k3,gc] - ( VALS[c,a] )  *   sk_g[:,:,k1,k2,k3, gc]
+                        
+                        
+                        VALS0[c, a,gc] = real(pVECTS[:,a,c]' * ( hk_g[:,:,k1,k2,k3,gc] - ( VALS[c,a] )  *   sk_g[:,:,k1,k2,k3, gc]   )  * pVECTS[:,a,c])                  #+ h1 .*  sk_g[:,:,k1,k2,k3, gc]
+                    end
+                end
+            end
+        end
+    end
+
+end
+
+
+function psi_gradH_psi2(VALS0, VECTS, hk_g, sk_g, h1, VALS, scf, nwan, nat, grid, OCCS)
+
+    pVECTS = permutedims(VECTS, [2,3,1])
+
+    if scf
+        @threads for a1 = 1:nwan
+            for a2 = 1:nwan
+                hk_g[a2,a1,:,:,:,:] += h1[a2,a1]*(@view sk_g[a2,a1,:,:,:,:])
+            end
+        end
+    end
+    occs_max = ones(Int64, prod(grid))*nwan
+
+    @threads for c = 1:prod(grid)
+        for a = 1:nwan
+            if OCCS[c,a] < 1e-4
+                occs_max[c] = max(a-1, 1)
+                break
+            end
+        end
+    end
+
+    
+    @threads for gc = 1:3*nat+6
+        c=0
+        for k1 = 1:grid[1]
+            for k2 = 1:grid[2]
+                for k3 = 1:grid[3]
+                    c += 1
+                    for a =1:occs_max[c]
+                        #                        hka[:,:] =  hk_g[:,:,k1,k2,k3,gc] - ( VALS[c,a] )  *   sk_g[:,:,k1,k2,k3, gc]
+                        
+                        
+                        #                        VALS0[c, a,gc] = real(pVECTS[:,a,c]' * ( hk_g[:,:,k1,k2,k3,gc] - ( VALS[c,a] )  *   sk_g[:,:,k1,k2,k3, gc]   )  * pVECTS[:,a,c])                  #+ h1 .*  sk_g[:,:,k1,k2,k3, gc]
+
+                        VALS0[c, a,gc] = real( (@view pVECTS[:,a,c])' * ( (@view hk_g[:,:,k1,k2,k3,gc]) - ( VALS[c,a] )  *   (@view sk_g[:,:,k1,k2,k3, gc])   )  * (@view pVECTS[:,a,c]))                  #+ h1 .*  sk_g[:,:,k1,k2,k3, gc]                        
+                    end
+                end
+            end
+        end
+    end
+
+end
 
 
 

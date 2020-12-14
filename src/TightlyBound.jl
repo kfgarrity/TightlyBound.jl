@@ -140,7 +140,7 @@ function scf_energy_force_stress(tbc::tb_crys; database = missing, smearing = 0.
     println()
     println("Calculate Force, Stress (no scf)")
     
-    energy_tot, f_cart, stress = Force_Stress.get_energy_force_stress(tbc, database, do_scf=false, smearing=smearing, grid=grid)
+    energy_tot, f_cart, stress = Force_Stress.get_energy_force_stress_fft(tbc, database, do_scf=false, smearing=smearing, grid=grid)
 
     println("done")
     println("----")
