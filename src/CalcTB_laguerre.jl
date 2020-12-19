@@ -147,7 +147,7 @@ struct coefs
 end
 
 
-function write_coefs(filename, co::coefs, compress=true)
+function write_coefs(filename, co::coefs; compress=true)
     """
     write xml coefs object
     """

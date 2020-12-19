@@ -168,6 +168,7 @@ function setup_proto_data()
     CalcD["sio2_224"] = ["$STRUCTDIR/binary/sio2.224.in", "vc-relax", "all", "vol", "nscf"]
     CalcD["ges"] = ["$STRUCTDIR/binary/POSCAR_ges", "vc-relax", "all", "vol", "nscf"]
     CalcD["alf3"] = ["$STRUCTDIR/binary/POSCAR_alf3", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["lipd3"] = ["$STRUCTDIR/binary/POSCAR_lipd3", "vc-relax", "all", "vol-mid", "nscf"]
     CalcD["mgf2_v2"] = ["$STRUCTDIR/binary/POSCAR_mgf2_v2", "vc-relax", "all", "vol", "nscf"]
     CalcD["sns"] = ["$STRUCTDIR/binary/POSCAR_sns", "vc-relax", "all", "vol", "nscf"]
     CalcD["sns2"] = ["$STRUCTDIR/binary/POSCAR_sns2", "vc-relax", "all", "vol", "nscf"]
@@ -259,6 +260,30 @@ function setup_proto_data()
     CalcD["hex12a"] = ["$STRUCTDIR/binary/hex_trim_12.in", "vc-relax",  "2Dxy", "2D-mid", "nscf"]
     CalcD["hex21a"] = ["$STRUCTDIR/binary/hex_trim_21.in", "vc-relax",  "2Dxy", "2D-mid", "nscf"]
 
+#
+    CalcD["sn2o2"] = ["$STRUCTDIR/binary/POSCAR_sn2o2", "vc-relax", "all", "vol", "nscf"]
+    CalcD["te2o6"] = ["$STRUCTDIR/binary/POSCAR_te2o6", "vc-relax", "all", "vol", "nscf"]
+    CalcD["a1f6"] = ["$STRUCTDIR/binary/POSCAR_a1f6", "vc-relax", "all", "vol", "nscf"]
+    CalcD["a2f6"] = ["$STRUCTDIR/binary/POSCAR_a2f6", "vc-relax", "all", "vol", "nscf"]
+    CalcD["ca1pd5"] = ["$STRUCTDIR/binary/POSCAR_ca1pd5", "vc-relax", "all", "vol", "nscf"]
+    CalcD["anatase"] = ["$STRUCTDIR/binary/POSCAR_anatase", "vc-relax", "all", "vol", "nscf"]
+    CalcD["ga4sr"] = ["$STRUCTDIR/binary/POSCAR_ga4sr", "vc-relax", "all", "vol", "nscf"]
+    CalcD["bi1f5"] = ["$STRUCTDIR/binary/POSCAR_bi1f5", "vc-relax", "all", "vol", "nscf"]
+    CalcD["cu2o1"] = ["$STRUCTDIR/binary/POSCAR_cu2o1", "vc-relax", "all", "vol", "nscf"]
+    CalcD["nb1f4"] = ["$STRUCTDIR/binary/POSCAR_nb1f4", "vc-relax", "all", "vol", "nscf"]
+    CalcD["rb1in4"] = ["$STRUCTDIR/binary/POSCAR_rb1in4", "vc-relax", "all", "vol", "nscf"]
+    CalcD["ni4la2"] = ["$STRUCTDIR/binary/POSCAR_ni4la2", "vc-relax", "all", "vol", "nscf"]
+    CalcD["re3n3"] = ["$STRUCTDIR/binary/POSCAR_re3n3", "vc-relax", "all", "vol", "nscf"]
+    CalcD["re3n"] = ["$STRUCTDIR/binary/POSCAR_re3n", "vc-relax", "all", "vol", "nscf"]
+    CalcD["cab6"] = ["$STRUCTDIR/binary/POSCAR_cab6", "vc-relax", "all", "vol", "nscf"]
+
+    CalcD["k2n6"] = ["$STRUCTDIR/binary/POSCAR_k2n6", "vc-relax", "all", "vol", "nscf"]
+
+    CalcD["mol_h2o"] =    ["$STRUCTDIR/binary/POSCAR_mol_h2o", "relax", "all", "coords-small", "nscf"]
+    CalcD["mol_h2o_v1"] = ["$STRUCTDIR/binary/POSCAR_mol_h2o_v1", "relax", "all", "coords-small", "nscf"]
+    CalcD["mol_h2o_v2"] = ["$STRUCTDIR/binary/POSCAR_mol_h2o_v2", "relax", "all", "coords-small", "nscf"]
+
+
     #ternary
     CalcD["abc_line"] = ["$STRUCTDIR/ternary/abc_line.in", "relax", "all", "coords-small", "nscf"]
     CalcD["bac_line"] = ["$STRUCTDIR/ternary/bac_line.in", "relax", "all", "coords-small", "nscf"]
@@ -308,11 +333,11 @@ function setup_proto_data()
     A0 = [   "as_orth",    "ga_tet",    "ge_wurtz",    "pb_r3m",    "beta_sn",   "ga",    "bi",    "te",    "in",    "i2",    "li_p6mmm",    "hcp_shape",     "diamond_shear",   "n" ] #"bcc_tet.in",  same as POSCAR_ga_tet   #"as_221",  is simple cubic
     
     A1B1 = ["hbn_real", "sis_2d", "ges", "sns", "wurtz"] #nias #
-    A1B2 = ["mgcl2", "mgcl2_tet", "caf2", "sis2", "tio2_rutile", "co2",  "mgf2",  "ticl2", "gei2"]   # "sns2" duplictes ticl2 #"mgf2_v2" is rutile
+    A1B2 = ["mgcl2", "mgcl2_tet", "caf2", "sis2", "tio2_rutile", "co2",  "mgf2",  "ticl2", "gei2", "anatase"]   # "sns2" duplictes ticl2 #"mgf2_v2" is rutile
     A1B3 = ["alf3", "asna3_2d", "ab3_mol", "gain3", "li3n_hex"]
     A1B4 = ["sif4", "snf4", "gei4_mol"]
-    A1B5 = ["ascl5"]
-    A1B6 = ["mof6"]
+    A1B5 = ["ascl5", "bi1f5"]
+    A1B6 = ["mof6", "a1f6"]
     A2B3 = ["y2o3", "p2ca3", "al2o3", "bi2se3", "ga2s3", "gas"]
     A2B5 = ["nb2o5", "p2o5"]
 
@@ -469,7 +494,7 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
         randi = Int64(round(rand()*1000000))
         try
             println("read crys")
-            c = CrystalMod.makecrys(file)
+            c = TightlyBound.CrystalMod.makecrys(file)
             
             for i in 1:c.nat
                 if c.types[i] == "A"
@@ -492,7 +517,7 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                 #preadjust vol
                 avg_rad = 0.0
                 for t in c.types
-                    avg_rad += Atomdata.atom_radius[t] / 100.0 / 0.529177
+                    avg_rad += TightlyBound.Atomdata.atom_radius[t] / 100.0 / 0.529177
                 end
                 avg_rad = avg_rad / c.nat
                 
@@ -509,7 +534,7 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
 
                 println("START DFT.runSCF")
                 
-                dft_ref = DFT.runSCF(c, inputstr=name, nprocs=procs, prefix="$name.qe.relax", directory="$dir", tmpdir="/$tmpname/$name.$randi", wannier=false, code="QE", skip=false, calculation=scf, dofree=free, cleanup=true)
+                dft_ref = TightlyBound.DFT.runSCF(c, inputstr=name, nprocs=procs, prefix="$name.qe.relax", directory="$dir", tmpdir="/$tmpname/$name.$randi", wannier=false, code="QE", skip=false, calculation=scf, dofree=free, cleanup=true)
 
                 println("did dft, get new struct")
 
@@ -520,7 +545,7 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                     println(c2)
                     println()
 
-                    dft_ref = DFT.runSCF(c2, inputstr=name, nprocs=procs, prefix="$name.qe.relax", directory="$dir", tmpdir="/$tmpname/$name.$randi", wannier=false, code="QE", skip=false, calculation=scf, dofree=free, cleanup=true)
+                    dft_ref = TightlyBound.DFT.runSCF(c2, inputstr=name, nprocs=procs, prefix="$name.qe.relax", directory="$dir", tmpdir="/$tmpname/$name.$randi", wannier=false, code="QE", skip=false, calculation=scf, dofree=free, cleanup=true)
                 end
 
                 println("END DFT.runSCF")
@@ -644,7 +669,7 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                     newst_t = "coords"
                     ab_dir="$dir/$name_t"*"_vnscf_"*"$newst_t"*"_"*"$ncalc_t"        
                     println("try $ab_dir")
-                    dft = QE.loadXML(ab_dir*"/qe.save")
+                    dft = TightlyBound.QE.loadXML(ab_dir*"/qe.save")
 
                     ab = -dft.crys.coords[1,3] * dft.crys.A[3,3] * 2.0
                     println("ab $ab loaded")
@@ -682,7 +707,7 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                     newst_t = "coords"
                     ab_dir="$dir/$name_t"*"_vnscf_"*"$newst_t"*"_"*"$ncalc_t"        
                     println("try $ab_dir")
-                    dft = QE.loadXML(ab_dir*"/qe.save")
+                    dft = TightlyBound.QE.loadXML(ab_dir*"/qe.save")
 
                     ab = -dft.crys.coords[1,3] * dft.crys.A[3,3] * 2.0
                     println("ab $ab loaded")
@@ -806,11 +831,11 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                         continue
                     end
 
-                    dft = DFT.runSCF(c, nprocs=procs, prefix="qe", directory="$d", tmpdir="$d", wannier=false, code="QE", skip=true, cleanup=true)
+                    dft = TightlyBound.DFT.runSCF(c, nprocs=procs, prefix="qe", directory="$d", tmpdir="$d", wannier=false, code="QE", skip=true, cleanup=true)
                     if calc_mode == "nscf"
 
                         try
-                            tbc, tbck = AtomicProj.projwfx_workf(dft, nprocs=procs, directory=d, skip_og=true, skip_proj=true, freeze=true, localized_factor = 0.15, cleanup=true, only_kspace=only_kspace)
+                            tbc, tbck = TightlyBound.AtomicProj.projwfx_workf(dft, nprocs=procs, directory=d, skip_og=true, skip_proj=true, freeze=true, localized_factor = 0.15, cleanup=true, only_kspace=only_kspace)
                         catch err3
                             println("err3")
                             println(err3)
@@ -956,6 +981,113 @@ function oxidation_guess(atom1, atom2)
             push!(keep, [atom1, atom2, :metals])
         end
     end
+
+
+    #special configurations
+
+
+    if atom1 in ["B"] &&  atom2 in ["H", "Li", "Na", "K", "Rb", "Cs", "Be", "Mg", "Ca", "Sr", "Ba"]
+        push!(keep, [atom2, atom1, "cab6"])
+    end
+    if atom2 in ["B"] &&  atom1 in ["H", "Li", "Na", "K", "Rb", "Cs", "Be", "Mg", "Ca", "Sr", "Ba"]
+        push!(keep, [atom1, atom2, "cab6"])
+    end 
+
+    if atom1 in ["Cr", "Mo", "W", "Mn", "Tc", "Re", "Fe", "Ru", "Os"] &&  atom2 in ["N"]
+        push!(keep, [atom1, atom2, "re3n"])
+        push!(keep, [atom1, atom2, "re3n3"])
+    end 
+
+    if atom2 in ["Cr", "Mo", "W", "Mn", "Tc", "Re", "Fe", "Ru", "Os"] &&  atom1 in ["N"]
+        push!(keep, [atom2, atom1, "re3n"])
+        push!(keep, [atom2, atom1, "re3n3"])
+    end 
+
+    if atom1 in ["O", "H", "F", "S", "Cl", "C", "N", "P"] &&  atom2 in ["O", "H", "F", "S", "Cl", "C", "N", "P"] && atom1 != atom2
+        push!(keep, [atom1, atom2, "mol_h2o_v1"])
+        push!(keep, [atom2, atom1, "mol_h2o_v2"])
+    end 
+
+    if atom1 in ["La", "Y", "Sc"] &&  atom2 in ["Ni", "Pd", "Pt"] 
+        push!(keep, [atom2, atom1, "ni4la2"])
+    end 
+    if atom2 in ["La", "Y", "Sc"] &&  atom1 in ["Ni", "Pd", "Pt"] 
+        push!(keep, [atom1, atom2, "ni4la2"])
+    end 
+
+    if atom1 in ["Rb", "K", "Cs", "Na"] &&  atom2 in ["Al", "Ga", "In", "Tl"] 
+        push!(keep, [atom1, atom2, "rb1in4"])
+    end 
+    if atom2 in ["Rb", "K", "Cs", "Na"] &&  atom1 in ["Al", "Ga", "In", "Tl"] 
+        push!(keep, [atom2, atom1, "rb1in4"])
+    end 
+
+    if atom1 in ["Nb", "V", "Ta"] &&  atom2 in ["F"]
+        push!(keep, [atom1, atom2, "nb1f4"])
+    end 
+    if atom2 in ["Nb", "V", "Ta"] &&  atom1 in ["F"]
+        push!(keep, [atom2, atom1, "nb1f4"])
+    end 
+
+    if atom1 in ["Li", "Na", "Cu", "Ag", "Au", "Hg"] &&  atom2 in ["O", "S", "Se"]
+        push!(keep, [atom1, atom2, "cu2o1"])
+    end 
+    if atom2 in ["Li", "Na", "Cu", "Ag", "Au", "Hg"] &&  atom1 in ["O", "S", "Se"]
+        push!(keep, [atom2, atom1, "cu2o1"])
+    end 
+
+    if atom1 in ["Al", "Ga", "In"] &&  atom2 in ["Ca", "Sr", "Ba"]
+        push!(keep, [atom1, atom2, "ga4sr"])
+    end 
+    if atom2 in ["Al", "Ga", "In"] &&  atom1 in ["Ca", "Sr", "Ba"]
+        push!(keep, [atom2, atom1, "ga4sr"])
+    end 
+
+    if atom1 in ["H", "Ca", "Sr", "Ba"] &&  atom2 in ["Pd", "Ni", "Pt"]
+        push!(keep, [atom1, atom2, "ca1pd5"])
+    end 
+    if atom2 in ["H", "Ca", "Sr", "Ba"] &&  atom1 in ["Pd", "Ni", "Pt"]
+        push!(keep, [atom2, atom1, "ca1pd5"])
+    end 
+
+    if atom1 in ["B", "Al", "Ga", "In", "Tl", "Sc", "Y", "La", "Sb", "Bi", "Co", "Fe", "Ni", "Mn", "Cr", "Ti", "V"] &&  atom2 in ["F"]
+        push!(keep, [atom1, atom2, "a2f6"])
+    end 
+    if atom2 in ["B", "Al", "Ga", "In", "Tl", "Sc", "Y", "La", "Sb", "Bi", "Co", "Fe", "Ni", "Mn", "Cr", "Ti", "V"] &&  atom1 in ["F"]
+        push!(keep, [atom2, atom1, "a2f6"])
+    end 
+
+    if atom1 in ["Cr", "Mo", "W","Tc", "Re","Mn", "Se", "Te"] &&  atom2 in ["O"]
+        push!(keep, [atom1, atom2, "te2o6"])
+    end 
+    if atom2 in ["Cr", "Mo", "W","Tc", "Re","Mn","Se", "Te"] &&  atom1 in ["O"]
+        push!(keep, [atom2, atom1, "te2o6"])
+    end 
+
+    if atom1 in ["Ge", "Sn", "Pb"] &&  atom2 in ["O"]
+        push!(keep, [atom1, atom2, "sn2o2"])
+    end 
+    if atom2 in ["Ge", "Sn", "Pb"] &&  atom1 in ["O"]
+        push!(keep, [atom2, atom1, "sn2o2"])
+    end 
+
+    if atom1 in ["Li", "Na", "K", "Rb", "Cs"] &&  atom2 in ["N"]
+        push!(keep, [atom1, atom2, "k2n6"])
+    end 
+    if atom2 in ["Li", "Na", "K", "Rb", "Cs"] &&  atom1 in ["N"]
+        push!(keep, [atom2, atom1, "k2n6"])
+    end 
+    
+    transmetals = ["Sc", "Y", "La", "Ti", "Zr", "Hf", "V", "Nb", "Ta", "Cr", "Mo", "W", "Mn", "Tc", "Re", "Fe", "Ru", "Os", "Co", "Rh", "Ir", "Ni", "Pd", "Pt", "Cu", "Ag", "Au", "Zn", "Cd", "Hg", "B", "Al", "Ga", "In", "Tl"]
+
+    if atom1 in transmetals && atom2 == "H"
+        push!(keep, [atom2, atom1, "lipd3"])
+    end
+    if atom2 in transmetals && atom1 == "H"
+        push!(keep, [atom1, atom2, "lipd3"])
+    end
+
+
 
 #    for k in keep
 #        println(k)

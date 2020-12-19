@@ -152,7 +152,7 @@ function real_space(crys::crystal, kappa::Float64, U::Array{Float64}, starting_s
     newcontr = 0.0
     newcontrU = 0.0
     
-    for N = starting_size_rspace:11
+    for N = starting_size_rspace:20
         gamma_ij_new[:,:] .= 0.0
         gamma_U_new[:,:] .= 0.0
         for x = -N:N
@@ -186,6 +186,8 @@ function real_space(crys::crystal, kappa::Float64, U::Array{Float64}, starting_s
         newcontr = sum(abs.(gamma_ij_new))
         newcontrU = sum(abs.(gamma_U_new))
 
+#        println("new $N real_space $newcontr $newcontrU")
+
         if newcontr < 1e-7 && newcontrU < 1e-7
 #            println("real_space YES converged $N : $newcontr")
             converged = true
@@ -203,6 +205,7 @@ function real_space(crys::crystal, kappa::Float64, U::Array{Float64}, starting_s
     if converged == false
         println("WARNING, real_space EWALD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         println("real_space NOT converged  : $newcontr    $newcontrU")
+        println(crys)
         
     end
 
@@ -228,9 +231,9 @@ function estimate_best_kappa(A)
     b = minimum([b1,b2,b3])
 
     tot = Float64[]
-    kappa_test = [0.00002 0.0001 0.0005 0.001 0.002 0.005 0.01 0.02 0.05 0.075 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.5 0.75 1.0 10.0 20.0]
+    kappa_test = [0.00002 0.0001 0.0005 0.001 0.002 0.005 0.01 0.02 0.05 0.075 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.5 0.65 0.75 0.80 0.90 1.0 1.1 1.3 2.0 5.0 10.0 20.0 50.0 100.0]
     for kappa = kappa_test
-        rs = erfc( kappa * a) / a * 75
+        rs = erfc( kappa * a) / a * 20
         ks = exp(-b^2 / 4.0 / kappa^2  * (2 * pi)^2 ) / (2*pi*b)^2
         push!(tot, rs + ks)
 #        println("$kappa rs $rs $ks $ks  tot ",rs + ks)
@@ -262,7 +265,7 @@ function k_space(crys::crystal, kappa, starting_size_kspace=2)
 
     newcontr = 0.0
     
-    for N = starting_size_kspace:15
+    for N = starting_size_kspace:25
         gamma_ij_new[:,:] .= 0.0
         for kx = -N:N
             for ky = -N:N
@@ -293,7 +296,7 @@ function k_space(crys::crystal, kappa, starting_size_kspace=2)
         end
         first_iter = false
         newcontr = sum(abs.(gamma_ij_new))
-
+#        println("kspace $N newcontr $newcontr")
         if newcontr < 1e-7
 #            println("k_space YES converged $N : $newcontr")
             converged = true
@@ -308,6 +311,7 @@ function k_space(crys::crystal, kappa, starting_size_kspace=2)
     if converged == false
         println("WARNING, k_space EWALD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         println("newcontr $newcontr")
+        println(crys)
     end
 
     return gamma_ij_tot

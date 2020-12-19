@@ -1288,7 +1288,7 @@ function compare_bands(h::tb, bs::bandstructure; energy_lim=missing, doplot=true
     end
     if doplot
         plot(vals1, color="green", seriestype=:scatter, marker=(:circle), MarkerSize=8)
-        plot(vals2, color="yellow", seriestype=:scatter, MarkerSize=4)
+        plot!(vals2, color="yellow", seriestype=:scatter, MarkerSize=4)
     end
     println("max abs diff $max_diff at kpoint $badk and value $badval")
     if max_diff > 1e-3
