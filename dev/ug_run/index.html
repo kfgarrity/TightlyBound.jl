@@ -49,7 +49,7 @@ CHECK FRONTIER - everything fine
 onsite
 -----
 
- 10.572511 seconds (14.05 M allocations: 688.854 MiB, 2.55% gc time)
+  6.056406 seconds (14.02 M allocations: 687.422 MiB, 3.76% gc time)
 ------
 Do SCF
 Mixing mode: pulay
@@ -70,12 +70,12 @@ SCF CALC 0007 energy  -0.75788969  en_diff:   5.404929E-05  dq_diff:   9.480784E
 SCF CALC 0008 energy  -0.75787888  en_diff:   1.081314E-05  dq_diff:   1.896222E-04
 SCF CALC 0009 energy  -0.75787672  en_diff:   2.163905E-06  dq_diff:   3.792407E-05
 
-YES convergence in 9 iters, energy -0.7578767153879724   dq = [-1.157, 1.157]
+YES convergence in 9 iters, energy -0.7578767153879749   dq = [-1.157, 1.157]
 END SCF ------------------
 
 scf_energy success, done
 
-The energy is -0.7578767153879724 Ryd</pre><p>This returns the non-magnetic atomization energy, and a tight-binding object with the SCF electron density calculated.</p><h2 id="**Plot-the-band-structure.**"><a class="docs-heading-anchor" href="#**Plot-the-band-structure.**"><strong>Plot the band structure.</strong></a><a id="**Plot-the-band-structure.**-1"></a><a class="docs-heading-anchor-permalink" href="#**Plot-the-band-structure.**" title="Permalink"></a></h2><p>Using the tight-binding object from above. Note: SCF must be done first to get meaningful results.</p><pre><code class="language-julia">plot_bandstr(tbc_alp, do_display=false);</code></pre><pre class="documenter-example-output">plot_bandstr
+The energy is -0.7578767153879749 Ryd</pre><p>This returns the non-magnetic atomization energy, and a tight-binding object with the SCF electron density calculated.</p><h2 id="**Plot-the-band-structure.**"><a class="docs-heading-anchor" href="#**Plot-the-band-structure.**"><strong>Plot the band structure.</strong></a><a id="**Plot-the-band-structure.**-1"></a><a class="docs-heading-anchor-permalink" href="#**Plot-the-band-structure.**" title="Permalink"></a></h2><p>Using the tight-binding object from above. Note: SCF must be done first to get meaningful results.</p><pre><code class="language-julia">plot_bandstr(tbc_alp, do_display=false);</code></pre><pre class="documenter-example-output">plot_bandstr
 clear
 align vbm
 color = blue markersize = 0</pre><p><img src="../alp.png" alt="AlP plot"/></p><p>Use <em>do_display=true</em> to produce an interactive plot.</p><p>The default just picks some random kpoints, but you can add your own kpath. We also project onto the <em>s</em> orbital of Al.</p><pre><code class="language-julia">kpath=[0.0 0.0 0.0; 0.5 0.5 0.5; 0.0 0.5 0.5];
@@ -96,7 +96,7 @@ show(stdout, &quot;text/plain&quot;, stress)</code></pre><pre class="documenter-
 Calculate Force, Stress (no scf)
 done
 ----
-energy -0.757876282625563
+energy -0.7578762826255628
 
 Forces
 2×3 Array{Float64,2}:
@@ -146,13 +146,13 @@ SCF CALC 0007 energy  -0.75788969  en_diff:   5.404929E-05  dq_diff:   9.480784E
 SCF CALC 0008 energy  -0.75787888  en_diff:   1.081314E-05  dq_diff:   1.896222E-04
 SCF CALC 0009 energy  -0.75787672  en_diff:   2.163905E-06  dq_diff:   3.792407E-05
 
-YES convergence in 9 iters, energy -0.7578767153879724   dq = [-1.157, 1.157]
+YES convergence in 9 iters, energy -0.7578767153879749   dq = [-1.157, 1.157]
 END SCF ------------------
 
 starting vec
 [0.0, 0.0, 0.0, 0.25, 0.25, 0.25, 4.9132898822133235, 4.9132898822133235, 0.0, 4.9132898822133235, 0.0, 4.9132898822133235, 0.0, 4.9132898822133235, 4.9132898822133235]
 
-FCALL 1 en:  -0.7578767153879724  fsum:  1.1521137565691524e-10  ssum:  0.004406861787783492    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1 en:  -0.7578767153879749  fsum:  1.1521139477340817e-10  ssum:  0.004406861787783491    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
 SCF CALC 0001 energy  -0.77883847
@@ -166,7 +166,7 @@ SCF CALC 0007 energy  -0.78084270  en_diff:   4.272543E-06  dq_diff:   4.723825E
 YES convergence in 7 iters, energy -0.7808427029289411   dq = [-1.081, 1.081]
 END SCF ------------------
 
-FCALL 2 en:  -0.7808427029289411  fsum:  1.8407843326889738e-10  ssum:  0.0011684631395061603    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 2 en:  -0.7808427029289411  fsum:  1.8407854726143717e-10  ssum:  0.0011684631395061569    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
 SCF CALC 0001 energy  -0.77883847
@@ -191,10 +191,10 @@ SCF CALC 0006 energy  -0.71976094  en_diff:   1.394378E-04  dq_diff:   1.172056E
 SCF CALC 0007 energy  -0.71979245  en_diff:   3.151469E-05  dq_diff:   2.214139E-04
 SCF CALC 0008 energy  -0.71979821  en_diff:   5.756644E-06  dq_diff:   4.600721E-05
 
-YES convergence in 8 iters, energy -0.7197982111647122   dq = [-0.699, 0.699]
+YES convergence in 8 iters, energy -0.7197982111647104   dq = [-0.699, 0.699]
 END SCF ------------------
 
-FCALL 3 en:  -0.7197982111647122  fsum:  9.81826954244694e-10  ssum:  0.0025426653281132193    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 3 en:  -0.7197982111647104  fsum:  9.818250932172302e-10  ssum:  0.002542665328113247    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
 SCF CALC 0001 energy  -0.69796316
@@ -206,7 +206,7 @@ SCF CALC 0006 energy  -0.71976094  en_diff:   1.394378E-04  dq_diff:   1.172056E
 SCF CALC 0007 energy  -0.71979245  en_diff:   3.151469E-05  dq_diff:   2.214139E-04
 SCF CALC 0008 energy  -0.71979821  en_diff:   5.756644E-06  dq_diff:   4.600721E-05
 
-YES convergence in 8 iters, energy -0.7197982111647122   dq = [-0.699, 0.699]
+YES convergence in 8 iters, energy -0.7197982111647104   dq = [-0.699, 0.699]
 END SCF ------------------
 
 
@@ -220,10 +220,10 @@ SCF CALC 0006 energy  -0.78320205  en_diff:   9.336868E-05  dq_diff:   9.262784E
 SCF CALC 0007 energy  -0.78318311  en_diff:   1.893835E-05  dq_diff:   1.846879E-04
 SCF CALC 0008 energy  -0.78317934  en_diff:   3.770706E-06  dq_diff:   3.698219E-05
 
-YES convergence in 8 iters, energy -0.7831793367669581   dq = [-0.986, 0.986]
+YES convergence in 8 iters, energy -0.7831793367669572   dq = [-0.986, 0.986]
 END SCF ------------------
 
-FCALL 4 en:  -0.7831793367669581  fsum:  2.6794549943067006e-8  ssum:  0.0006250327847446217    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 4 en:  -0.7831793367669572  fsum:  2.6794545297973757e-8  ssum:  0.0006250327847447027    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
 SCF CALC 0001 energy  -0.79074054
@@ -235,7 +235,7 @@ SCF CALC 0006 energy  -0.78320205  en_diff:   9.336868E-05  dq_diff:   9.262784E
 SCF CALC 0007 energy  -0.78318311  en_diff:   1.893835E-05  dq_diff:   1.846879E-04
 SCF CALC 0008 energy  -0.78317934  en_diff:   3.770706E-06  dq_diff:   3.698219E-05
 
-YES convergence in 8 iters, energy -0.7831793367669581   dq = [-0.986, 0.986]
+YES convergence in 8 iters, energy -0.7831793367669572   dq = [-0.986, 0.986]
 END SCF ------------------
 
 
@@ -250,7 +250,7 @@ SCF CALC 0006 energy  -0.78431465  en_diff:   8.514312E-06  dq_diff:   8.398462E
 YES convergence in 6 iters, energy -0.7843146521343928   dq = [-1.013, 1.013]
 END SCF ------------------
 
-FCALL 5 en:  -0.7843146521343928  fsum:  7.863891033190018e-9  ssum:  0.00015440117190780922    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 5 en:  -0.7843146521343928  fsum:  7.863886649481428e-9  ssum:  0.00015440117190777532    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
 SCF CALC 0001 energy  -0.78509768
@@ -273,10 +273,10 @@ SCF CALC 0005 energy  -0.77507516  en_diff:   1.330616E-04  dq_diff:   1.578532E
 SCF CALC 0006 energy  -0.77504861  en_diff:   2.654855E-05  dq_diff:   3.159619E-04
 SCF CALC 0007 energy  -0.77504329  en_diff:   5.318555E-06  dq_diff:   6.318178E-05
 
-YES convergence in 7 iters, energy -0.7750432929307689   dq = [-1.114, 1.114]
+YES convergence in 7 iters, energy -0.7750432929307709   dq = [-1.114, 1.114]
 END SCF ------------------
 
-FCALL 6 en:  -0.7750432929307689  fsum:  2.0114436964191342e-7  ssum:  0.002082207476508384    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 6 en:  -0.7750432929307709  fsum:  2.0114439314376909e-7  ssum:  0.0020822074765086767    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
 SCF CALC 0001 energy  -0.77730529
@@ -287,7 +287,7 @@ SCF CALC 0005 energy  -0.77507516  en_diff:   1.330616E-04  dq_diff:   1.578532E
 SCF CALC 0006 energy  -0.77504861  en_diff:   2.654855E-05  dq_diff:   3.159619E-04
 SCF CALC 0007 energy  -0.77504329  en_diff:   5.318555E-06  dq_diff:   6.318178E-05
 
-YES convergence in 7 iters, energy -0.7750432929307689   dq = [-1.114, 1.114]
+YES convergence in 7 iters, energy -0.7750432929307709   dq = [-1.114, 1.114]
 END SCF ------------------
 
 
@@ -300,10 +300,10 @@ SCF CALC 0005 energy  -0.78434540  en_diff:   1.467640E-04  dq_diff:   1.438028E
 SCF CALC 0006 energy  -0.78437435  en_diff:   2.894920E-05  dq_diff:   2.882142E-04
 SCF CALC 0007 energy  -0.78438015  en_diff:   5.802518E-06  dq_diff:   5.761241E-05
 
-YES convergence in 7 iters, energy -0.7843801510461748   dq = [-1.021, 1.021]
+YES convergence in 7 iters, energy -0.7843801510461754   dq = [-1.021, 1.021]
 END SCF ------------------
 
-FCALL 7 en:  -0.7843801510461748  fsum:  1.2506339025983093e-8  ssum:  9.73425212861494e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 7 en:  -0.7843801510461754  fsum:  1.2506342061794054e-8  ssum:  9.734252128622026e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
 SCF CALC 0001 energy  -0.78155927
@@ -314,7 +314,7 @@ SCF CALC 0005 energy  -0.78434540  en_diff:   1.467640E-04  dq_diff:   1.438028E
 SCF CALC 0006 energy  -0.78437435  en_diff:   2.894920E-05  dq_diff:   2.882142E-04
 SCF CALC 0007 energy  -0.78438015  en_diff:   5.802518E-06  dq_diff:   5.761241E-05
 
-YES convergence in 7 iters, energy -0.7843801510461748   dq = [-1.021, 1.021]
+YES convergence in 7 iters, energy -0.7843801510461754   dq = [-1.021, 1.021]
 END SCF ------------------
 
 
@@ -335,7 +335,7 @@ res
     |g(x)|                 = 8.82e-05 ≤ 7.0e-04
 
  * Work counters
-    Seconds run:   26  (vs limit Inf)
+    Seconds run:   16  (vs limit Inf)
     Iterations:    2
     f(x) calls:    7
     ∇f(x) calls:   7
@@ -350,7 +350,7 @@ P    0.25000  0.25000  0.25000
 
 
 Relax done
-Energy new -0.7843801510461748
+Energy new -0.7843801510461754
 
 Force
 2×3 Array{Float64,2}:
@@ -360,4 +360,4 @@ Stress
 3×3 Array{Float64,2}:
  -3.2444e-6    1.7457e-10   1.7457e-10
   1.7457e-10  -3.2444e-6    1.7457e-10
-  1.7457e-10   1.7457e-10  -3.2444e-6</pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Saturday 19 December 2020 13:36">Saturday 19 December 2020</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+  1.7457e-10   1.7457e-10  -3.2444e-6</pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 23 December 2020 20:04">Wednesday 23 December 2020</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
