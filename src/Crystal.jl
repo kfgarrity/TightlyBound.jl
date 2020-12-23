@@ -334,6 +334,7 @@ function parseQEinput(lines)
     A=zeros(3,3)
     coords = Float64[]
     nat = -1
+    units = 1.0
     for line in lines
         liner = replace(replace(line, "," => " "), "=" => " ")
 
@@ -364,13 +365,30 @@ function parseQEinput(lines)
                 
             elseif  sp[1] == "ATOMIC_POSITIONS"
                 posind = 0
+                if len(sp) > 1
+                    if sp[2] != "crystal" && sp[2] != "(crystal)"
+                        println("warning, only crystal coords supported !!!!!!!!!!!!!!!!!!")
+                    end
+                end
             elseif sp[1] == "CELL_PARAMETERS"
                 Aind = 0
+                if len(sp) > 1
+                    if sp[2] == "angstrom" || sp[2] == "Angstrom" || sp[2] == "(angstrom")
+                        units = 0.529177
+                    else 
+                        println("warning alat or other CELL_PARAMETERS not supported !!!!!!!!!!!!!!!!!!!!!!!")
+                    end
+                end
             end
                 
                    
         end 
     end
+
+    A = A * units
+
+    
+
     return A, coords, types
 
     
