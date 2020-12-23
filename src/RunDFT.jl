@@ -431,11 +431,16 @@ function loadXML(savedir)
     a2 = stout["cell"]["a2"]
     a3 = stout["cell"]["a3"]
 
+    println("a1 ", a1)
+    println("a2 ", a2)
+    println("a3 ", a3)
+
     A = zeros((3,3))
     A[1,:] = parse_str_ARR_float(a1)
     A[2,:] = parse_str_ARR_float(a2)
     A[3,:] = parse_str_ARR_float(a3)
     
+    println(A)
 
     nat = parse(Int, stin[:nat])
     types = []

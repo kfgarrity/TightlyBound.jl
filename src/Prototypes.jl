@@ -245,7 +245,7 @@ function setup_proto_data()
     CalcD["tet"] = ["$STRUCTDIR/binary/tet.in", "vc-relax", "all", "vol", "nscf"]
 
 
-    CalcD["mof6"] = ["$STRUCTDIR/binary/POSCAR_mof6", "vc-relax",  "all", "vol", "nscf"]
+    CalcD["mof6"] = ["$STRUCTDIR/binary/POSCAR_mof6", "vc-relax",  "all", "vol-mid", "nscf"]
 
 
     CalcD["ascl5"] = ["$STRUCTDIR/binary/POSCAR_ascl5", "vc-relax",  "2Dxy", "2D", "nscf"]
@@ -263,7 +263,7 @@ function setup_proto_data()
 #
     CalcD["sn2o2"] = ["$STRUCTDIR/binary/POSCAR_sn2o2", "vc-relax", "all", "vol", "nscf"]
     CalcD["te2o6"] = ["$STRUCTDIR/binary/POSCAR_te2o6", "vc-relax", "all", "vol", "nscf"]
-    CalcD["a1f6"] = ["$STRUCTDIR/binary/POSCAR_a1f6", "vc-relax", "all", "vol", "nscf"]
+    CalcD["a1f6"] = ["$STRUCTDIR/binary/POSCAR_a1f6", "vc-relax", "all", "vol-mid", "nscf"]
     CalcD["a2f6"] = ["$STRUCTDIR/binary/POSCAR_a2f6", "vc-relax", "all", "vol", "nscf"]
     CalcD["ca1pd5"] = ["$STRUCTDIR/binary/POSCAR_ca1pd5", "vc-relax", "all", "vol", "nscf"]
     CalcD["anatase"] = ["$STRUCTDIR/binary/POSCAR_anatase", "vc-relax", "all", "vol", "nscf"]
@@ -1056,6 +1056,16 @@ function oxidation_guess(atom1, atom2)
     if atom2 in ["B", "Al", "Ga", "In", "Tl", "Sc", "Y", "La", "Sb", "Bi", "Co", "Fe", "Ni", "Mn", "Cr", "Ti", "V"] &&  atom1 in ["F"]
         push!(keep, [atom2, atom1, "a2f6"])
     end 
+
+    if atom1 in ["Cr", "Mo", "W", "Mn", "Tc", "Re", "Ru", "S", "Se", "Te"] &&  atom2 in ["F"]
+        push!(keep, [atom1, atom2, "a1f6"])
+        push!(keep, [atom1, atom2, "mof6"])
+    end 
+    if atom2 in ["Cr", "Mo", "W", "Mn", "Tc", "Re", "Ru", "Os", "S", "Se", "Te"] &&  atom1 in ["F"]
+        push!(keep, [atom2, atom1, "a1f6"])
+        push!(keep, [atom2, atom1, "mof6"])
+    end 
+
 
     if atom1 in ["Cr", "Mo", "W","Tc", "Re","Mn", "Se", "Te"] &&  atom2 in ["O"]
         push!(keep, [atom1, atom2, "te2o6"])

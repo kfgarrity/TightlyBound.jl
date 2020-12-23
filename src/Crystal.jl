@@ -298,6 +298,11 @@ function parsePOSCAR(lines)
     nat = sum(thenumbers)
 
 
+    dc = split(lines[8])[1][1]
+    cart = false
+    if dc == 'c' || dc == 'C' 
+        cart = true
+    end
 
     
     types = String[]
@@ -312,6 +317,10 @@ function parsePOSCAR(lines)
     for i = 1:nat
 
         coords[i,:] = parseARRfloat(split(lines[8+i]))
+    end
+
+    if cart
+        coords = (coords / 0.529177 )* inv(A)
     end
 
     return A, coords, types

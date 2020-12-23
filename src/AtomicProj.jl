@@ -380,6 +380,11 @@ Steps:
     println("Step #2 run projwfc.x----------------------------------------------------------------------")
     println()
 
+    println("A dft")
+    println(dft.crys.A)
+    println("A dft nscf")
+    println(dft_nscf.crys.A)
+
     A = dft.crys.A             #needed to convert kpoints to crystal units
     a1=sum(A[1,:].^2)^0.5
     B = inv(A./a1)'
@@ -404,6 +409,14 @@ Steps:
         p = loadXML_proj("$directory/$newprefix.save", B)
         
     end
+    
+    if sum(abs.(dft_nscf.crys.A - dft.crys.A)) > 1e-4
+        println("Warning, dft and dft_nscf may not match")
+        println(dft.crys)
+        println(dft_nscf.crys)
+    end
+
+    p.bs.kpts[:,:] = dft_nscf.bandstruct.kpts #fix kpoint rounding issue
 
     println("P OVERLAPS ", size(p.overlaps))
     
