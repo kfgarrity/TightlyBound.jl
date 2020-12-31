@@ -19,6 +19,7 @@ struct proto_data
     A1B6::Array{String}
     A2B3::Array{String}
     A2B5::Array{String}
+    A3B5::Array{String}
     metals::Array{String}
     short_bonds::Array{String}
     all_ternary::Array{String}
@@ -277,6 +278,13 @@ function setup_proto_data()
     CalcD["re3n"] = ["$STRUCTDIR/binary/POSCAR_re3n", "vc-relax", "all", "vol", "nscf"]
     CalcD["cab6"] = ["$STRUCTDIR/binary/POSCAR_cab6", "vc-relax", "all", "vol", "nscf"]
 
+    CalcD["c2ca"] = ["$STRUCTDIR/binary/POSCAR_c2ca", "vc-relax", "all", "vol", "nscf"]
+    CalcD["osn2"] = ["$STRUCTDIR/binary/POSCAR_osn2", "vc-relax", "all", "vol", "nscf"]
+    CalcD["pt2o2"] = ["$STRUCTDIR/binary/POSCAR_pt2o2", "vc-relax", "all", "vol", "nscf"]
+    CalcD["p3n5"] = ["$STRUCTDIR/binary/POSCAR_p3n5", "vc-relax", "all", "vol", "nscf"]
+    CalcD["pd3te"] = ["$STRUCTDIR/binary/POSCAR_pd3te", "vc-relax", "all", "vol", "nscf"]
+
+
     CalcD["k2n6"] = ["$STRUCTDIR/binary/POSCAR_k2n6", "vc-relax", "all", "vol", "nscf"]
 
     CalcD["mol_h2o"] =    ["$STRUCTDIR/binary/POSCAR_mol_h2o", "relax", "all", "coords-small", "nscf"]
@@ -340,6 +348,7 @@ function setup_proto_data()
     A1B6 = ["mof6", "a1f6"]
     A2B3 = ["y2o3", "p2ca3", "al2o3", "bi2se3", "ga2s3", "gas"]
     A2B5 = ["nb2o5", "p2o5"]
+    A3B5 = ["p3n5"]
 
     short_bonds = ["dimer_pair", "cao2_12", "irn2_38"]
     
@@ -350,7 +359,7 @@ function setup_proto_data()
 
     all_ternary = ["abc_line", "bac_line", "cab_line", "fcc_tern", "hex_trim", "hh1", "hh2", "hh3", "stuffhex_1", "stuffhex_2", "stuffhex_3","stuffhex_z_1", "stuffhex_z_2", "stuffhex_z_3", "rocksalt_2lay_abo2", "caf2_abc", "perov", "perov2", "perov3",  "perov4",  "perov5",  "perov6"  ]
 
-    pd = proto_data(CalcD, core_mono, core_binary, A0, A1B1, A1B2, A1B3, A1B4, A1B5, A1B6, A2B3, A2B5, metals, short_bonds, all_ternary)
+    pd = proto_data(CalcD, core_mono, core_binary, A0, A1B1, A1B2, A1B3, A1B4, A1B5, A1B6, A2B3, A2B5,A3B5, metals, short_bonds, all_ternary)
 
     return pd
 
@@ -382,6 +391,8 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
             TORUN = [TORUN;pd.A2B3]
         elseif t == :A2B5
             TORUN = [TORUN;pd.A2B5]
+        elseif t == :A3B5
+            TORUN = [TORUN;pd.A3B5]
         elseif t == :metals
             TORUN = [TORUN;pd.metals]
         elseif t == :short_bonds
@@ -955,6 +966,8 @@ function oxidation_guess(atom1, atom2)
                 push!(keep, [atom1, atom2, :A2B3])
             elseif possible_configs[p,1] == 2 && possible_configs[p,2] == 5
                 push!(keep, [atom1, atom2, :A2B5])
+            elseif possible_configs[p,1] == 3 && possible_configs[p,2] == 5
+                push!(keep, [atom1, atom2, :A3B5])
 
 
             elseif possible_configs[p,2] == 1 && possible_configs[p,1] == 2
@@ -971,6 +984,8 @@ function oxidation_guess(atom1, atom2)
                 push!(keep, [atom2, atom1, :A2B3])
             elseif possible_configs[p,2] == 2 && possible_configs[p,1] == 5
                 push!(keep, [atom2, atom1, :A2B5])
+            elseif possible_configs[p,2] == 3 && possible_configs[p,1] == 5
+                push!(keep, [atom2, atom1, :A3B5])
             end
 
 
@@ -986,10 +1001,10 @@ function oxidation_guess(atom1, atom2)
     #special configurations
 
 
-    if atom1 in ["B"] &&  atom2 in ["H", "Li", "Na", "K", "Rb", "Cs", "Be", "Mg", "Ca", "Sr", "Ba"]
+    if atom1 in ["B"] &&  atom2 in ["H", "Li", "Na", "K", "Rb", "Cs", "Be", "Mg", "Ca", "Sr", "Ba", "Y", "La", "Sc", "Tl", "In", "Ga"]
         push!(keep, [atom2, atom1, "cab6"])
     end
-    if atom2 in ["B"] &&  atom1 in ["H", "Li", "Na", "K", "Rb", "Cs", "Be", "Mg", "Ca", "Sr", "Ba"]
+    if atom2 in ["B"] &&  atom1 in ["H", "Li", "Na", "K", "Rb", "Cs", "Be", "Mg", "Ca", "Sr", "Ba", "Y", "La", "Sc", "Tl", "In", "Ga"]
         push!(keep, [atom1, atom2, "cab6"])
     end 
 
@@ -1089,6 +1104,9 @@ function oxidation_guess(atom1, atom2)
     end 
     
     transmetals = ["Sc", "Y", "La", "Ti", "Zr", "Hf", "V", "Nb", "Ta", "Cr", "Mo", "W", "Mn", "Tc", "Re", "Fe", "Ru", "Os", "Co", "Rh", "Ir", "Ni", "Pd", "Pt", "Cu", "Ag", "Au", "Zn", "Cd", "Hg", "B", "Al", "Ga", "In", "Tl"]
+    anions  = ["B", "Al", "Ga", "In", "Tl", "C", "Si", "Ge", "Sn", "Pb", "N", "P", "As", "Sb", "Bi", "O", "S", "Se", "Te", "F", "Cl", "Br", "I"]
+    othermetals = ["Li", "Na", "K", "Rb", "Cs", "Be", "Mg", "Ca", "Sr", "Ba"]
+    metals = [transmetals; othermetals]
 
     if atom1 in transmetals && atom2 == "H"
         push!(keep, [atom2, atom1, "lipd3"])
@@ -1096,6 +1114,43 @@ function oxidation_guess(atom1, atom2)
     if atom2 in transmetals && atom1 == "H"
         push!(keep, [atom1, atom2, "lipd3"])
     end
+
+
+    if atom1 in ["Li", "Na", "K", "Rb", "Cs", "Be", "Mg", "Ca", "Sr", "Ba", "Y", "La", "Sc"] &&  atom2 in ["C"]
+        push!(keep, [atom2, atom1, "c2ca"])
+    end 
+    if atom2 in ["Li", "Na", "K", "Rb", "Cs", "Be", "Mg", "Ca", "Sr", "Ba", "Y", "La", "Sc"] &&  atom1 in ["C"]
+        push!(keep, [atom1, atom2, "c2ca"])
+    end 
+
+    if atom1 in transmetals &&  atom2 in ["N"]
+        push!(keep, [atom1, atom2, "osn2"])
+    end 
+    if atom2 in transmetals &&  atom1 in ["N"]
+        push!(keep, [atom2, atom1, "osn2"])
+    end 
+
+    if atom1 in ["Pt", "Pd", "Ni", "Co", "Rh", "Ir", "Cu", "Ag", "Au"] &&  atom2 in ["O", "S"]
+        push!(keep, [atom1, atom2, "pt2o2"])
+    end 
+    if atom2 in ["Pt", "Pd", "Ni", "Co", "Rh", "Ir", "Cu", "Ag", "Au"] &&  atom1 in ["O", "S"]
+        push!(keep, [atom2, atom1, "pt2o2"])
+    end 
+
+
+    if atom1 in metals &&  atom2 in anions
+        push!(keep, [atom1, atom2, "pd3te"])
+    end 
+    if atom2 in metals &&  atom1 in anions
+        push!(keep, [atom2, atom1, "pd3te"])
+    end 
+
+    if atom1 in metals &&  atom2 in ["B", "C", "N"]
+        push!(keep, [atom2, atom1, "bpt"])
+    end 
+    if atom2 in metals &&  atom1 in ["B", "C", "N"]
+        push!(keep, [atom1, atom2, "bpt"])
+    end 
 
 
 

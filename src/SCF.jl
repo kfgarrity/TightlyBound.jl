@@ -42,7 +42,7 @@ using SpecialFunctions
 export scf_energy
 
 
-function scf_energy(c::crystal, database::Dict; smearing=0.01, grid = missing, conv_thr = 1e-5, iters = 50, mix = -1.0, mixing_mode=:pulay, verbose=true)
+function scf_energy(c::crystal, database::Dict; smearing=0.01, grid = missing, conv_thr = 1e-5, iters = 75, mix = -1.0, mixing_mode=:pulay, verbose=true)
 
     println("construct")
     @time tbc = calc_tb_fast(c, database);
@@ -186,7 +186,7 @@ Solve for scf energy, also stores the updated electron density and h1 inside the
             delta_eden_old = delta_eden
             delta_eden = sum(abs.(e_den_NEW - e_denA))
 
-            if delta_eden >= delta_eden_old*0.98 && iter > 2
+            if (delta_eden >= delta_eden_old*0.98 && iter > 2) || iter == 25
                 mixA = max(mixA * 0.5, 0.0005)
                 nreduce += 1
                 if nreduce > 10

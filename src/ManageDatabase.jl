@@ -46,7 +46,8 @@ function add_to_database(s::Set)#
     if length(s) == 1
         a1 = at_arr[1]
         if !haskey(database_cached , (a1, a1))
-            f = "$defaultdatdir/v0.1_dat_2body_scf_pbesol_el.$a1.xml"
+#            f = "$defaultdatdir/v0.1_dat_2body_scf_pbesol_el.$a1.xml"
+            f = "$defaultdatdir/coef.el.2bdy.$a1.xml.gz"
             if isfile(f) || isfile(f*".gz")
                 try
                     dat = read_coefs(f)
@@ -61,7 +62,8 @@ function add_to_database(s::Set)#
         end
 
         if !haskey(database_cached , (a1, a1, a1))
-            f = "$defaultdatdir/v0.1_dat_3body_scf_pbesol_el.$a1.xml"
+#            f = "$defaultdatdir/v0.1_dat_3body_scf_pbesol_el.$a1.xml"
+            f = "$defaultdatdir/coef.el.3bdy.$a1.xml.gz"
             if isfile(f) || isfile(f*".gz")
                 try
 #                    jldopen(f)                    
@@ -83,8 +85,11 @@ function add_to_database(s::Set)#
         a2 = at_arr[2]
         if !haskey(database_cached , (a1, a2))
             
-            fab = "$defaultdatdir/v0.1_dat_2body_scf_pbesol_binary.$a1.$a2.xml"
-            fba = "$defaultdatdir/v0.1_dat_2body_scf_pbesol_binary.$a2.$a1.xml"
+#            fab = "$defaultdatdir/v0.1_dat_2body_scf_pbesol_binary.$a1.$a2.xml"
+#            fba = "$defaultdatdir/v0.1_dat_2body_scf_pbesol_binary.$a2.$a1.xml"
+
+            fab = "$defaultdatdir/coef.el.2bdy.$a1.$a2.xml.gz"
+            fba = "$defaultdatdir/coef.el.2bdy.$a2.$a1.xml.gz"
             
             if isfile(fab) || isfile(fab*".gz")
                 f = fab
@@ -111,8 +116,11 @@ function add_to_database(s::Set)#
             end
 #################
 
-            fab = "$defaultdatdir/v0.1_dat_3body_scf_pbesol_binary.$a1.$a2.xml"
-            fba = "$defaultdatdir/v0.1_dat_3body_scf_pbesol_binary.$a2.$a1.xml"
+#            fab = "$defaultdatdir/v0.1_dat_3body_scf_pbesol_binary.$a1.$a2.xml"
+#            fba = "$defaultdatdir/v0.1_dat_3body_scf_pbesol_binary.$a2.$a1.xml"
+
+            fab = "$defaultdatdir/coef.el.3bdy.$a1.$a2.xml.gz"
+            fba = "$defaultdatdir/coef.el.3bdy.$a2.$a1.xml.gz"
             
             if isfile(fab) || isfile(fab*".gz")
                 f = fab
