@@ -1107,13 +1107,13 @@ function fourierspace(tbc, kpoints, X_H, X_S, Y_H, Y_S, Xhc, Xsc, rind, Rvec, IN
     cols = size(X_S)[2]
 
 
-    println("fourierspace x")
-    println(tbc.crys)
-    println(tbc.tb.grid)
+#    println("fourierspace x")
+#    println(tbc.crys)
+#    println(tbc.tb.grid)
 
-    println(kpoints[1:min(5,nk),:])
-    println(tbc.tb.K[1:min(5,nk),:])
-    println("-----")
+#    println(kpoints[1:min(5,nk),:])
+#    println(tbc.tb.K[1:min(5,nk),:])
+#    println("-----")
 
 
 

@@ -407,7 +407,7 @@ function generate_supercell(crys, cell)
 
     cells = prod(cell)
 
-    println("cells ", cell, " " , cells)
+#    println("cells ", cell, " " , cells)
     
     coords = zeros(crys.nat*cells, 3)
 

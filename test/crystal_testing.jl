@@ -59,7 +59,7 @@ end
         
         c=makecrys(A, pos, types)
         
-        println(c)
+#        println(c)
         c2 = c * [2,2,2]
      
         TightlyBound.CrystalMod.generate_random(c2,0.01,0.01)
