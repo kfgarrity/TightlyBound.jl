@@ -365,14 +365,14 @@ function parseQEinput(lines)
                 
             elseif  sp[1] == "ATOMIC_POSITIONS"
                 posind = 0
-                if len(sp) > 1
+                if length(sp) > 1
                     if sp[2] != "crystal" && sp[2] != "(crystal)"
                         println("warning, only crystal coords supported !!!!!!!!!!!!!!!!!!")
                     end
                 end
             elseif sp[1] == "CELL_PARAMETERS"
                 Aind = 0
-                if len(sp) > 1
+                if length(sp) > 1
                     if sp[2] == "angstrom" || sp[2] == "Angstrom" || sp[2] == "(angstrom)"
                         units = 0.529177
                     else 

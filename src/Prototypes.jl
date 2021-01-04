@@ -283,6 +283,7 @@ function setup_proto_data()
     CalcD["pt2o2"] = ["$STRUCTDIR/binary/POSCAR_pt2o2", "vc-relax", "all", "vol", "nscf"]
     CalcD["p3n5"] = ["$STRUCTDIR/binary/POSCAR_p3n5", "vc-relax", "all", "vol", "nscf"]
     CalcD["pd3te"] = ["$STRUCTDIR/binary/POSCAR_pd3te", "vc-relax", "all", "vol", "nscf"]
+    CalcD["bpt"] = ["$STRUCTDIR/binary/POSCAR_bpt", "vc-relax", "all", "vol", "nscf"]
 
 
     CalcD["k2n6"] = ["$STRUCTDIR/binary/POSCAR_k2n6", "vc-relax", "all", "vol", "nscf"]
@@ -348,7 +349,7 @@ function setup_proto_data()
     A1B6 = ["mof6", "a1f6"]
     A2B3 = ["y2o3", "p2ca3", "al2o3", "bi2se3", "ga2s3", "gas"]
     A2B5 = ["nb2o5", "p2o5"]
-    A3B5 = ["p3n5"]
+    A3B5 = [] #"p3n5"
 
     short_bonds = ["dimer_pair", "cao2_12", "irn2_38"]
     

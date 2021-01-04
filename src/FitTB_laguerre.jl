@@ -1549,12 +1549,13 @@ function get_k(dft_list, ncalc; NLIM = 100)
                 println("limit kpoints to $NLIM, from ",  size(kpts)[1])
                 ind = reverse(sortperm(wghts)) #largest weights first
                 
-                keepN = 30 #keep this many from beginning of weighted list
+#                keepN = 30 #keep this many from beginning of weighted list
+                keepN = min(NLIM, length(ind))
                 ind1 = ind[1:keepN]
-
-
-                N = randperm(size(kpts)[1]-keepN) .+ keepN #randomly sample the rest
-                ind2 = [ind1;ind[N]]
+                if size(kpts)[1]-keepN > 0
+                    N = randperm(size(kpts)[1]-keepN) .+ keepN #randomly sample the rest
+                    ind2 = [ind1;ind[N]]
+                end
 
 #                kpts = kpts[N[1:NLIM],:]
 #                wghts = wghts[N[1:NLIM]]
