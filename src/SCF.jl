@@ -187,10 +187,10 @@ Solve for scf energy, also stores the updated electron density and h1 inside the
             delta_eden = sum(abs.(e_den_NEW - e_denA))
 
             if (delta_eden >= delta_eden_old*0.98 && iter > 2) || iter == 25
-                mixA = max(mixA * 0.5, 0.0005)
+                mixA = max(mixA * 0.5, 0.00001)
                 nreduce += 1
                 if nreduce > 10
-                    mixA = 0.5
+                    mixA = 0.05
                     nreduce = -20
                 end
                 @printf("                               reduce mixing: % 6.4f   olderr:  % 10.8f  newerr: % 10.8f \n" , mixA ,delta_eden_old, delta_eden)

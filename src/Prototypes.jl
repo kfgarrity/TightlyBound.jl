@@ -285,6 +285,9 @@ function setup_proto_data()
     CalcD["pd3te"] = ["$STRUCTDIR/binary/POSCAR_pd3te", "vc-relax", "all", "vol", "nscf"]
     CalcD["bpt"] = ["$STRUCTDIR/binary/POSCAR_bpt", "vc-relax", "all", "vol", "nscf"]
 
+    CalcD["bcc_5lay"] = ["$STRUCTDIR/binary/POSCAR_bcc_5lay", "vc-relax", "all", "vol", "nscf"]
+    CalcD["fcc_5lay"] = ["$STRUCTDIR/binary/POSCAR_fcc_5lay", "vc-relax", "all", "vol", "nscf"]
+
 
     CalcD["k2n6"] = ["$STRUCTDIR/binary/POSCAR_k2n6", "vc-relax", "all", "vol", "nscf"]
 
@@ -1105,14 +1108,14 @@ function oxidation_guess(atom1, atom2)
     end 
     
     transmetals = ["Sc", "Y", "La", "Ti", "Zr", "Hf", "V", "Nb", "Ta", "Cr", "Mo", "W", "Mn", "Tc", "Re", "Fe", "Ru", "Os", "Co", "Rh", "Ir", "Ni", "Pd", "Pt", "Cu", "Ag", "Au", "Zn", "Cd", "Hg", "B", "Al", "Ga", "In", "Tl"]
-    anions  = ["B", "Al", "Ga", "In", "Tl", "C", "Si", "Ge", "Sn", "Pb", "N", "P", "As", "Sb", "Bi", "O", "S", "Se", "Te", "F", "Cl", "Br", "I"]
+    anions  = [ "C", "Si", "Ge", "Sn", "Pb", "N", "P", "As", "Sb", "Bi", "O", "S", "Se", "Te", "F", "Cl", "Br", "I", "H"]
     othermetals = ["Li", "Na", "K", "Rb", "Cs", "Be", "Mg", "Ca", "Sr", "Ba"]
     metals = [transmetals; othermetals]
 
-    if atom1 in transmetals && atom2 == "H"
+    if atom1 in transmetals && atom2 == "H" && atom1 != atom2
         push!(keep, [atom2, atom1, "lipd3"])
     end
-    if atom2 in transmetals && atom1 == "H"
+    if atom2 in transmetals && atom1 == "H"  && atom1 != atom2
         push!(keep, [atom1, atom2, "lipd3"])
     end
 
@@ -1153,7 +1156,23 @@ function oxidation_guess(atom1, atom2)
         push!(keep, [atom1, atom2, "bpt"])
     end 
 
+    if atom1 in ["Ru", "Os"] &&  atom2 in ["O"]
+        push!(keep, [atom1, atom2, "sif4"])
+        push!(keep, [atom1, atom2, "gei4_mol"])
+    end 
+    if atom2 in ["Ru", "Os"] &&  atom1 in ["O"]
+        push!(keep, [atom2, atom1, "sif4"])
+        push!(keep, [atom2, atom1, "gei4_mol"])
+    end 
 
+    if atom1 in anions && !(atom2 in anions)
+        push!(keep, [atom2, atom1, "bcc_5lay"])
+        push!(keep, [atom2, atom1, "fcc_5lay"])
+    end
+    if atom2 in anions && !(atom1 in anions)
+        push!(keep, [atom1, atom2, "bcc_5lay"])
+        push!(keep, [atom1, atom2, "fcc_5lay"])
+    end
 
 #    for k in keep
 #        println(k)
