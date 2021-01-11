@@ -3,6 +3,8 @@ using LinearAlgebra
 using ..TightlyBound.Atomdata:atom_prefered_oxidation
 using ..TightlyBound.Atomdata:min_dimer_dist_dict
 using ..TightlyBound.QE:loadXML
+using ..TightlyBound.CalcTB:distances_etc_3bdy
+using ..TightlyBound.ManageDatabase:prepare_database
 
 struct proto_data
 
@@ -25,6 +27,68 @@ struct proto_data
     all_ternary::Array{String}
 
 end
+
+function get_twobody_dist(A,B)
+
+    prepare_database([A,B])
+    database = TightlyBound.ManageDatabase.database_cached
+    
+    ab = database[(A,B)].min_dist * 1.0001
+    println("min dist $A $B $ab")
+    return ab
+end
+#=    println("get_twobody_dist $A $B")
+
+    dir1 = "/wrk/kfg/julia_data/$A"*"_$B"*"_kspace"
+    dir2 = "/wrk/kfg/julia_data/$B"*"_$A"*"_kspace"
+
+    if isdir(dir1)
+        dir = dir1
+    else
+        dir = dir2
+    end
+
+    println(dir)
+    ab = 1.0
+    try
+        name_t="dimer.in"
+        ncalc_t = 1
+        newst_t = "coords"
+        ab_dir="$dir/$name_t"*"_vnscf_"*"$newst_t"*"_"*"1"        
+        println("try $ab_dir")
+        println("dft ",ab_dir*"/qe.save")
+
+        dft = loadXML(ab_dir*"/qe.save")
+        ab = -dft.crys.coords[1,3] * dft.crys.A[3,3] * 2.0
+        ab2 = (min_dimer_dist_dict[A] + min_dimer_dist_dict[B]) / 2.0 
+        ab = min(ab,ab2)
+        println("try $ab")
+    catch
+        ab = (min_dimer_dist_dict[A] + min_dimer_dist_dict[B]) / 2.0 
+        println("catch $ab")
+    end
+    println("ab $ab")
+
+    return ab
+end
+=#
+
+function check_twobody_dist(crys)
+    R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy(crys,10.0, 0.0)
+    ret = true
+    for t1 in crys.types
+        for t2 in crys.types
+            ab = get_twobody_dist(t1,t2)
+            if dmin_types[Set([t1,t2])] < ab
+                ret = false
+                break
+            end
+        end
+    end
+    return ret
+end
+
+
 
 function setup_proto_data()
 
@@ -329,6 +393,8 @@ function setup_proto_data()
 
     CalcD["simple_hex"] = ["$STRUCTDIR/simple_hex.in", "vc-relax", "all", "flyaway", "nscf"]
 
+    CalcD["trimer_tern"] =       ["$STRUCTDIR/ternary/POSCAR_trimer_tern", "none", "2Dxy", "trimer_tern", "nscf"]
+    CalcD["trimer_tern_right"] =       ["$STRUCTDIR/ternary/POSCAR_trimer_tern_right", "none", "2Dxy", "trimer_tern_right", "nscf"]
 
 
 
@@ -477,6 +543,10 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
             ncalc = length([1.05, 1.1,  1.2,  1.3])
         elseif (newst == "coords_trimer_dense" || newst == "coords_trimer_ab_dense" )
             ncalc = length([1.0, 0.95])
+        elseif newst == "trimer_tern"
+            ncalc = 4
+        elseif newst == "trimer_tern_right"
+            ncalc = 9
         else
             println("error newst: ", newst)
             ncalc = 1
@@ -646,7 +716,7 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                     newst_t = "coords"
                     ab_dir="$dir/$name_t"*"_vnscf_"*"$newst_t"*"_"*"$ncalc_t"        
                     println("try $ab_dir")
-                    dft = QE.loadXML(ab_dir*"/qe.save")
+                    dft = loadXML(ab_dir*"/qe.save")
 
                     ab = -dft.crys.coords[1,3] * dft.crys.A[3,3] * 2.0
                     println("ab $ab loaded")
@@ -829,6 +899,42 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                 
             elseif newst == "scf"
                 push!(torun, deepcopy(cnew))
+            elseif newst == "trimer_tern"
+                println("trimer_tern")
+                counter = 0
+                for x in [0.5, 0.7, 0.9, 1.1, 1.3,  1.5,  1.7, 1.9, 2.1]
+                    c = deepcopy(cnew)
+                    c.coords = c.coords * x
+                    if check_twobody_dist(c)
+                        counter += 1
+                        push!(torun, deepcopy(c))
+                        if counter >= 4
+                            break
+                        end
+                    end
+                end
+            elseif newst == "trimer_tern_right"
+#                println("trimer_tern")
+                counter = 0
+                c = deepcopy(cnew)
+                
+                orders = [[1,2,3], [2,1,3], [3,1,2]]
+                for o in orders
+                    t = c.types[o]
+                    a12 = get_twobody_dist(t[1], t[2])
+                    a13 = get_twobody_dist(t[1], t[3])
+                    coords = zeros(3,3)
+                    coords[2,1] = a12/12.0
+                    coords[3,2] = a13/12.0
+                    c2 = makecrys(c.A, coords, t)
+
+                    for x in [1.0, 1.2, 1.4]
+                        c3 = deepcopy(c2)
+                        c3.coords = c3.coords * x
+                        push!(torun, deepcopy(c3))
+                    end
+                end
+                
             else
                 println("error newst: ", newst)
             end
