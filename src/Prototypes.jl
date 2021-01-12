@@ -24,7 +24,7 @@ struct proto_data
     A3B5::Array{String}
     metals::Array{String}
     short_bonds::Array{String}
-    all_ternary::Array{String}
+    core_ternary::Array{String}
 
 end
 
@@ -348,6 +348,8 @@ function setup_proto_data()
     CalcD["p3n5"] = ["$STRUCTDIR/binary/POSCAR_p3n5", "vc-relax", "all", "vol", "nscf"]
     CalcD["pd3te"] = ["$STRUCTDIR/binary/POSCAR_pd3te", "vc-relax", "all", "vol", "nscf"]
     CalcD["bpt"] = ["$STRUCTDIR/binary/POSCAR_bpt", "vc-relax", "all", "vol", "nscf"]
+    CalcD["pd3s"] = ["$STRUCTDIR/binary/POSCAR_JVASP-pd3s", "vc-relax", "all", "vol", "nscf"]
+
 
     CalcD["bcc_5lay"] = ["$STRUCTDIR/binary/POSCAR_bcc_5lay", "vc-relax", "all", "vol", "nscf"]
     CalcD["fcc_5lay"] = ["$STRUCTDIR/binary/POSCAR_fcc_5lay", "vc-relax", "all", "vol", "nscf"]
@@ -372,9 +374,9 @@ function setup_proto_data()
     CalcD["hh2"] = ["$STRUCTDIR/ternary/POSCAR_hh2", "vc-relax", "all", "vol-mid", "nscf"]
     CalcD["hh3"] = ["$STRUCTDIR/ternary/POSCAR_hh3", "vc-relax", "all", "vol-mid", "nscf"]
 
-    CalcD["stuffhex_1"] = ["$STRUCTDIR/ternary/POSCAR_mgb2_1", "vc-relax", "all", "vol", "nscf"]
-    CalcD["stuffhex_2"] = ["$STRUCTDIR/ternary/POSCAR_mgb2_2", "vc-relax", "all", "vol", "nscf"]
-    CalcD["stuffhex_3"] = ["$STRUCTDIR/ternary/POSCAR_mgb2_3", "vc-relax", "all", "vol", "nscf"]
+    CalcD["stuffhex_1"] = ["$STRUCTDIR/ternary/POSCAR_mgb2_1", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["stuffhex_2"] = ["$STRUCTDIR/ternary/POSCAR_mgb2_2", "vc-relax", "all", "vol-mid", "nscf"]
+    CalcD["stuffhex_3"] = ["$STRUCTDIR/ternary/POSCAR_mgb2_3", "vc-relax", "all", "vol-mid", "nscf"]
 
     CalcD["stuffhex_z_1"] = ["$STRUCTDIR/ternary/POSCAR_z_mgb2_1", "vc-relax", "all", "vol-mid", "nscf"]
     CalcD["stuffhex_z_2"] = ["$STRUCTDIR/ternary/POSCAR_z_mgb2_2", "vc-relax", "all", "vol-mid", "nscf"]
@@ -427,9 +429,10 @@ function setup_proto_data()
 #    metals = [ "mg2si", "simg2",  "mgb2_12", "mgb2_21",  "fcc_conv_ABBB","fcc_conv_BAAA",  "ab2_71", "ba2_71"]
     metals = [ "mg2si", "simg2",  "mgb2_12", "mgb2_21",    "ab2_71", "ba2_71"]
 
-    all_ternary = ["abc_line", "bac_line", "cab_line", "fcc_tern", "hex_trim", "hh1", "hh2", "hh3", "stuffhex_1", "stuffhex_2", "stuffhex_3","stuffhex_z_1", "stuffhex_z_2", "stuffhex_z_3", "rocksalt_2lay_abo2", "caf2_abc", "perov", "perov2", "perov3",  "perov4",  "perov5",  "perov6"  ]
+   # all_ternary = ["abc_line", "bac_line", "cab_line", "fcc_tern", "hex_trim", "hh1", "hh2", "hh3", "stuffhex_1", "stuffhex_2", "stuffhex_3","stuffhex_z_1", "stuffhex_z_2", "stuffhex_z_3", "rocksalt_2lay_abo2", "caf2_abc", "perov", "perov2", "perov3",  "perov4",  "perov5",  "perov6"  ]
+    core_ternary = ["abc_line", "bac_line", "cab_line", "fcc_tern", "hex_trim", "hh1", "hh2", "hh3", "stuffhex_1", "stuffhex_2", "stuffhex_3", "trimer_tern","trimer_tern_right" ]
 
-    pd = proto_data(CalcD, core_mono, core_binary, A0, A1B1, A1B2, A1B3, A1B4, A1B5, A1B6, A2B3, A2B5,A3B5, metals, short_bonds, all_ternary)
+    pd = proto_data(CalcD, core_mono, core_binary, A0, A1B1, A1B2, A1B3, A1B4, A1B5, A1B6, A2B3, A2B5,A3B5, metals, short_bonds, core_ternary)
 
     return pd
 
@@ -467,8 +470,8 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
             TORUN = [TORUN;pd.metals]
         elseif t == :short_bonds
             TORUN = [TORUN;pd.short_bonds]
-        elseif t == :all_ternary
-            TORUN = [TORUN;pd.all_ternary]
+        elseif t == :core_ternary
+            TORUN = [TORUN;pd.core_ternary]
         else
             TORUN = [TORUN; t]
         end
@@ -1279,6 +1282,14 @@ function oxidation_guess(atom1, atom2)
         push!(keep, [atom1, atom2, "bcc_5lay"])
         push!(keep, [atom1, atom2, "fcc_5lay"])
     end
+
+    if atom1 in ["Re", "Tc", "Ru", "Os", "Rh", "Ir", "Pd", "Pt", "Ag", "Au", "Ni"] && atom2 in ["Te", "Se", "S", "Be", "B"]
+        push!(keep, [atom1, atom2, "pd3s"])
+    end
+    if atom2 in ["Re", "Tc", "Ru", "Os", "Rh", "Ir", "Pd", "Pt", "Ag", "Au", "Ni"] && atom1 in ["Te", "Se", "S", "Be", "B"]
+        push!(keep, [atom2, atom1, "pd3s"])
+    end
+
 
 #    for k in keep
 #        println(k)
