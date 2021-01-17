@@ -356,7 +356,7 @@ Solve for scf energy, also stores the updated electron density and h1 inside the
             #        e_den = e_den_OLD
             mix = min(mix, 0.01)
             println("scf convergence trouble, trying more conservative settings 3  $mix")
-            conv, e_den = innnerloop(mix, smearing, e_den, conv_thr, iters*50)
+            conv, e_den = innnerloop(mix, smearing, e_den, conv_thr, iters*4)
             if conv == false println("still scf convergence trouble 3") end
         end        
     end

@@ -39,6 +39,7 @@ using ..TB:get_dq
 
 #using ..CalcTB:calc_tb_prepare
 using ..CalcTB:calc_tb_prepare_fast
+using ..CalcTB:calc_frontier
 using ..CalcTB:calc_frontier_list
 #using ..CalcTB:calc_tb
 using ..CalcTB:calc_tb_fast
@@ -138,6 +139,7 @@ function prepare_for_fitting(list_of_tbcs; kpoints = missing, dft_list = missing
 
         @time twobody_arrays, threebody_arrays, hvec, svec, Rvec, INDvec, h_onsite, ind_convert, dmin_types, dmin_types3 =  calc_tb_prepare_fast(tbc, use_threebody=fit_threebody, use_threebody_onsite=fit_threebody_onsite)
 
+        
         if !ismissing(starting_database)
             goodmin=true
             for key in keys(dmin_types)
@@ -169,6 +171,16 @@ function prepare_for_fitting(list_of_tbcs; kpoints = missing, dft_list = missing
                     end
                 end
             end
+
+            if goodmin == true
+                violation_list, vio_bool = calc_frontier(tbc.crys, starting_database, test_frontier=true, verbose=false)
+                if vio_bool == false
+                    println("calc_frontier failed, skip $counter") 
+                    println(tbc.crys)
+                    goodmin = false
+                end
+            end
+
 
             if goodmin == false
                 println("goodmin == false")
@@ -2244,7 +2256,7 @@ function do_fitting_recursive_main(list_of_tbcs, prepare_data; weights_list=miss
 #                    println( " scf $c_scf $c ", energy_new+etypes, "    $dq   $energy_charge $energy_band $energy_smear")
 
                     if abs(energy_new  - energy_old) < 1e-5
-                        println("scf converged  $c ", energy_new+etypes, "    $dq " )
+#                        println("scf converged  $c ", energy_new+etypes, "    $dq " )
                         conv = true
                         break
                     end
@@ -2298,6 +2310,8 @@ function do_fitting_recursive_main(list_of_tbcs, prepare_data; weights_list=miss
 
             
             ENERGIES_FITTED[c] = etypes + energy_charge + energy_band + energy_smear
+            println("scf $conv $c ", ENERGIES_FITTED[c], " d  ", ENERGIES_FITTED[c] - ENERGIES[c], "    $dq " )
+
 
         end
 

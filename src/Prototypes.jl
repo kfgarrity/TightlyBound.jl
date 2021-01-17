@@ -1,9 +1,12 @@
 using TightlyBound
 using LinearAlgebra
+using DelimitedFiles
 using ..TightlyBound.Atomdata:atom_prefered_oxidation
 using ..TightlyBound.Atomdata:min_dimer_dist_dict
+using ..TightlyBound.Atomdata:sub_list
 using ..TightlyBound.QE:loadXML
 using ..TightlyBound.CalcTB:distances_etc_3bdy
+using ..TightlyBound.CalcTB:calc_frontier
 using ..TightlyBound.ManageDatabase:prepare_database
 
 struct proto_data
@@ -27,6 +30,17 @@ struct proto_data
     core_ternary::Array{String}
 
 end
+
+
+function check_frontier(crys)
+
+    prepare_database(crys)
+    database = TightlyBound.ManageDatabase.database_cached
+    violation_list, vio_bool = calc_frontier(crys, database, test_frontier=true, verbose=false)
+    
+    return vio_bool
+end
+
 
 function get_twobody_dist(A,B)
 
@@ -363,9 +377,9 @@ function setup_proto_data()
 
 
     #ternary
-    CalcD["abc_line"] = ["$STRUCTDIR/ternary/abc_line.in", "relax", "all", "coords-small", "nscf"]
-    CalcD["bac_line"] = ["$STRUCTDIR/ternary/bac_line.in", "relax", "all", "coords-small", "nscf"]
-    CalcD["cab_line"] = ["$STRUCTDIR/ternary/cab_line.in", "relax", "all", "coords-small", "nscf"]
+    CalcD["abc_line"] = ["$STRUCTDIR/ternary/abc_line.in", "relax", "all", "coords-small2", "nscf"]
+    CalcD["bac_line"] = ["$STRUCTDIR/ternary/bac_line.in", "relax", "all", "coords-small2", "nscf"]
+    CalcD["cab_line"] = ["$STRUCTDIR/ternary/cab_line.in", "relax", "all", "coords-small2", "nscf"]
 
     CalcD["fcc_tern"] = ["$STRUCTDIR/ternary/fcc_tern.in", "vc-relax", "all", "vol-mid", "nscf"]
     CalcD["hex_trim"] = ["$STRUCTDIR/ternary/hex_trim_3.in", "vc-relax",  "2Dxy", "2D-mid", "nscf"]
@@ -397,6 +411,10 @@ function setup_proto_data()
 
     CalcD["trimer_tern"] =       ["$STRUCTDIR/ternary/POSCAR_trimer_tern", "none", "2Dxy", "trimer_tern", "nscf"]
     CalcD["trimer_tern_right"] =       ["$STRUCTDIR/ternary/POSCAR_trimer_tern_right", "none", "2Dxy", "trimer_tern_right", "nscf"]
+
+    CalcD["hh_oxygen"] = ["$STRUCTDIR/ternary/POSCAR_hh_oxygen", "vc-relax", "all", "vol-oxygen", "nscf"]
+    CalcD["hh_oxygen2"] = ["$STRUCTDIR/ternary/POSCAR_hh_oxygen2", "vc-relax", "all", "vol-oxygen", "nscf"]
+    CalcD["hex_oxygen"] = ["$STRUCTDIR/ternary/hex_trim_3.in_oxygen", "vc-relax",  "2Dxy", "2D-oxygen", "nscf"]
 
 
 
@@ -477,17 +495,19 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
         end
     end
 
-#    println("TORUN")
-#    for t in TORUN
-#        println(t)
-#    end
-#    println("--")
+    println("TORUN")
+    for t in TORUN
+        println(t)
+    end
+    println("--")
 #    sleep(1)
 
     already_done = []
     not_done = []
 
     for st in TORUN
+
+        println("start ", st)
 
         file, scf, free, newst, calc_mode = pd.CalcD[st]
 
@@ -509,6 +529,10 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
             ncalc = length([ 0.95 1.0 1.05])
         elseif newst == "vol-mid"
             ncalc = length( [ 0.9 0.95 1.0 1.05 1.1 ])
+        elseif newst == "vol-oxygen"
+            ncalc = 4
+        elseif newst == "2D-oxygen"
+            ncalc = 3
         elseif newst == "vol-dense"
             ncalc = length( [0.8 0.83 0.87 ])
         elseif newst == "vol-verydense"
@@ -531,6 +555,8 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
             ncalc = length( [-0.3 -0.27 -0.25])
         elseif newst == "coords-small"
             ncalc = length( [ -0.15  -0.10 -0.05  0.0 0.05 0.10  0.15  ])
+        elseif newst == "coords-small2"
+            ncalc = length( [ -0.12  -0.06 0.0  0.06   ])
         elseif newst == "coords_super"
             ncalc = length( 0.08:.01:0.25)
         elseif newst == "break_inv"
@@ -591,6 +617,8 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                     c.types[i] = T2
                 elseif c.types[i] == "C"
                     c.types[i] = T3
+                elseif c.types[i] == "O"
+                    c.types[i] = "O"
                 else
                     c.types[i] = T2
                 end
@@ -659,6 +687,28 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                     c.A = c.A * x
                     push!(torun, deepcopy(c))
                 end
+            elseif newst == "vol-oxygen"
+                cx = makecrys(cnew.A, cnew.coords[1:2,:], cnew.types[1:2])
+
+                for x in [ 0.90, 0.96, 1.0  ]
+                    c = deepcopy(cx)
+                    c.A = c.A * x
+                    push!(torun, deepcopy(c))
+                end
+                cx.coords[1,3] += 0.02
+                cx.A = cx.A * 0.93
+                push!(torun, deepcopy(cx))
+
+
+            elseif newst == "2D-oxygen"
+                cx = makecrys(cnew.A, cnew.coords[2:3,:], cnew.types[2:3])
+
+                for x in [ 0.91, 0.95, 1.0  ]
+                    c = deepcopy(cx)
+                    c.A = c.A * x
+                    push!(torun, deepcopy(c))
+                end
+
             elseif newst == "vol-dense"
                 for x in [0.8 0.83 0.87 ]
                     c = deepcopy(cnew)
@@ -865,6 +915,21 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                     c.coords = c.coords * (1+x)
                     push!(torun, deepcopy(c))
                 end
+            elseif newst == "coords-small2"
+                for x in [ -0.12,  -0.06, 0.0, 0.06  ]
+                    c = deepcopy(cnew)
+                    c.coords[:,3] = c.coords[:,3] .- c.coords[1,3]
+#                    c.coords = c.coords * (1+x)
+#                    if c.coords[2,3] > 0.35
+#                        c.coords[2,3] = 0.35
+#                    end
+#                    if c.coords[3,3] < -0.35
+#                        c.coords[3,3] = -0.35
+#                    end
+                    c.A[3,3] = c.A[3,3] * (1+x)
+
+                    push!(torun, deepcopy(c))
+                end
             elseif newst == "coords_super"
                 for x in 0.08:.01:0.25
                     c = deepcopy(cnew)
@@ -917,7 +982,7 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                     end
                 end
             elseif newst == "trimer_tern_right"
-#                println("trimer_tern")
+                println("trimer_tern right")
                 counter = 0
                 c = deepcopy(cnew)
                 
@@ -927,14 +992,21 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                     a12 = get_twobody_dist(t[1], t[2])
                     a13 = get_twobody_dist(t[1], t[3])
                     coords = zeros(3,3)
-                    coords[2,1] = a12/12.0
-                    coords[3,2] = a13/12.0
+                    coords[2,1] = a12/12.0 * 1.05
+                    coords[3,2] = a13/12.0 * 1.05
                     c2 = makecrys(c.A, coords, t)
-
-                    for x in [1.0, 1.2, 1.4]
+                    counterX = 0
+                    for x in 1.0:0.05:5.0
                         c3 = deepcopy(c2)
-                        c3.coords = c3.coords * x
-                        push!(torun, deepcopy(c3))
+                        c3.A[1,:] = c3.A[1,:] * x
+                        c3.A[2,:] = c3.A[2,:] * x
+                        if check_frontier(c3)
+                            push!(torun, deepcopy(c3))
+                            counterX += 1
+                            if counterX >= 3
+                                break
+                            end
+                        end
                     end
                 end
                 
@@ -959,7 +1031,7 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                     if calc_mode == "nscf"
 
                         try
-                            tbc, tbck = TightlyBound.AtomicProj.projwfx_workf(dft, nprocs=procs, directory=d, skip_og=true, skip_proj=true, freeze=true, localized_factor = 0.15, cleanup=true, only_kspace=only_kspace)
+                            tbc, tbck = TightlyBound.AtomicProj.projwfx_workf(dft, nprocs=procs, directory=d, skip_og=true, skip_proj=true, freeze=true, localized_factor = 0.15, cleanup=true, only_kspace=true)
                         catch err3
                             println("err3")
                             println(err3)
@@ -986,7 +1058,299 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
 
 end
 
+
 pd = setup_proto_data()
+
+function structure_substitute(atom1, atom2, atom3)
+
+    transmetals = ["Sc", "Y", "La", "Ti", "Zr", "Hf", "V", "Nb", "Ta", "Cr", "Mo", "W", "Mn", "Tc", "Re", "Fe", "Ru", "Os", "Co", "Rh", "Ir", "Ni", "Pd", "Pt", "Cu", "Ag", "Au", "Zn", "Cd", "Hg", "B", "Al", "Ga", "In", "Tl"]
+
+    STRUCTDIR = TightlyBound.STRUCTDIR
+    summ = readdlm("$STRUCTDIR/ternary/summ.csv")
+
+    satom = sort([atom1, atom2, atom3])
+
+    function arediff(st)
+        return (st[1] != st[2]) || (st[1] != st[3]) || (st[2] != st[3])
+    end
+
+    orders = [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+
+
+    sl = []
+    for i in 1:3
+        push!(sl, sub_list[satom[i]])
+    end
+    slalt = []
+    for i in 1:3
+        if satom[i] in transmetals
+            push!(slalt,  transmetals)
+        else
+            push!(slalt,  sub_list[satom[i]])
+        end
+    end
+
+    CR0 = []
+    SUB0 = []
+
+    #find exact matches
+    for i in 1:size(summ)[1]
+        at = summ[i,5:7]
+        if satom == sort(at)
+            c = makecrys(String(summ[i,1]))
+            push!(CR0, c)
+            push!(SUB0, [String(summ[i,2]), c.types[1], c.types[2], c.types[3]])
+
+        end
+    end
+
+    #generate all single subs
+    SUB1 = []
+    SUB2 = []
+    SUBTRANS = []
+    println("generate")
+    
+    CR1 = []
+    CR2 = []
+    CRTRANS = []
+
+    for i in 1:3
+        if i == 1
+            others = [2,3]
+        elseif i == 2
+            others = [1,3]
+        elseif i == 3
+            others = [1,2]
+        end
+
+        for s in sl[i]
+            temp = [s, satom[others[1]], satom[others[2]]]
+            orig = [satom[i], satom[others[1]], satom[others[2]]]
+            if arediff(temp)
+                for o in orders
+                    to = temp[o]
+                    for i in 1:size(summ)[1]
+                        at = summ[i,5:7]
+                        if to == at
+#                            println(at, " ", orig[o])
+                            c = makecrys(String(summ[i,1]))
+                            for (ind,t) in enumerate(c.types)
+                                for ii = 1:3
+                                    if t == at[ii]
+                                        c.types[ind] = orig[o[ii]]
+                                    end
+                                end
+                            end
+                            push!(CR1, c)
+
+                            push!(SUB1, [String(summ[i,2]), orig[o[1]], orig[o[2]], orig[o[3]]])
+                        end
+                    end
+                end
+            end
+        end
+
+        for s in slalt[i]
+            temp = [s, satom[others[1]], satom[others[2]]]
+            orig = [satom[i], satom[others[1]], satom[others[2]]]
+            if arediff(temp)
+                for o in orders
+                    to = temp[o]
+                    for i in 1:size(summ)[1]
+                        at = summ[i,5:7]
+                        if to == at
+                            c = makecrys(String(summ[i,1]))
+                            for (ind,t) in enumerate(c.types)
+                                for ii = 1:3
+                                    if t == at[ii]
+                                        c.types[ind] = orig[o[ii]]
+                                    end
+                                end
+                            end
+
+                            push!(CRTRANS, c)
+#                            println(at, " t ", orig[o])
+                            push!(SUBTRANS, [String(summ[i,2]), orig[o[1]], orig[o[2]], orig[o[3]]])
+                        end
+                    end
+                end
+            end
+        end
+
+
+
+    end
+
+    #generate all double subs
+
+    println("generate")
+    for i in 1:3
+        if i == 1
+            others = [2,3]
+        elseif i == 2
+            others = [1,3]
+        elseif i == 3
+            others = [1,2]
+        end
+        for s1 in sl[others[1]]
+            for s2 in sl[others[2]]
+                temp = [s1,s2,satom[i]]
+#            temp = [s, satom[others[1]], satom[others[2]]]
+                orig = [satom[others[1]], satom[others[2]], satom[i]]
+                if arediff(temp)
+                    for o in orders
+                        to = temp[o]
+                        for i in 1:size(summ)[1]
+                            at = summ[i,5:7]
+                            if to == at
+                                c = makecrys(String(summ[i,1]))
+                                for (ind,t) in enumerate(c.types)
+                                    for ii = 1:3
+                                        if t == at[ii]
+                                            c.types[ind] = orig[o[ii]]
+                                        end
+                                    end
+                                end
+
+                                push!(CR2, c)
+
+#                                println(at, " d ", orig[o])
+                                push!(SUB2, [String(summ[i,2]), orig[o[1]], orig[o[2]], orig[o[3]]])
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return CR0, CR1, CR2, CRTRANS, SUB0, SUB1, SUB2, SUBTRANS
+
+
+end
+
+#    println("EXACT")
+#    for i in exact
+#        println(summ[i,:])
+#    end
+#    println()
+
+#        if sat == satom
+#            exact = [exact; i]
+#        else
+#            at1 == atom1
+
+function do_run_ternary_sub(at1, at2, at3, dir,procs, n1=6, n2 = 12)
+
+    CR0, CR1, CR2, CRTRANS, SUB0, SUB1, SUB2, SUBTRANS = structure_substitute(at1, at2, at3)
+
+    c0 = length(CR0)
+    c1 = length(CR1)
+    c2 = length(CR2)
+    ct = length(CRTRANS)
+
+    CBIG = [CR1 ;  CR2 ; CRTRANS]
+    SBIG = [SUB1 ; SUB2 ; SUBTRANS]
+    
+    satom = sort([at1,at2, at3])
+        
+    DONE = []
+    DONE_TYPES = []
+
+    torun = []
+    n = 0
+
+    #add exact atom matches at 95 percent, 105 %,  assume that 100 percent is already done somewhere
+    for (i,c) in enumerate(CR0)
+        name = SUB0[i][1]
+        if name in DONE
+            continue
+        end
+        n += 1
+
+        if n <= n1
+            push!(torun, deepcopy(c) * 0.95)
+            push!(DONE, name)
+        end
+        n += 1
+        if n <= n1
+            push!(torun, deepcopy(c) * 1.05)
+            push!(DONE, name)
+        end
+        if n >= n2
+            break
+        end
+        push!(DONE_TYPES, sort(c.types))
+    end
+
+    #add others with differing stoichiometry
+    for (i,c) in enumerate(CBIG)
+        name = SBIG[i][1]
+        if name in DONE
+            continue
+        end
+        if sort(c.types) in DONE_TYPES
+            continue
+        end
+        n += 1
+        if n <= n1
+            push!(torun, deepcopy(c) * 0.95)
+            push!(DONE, name)
+        end
+        n += 1
+        push!(torun, deepcopy(c) )
+        push!(DONE, name)
+        if n >= n2
+            break
+        end
+        push!(DONE_TYPES, sort(c.types))
+    end
+
+    #add anything else if we still need more structures to reach n2
+    if n < n2
+        for (i,c) in enumerate(CBIG)
+            name = SBIG[i][1]
+            if name in DONE
+                continue
+            end
+            n += 1
+            push!(torun, deepcopy(c) )
+            push!(DONE, name)
+            if n >= n2
+                break
+            end
+
+        end            
+    end
+    println("DONE")
+    for d in DONE
+        println(d)
+    end
+
+    for (i,c) in enumerate(torun)
+        name = DONE[i]
+
+        println("running dft ternary")
+        println(c)
+        println()
+        d="$dir/$name"*"_vnscf_"*"$i"        
+        try
+            dft = TightlyBound.DFT.runSCF(c, nprocs=procs, prefix="qe", directory="$d", tmpdir="$d", wannier=false, code="QE", skip=true, cleanup=true)
+            tbc, tbck = TightlyBound.AtomicProj.projwfx_workf(dft, nprocs=procs, directory=d, skip_og=true, skip_proj=true, freeze=true, localized_factor = 0.15, cleanup=true, only_kspace=true)
+        catch
+            println("err dft $d")
+        end
+        println("done run")
+
+
+    end
+
+    return torun
+
+end
+        
+
+
+
 
 function oxidation_guess(atom1, atom2)
 
@@ -1218,6 +1582,7 @@ function oxidation_guess(atom1, atom2)
     
     transmetals = ["Sc", "Y", "La", "Ti", "Zr", "Hf", "V", "Nb", "Ta", "Cr", "Mo", "W", "Mn", "Tc", "Re", "Fe", "Ru", "Os", "Co", "Rh", "Ir", "Ni", "Pd", "Pt", "Cu", "Ag", "Au", "Zn", "Cd", "Hg", "B", "Al", "Ga", "In", "Tl"]
     anions  = [ "C", "Si", "Ge", "Sn", "Pb", "N", "P", "As", "Sb", "Bi", "O", "S", "Se", "Te", "F", "Cl", "Br", "I", "H"]
+    stronganions  = [  "N", "P", "As", "O", "S", "Se", "F", "Cl", "Br", "I"]
     othermetals = ["Li", "Na", "K", "Rb", "Cs", "Be", "Mg", "Ca", "Sr", "Ba"]
     metals = [transmetals; othermetals]
 
@@ -1290,6 +1655,13 @@ function oxidation_guess(atom1, atom2)
         push!(keep, [atom2, atom1, "pd3s"])
     end
 
+    bigmetals = ["Li", "Na", "K", "Rb", "Cs", "Be", "Mg", "Ca", "Sr", "Ba", "Sc", "Y", "La", "Hg"]
+
+    if (atom1 in bigmetals && !(atom2 in stronganions)) || (atom2 in bigmetals && !(atom1 in stronganions)) 
+        push!(keep, [atom1, atom2, "hh_oxygen"])
+        push!(keep, [atom1, atom2, "hh_oxygen2"])
+        push!(keep, [atom1, atom2, "hex_oxygen"])
+    end
 
 #    for k in keep
 #        println(k)
@@ -1304,3 +1676,151 @@ end
 #    A1B5 = ["ascl5"]
 #    A2B3 = ["y2o3", "p2ca3", "al2o3", "bi2se3", "ga2s3", "gas"]
 #    A2B5 = ["nb2o5"]
+
+
+
+
+#=
+
+                end
+            end
+
+#            println(i, " s1 " , SUB1[end])
+        end
+    end
+    #generate all double subs
+    SUB2 = []
+    println("generate2")
+    for i in 1:3
+        if i == 1
+            others = [2,3]
+        elseif i == 2
+            others = [1,3]
+        elseif i == 3
+            others = [1,2]
+        end
+
+
+        for s1 in sl[others[1]]
+            for s2 in sl[others[2]]
+                temp = [s1,s2,satom[i]]
+                if arediff(temp)
+                    for o in orders
+                        push!(SUB2,deepcopy(temp[o]))
+                    end
+                end
+#                println(i, " s2 " , SUB2[end])
+            end
+        end
+    end
+
+    TRANSMETAL = []
+    println("generate all trans metal subs")
+    for i in 1:3
+        if satom[i] in transmetals
+            sl[i] = transmetals
+        end
+    end
+    for i in 1:3
+        if i == 1
+            others = [2,3]
+        elseif i == 2
+            others = [1,3]
+        elseif i == 3
+            others = [1,2]
+        end
+
+        for s in sl[i]
+            temp = [s, satom[others[1]], satom[others[2]]]
+            if arediff(temp)
+                for o in orders
+                    push!(TRANSMETAL,deepcopy(temp[o]))
+                end
+            end
+        end
+
+        for s in sl[i]
+            if arediff([s, satom[others[1]], satom[others[2]]])
+                push!(TRANSMETAL, sort([s, satom[others[1]], satom[others[2]]]))
+            end
+#            println(i, " st " , TRANSMETAL[end])
+        end
+
+
+#        for s1 in sl[others[1]]
+#            for s2 in sl[others[2]]
+#                push!(TRANSMETAL, sort([s1,s2,satom[i]]))
+#            end
+#        end
+    end
+
+
+
+    exact = []
+    sub1 = []
+    sub2 = []
+    subtrans = []
+    for i in 1:size(summ)[1]
+        at1 = summ[i,5]
+        at2 = summ[i,6]
+        at3 = summ[i,7]
+        at = summ[i,5:7]
+
+        sat = sort([at1, at2, at3])
+        ex = 0
+        if at1 in satom
+            ex += 1
+        end
+        if at2 in satom
+            ex += 1
+        end
+        if at3 in satom
+            ex += 1
+        end
+
+        if ex == 3
+            exact = [exact; i]
+        elseif ex == 2
+            if sat in SUB1
+                sub1 = [sub1; i]
+                bestorder(summ[i,5:7], satom)
+
+            end
+            if sat in TRANSMETAL
+                subtrans = [subtrans; i]
+            end
+
+        elseif ex == 1
+            if sat in SUB2
+                sub2 = [sub2; i]
+            end
+
+        end
+    end
+
+    println("EXACT ", length(exact))
+    for i in exact
+        println(summ[i,:])
+    end
+    println()
+
+    println("SUB1  ", length(sub1))
+    for i in sub1
+        println(summ[i,:])
+    end
+    println()
+
+    println("SUB2  ", length(sub2))
+    for i in sub2
+        println(summ[i,:])
+    end
+    println()
+
+    println("SUBTRNS  ", length(subtrans))
+    for i in subtrans
+        println(summ[i,:])
+    end
+    println()
+
+    return summ[exact, :], summ[sub1, :], summ[sub2, :], summ[subtrans, :]
+=#
