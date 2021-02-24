@@ -4,6 +4,7 @@ using DelimitedFiles
 using ..TightlyBound.Atomdata:atom_prefered_oxidation
 using ..TightlyBound.Atomdata:min_dimer_dist_dict
 using ..TightlyBound.Atomdata:sub_list
+using ..TightlyBound.Atomdata:electronegativity
 using ..TightlyBound.QE:loadXML
 using ..TightlyBound.CalcTB:distances_etc_3bdy
 using ..TightlyBound.CalcTB:calc_frontier
@@ -142,6 +143,7 @@ function setup_proto_data()
     CalcD["dimer_short"] = ["$STRUCTDIR/dimer.in", "relax", "2Dxy", "coords-short", "nscf"]
     CalcD["dimer_small"] = ["$STRUCTDIR/dimer_small.in", "relax", "2Dxy", "coords", "nscf"]
     CalcD["dimer_super"] = ["$STRUCTDIR/dimer.in", "relax", "2Dxy", "coords_super", "nscf"]
+    CalcD["dimer2_super"] = ["$STRUCTDIR/binary/dimer.in", "scf", "2Dxy", "coords_super", "nscf"]
     CalcD["hcp_shape"] = ["$STRUCTDIR/hcp.in.up", "vc-relax", "all", "shape", "nscf"]
 
     CalcD["hex_2lay"] = ["$STRUCTDIR/hex_2layers.in.up", "vc-relax", "2Dxy", "2D", "nscf"]
@@ -219,10 +221,20 @@ function setup_proto_data()
     CalcD["hbn"] = ["$STRUCTDIR/binary/hbn.in", "vc-relax", "2Dxy", "2D-mid", "nscf"]
     CalcD["znse"] = ["$STRUCTDIR/binary/znse.in", "vc-relax", "all", "vol-mid", "nscf"]
     CalcD["dimer2"] = ["$STRUCTDIR/binary/dimer.in", "relax", "all", "coords", "nscf"]
+
+    CalcD["dimer2_min"] = ["$STRUCTDIR/binary/dimer.in", "none", "all", "coords_min", "nscf"]
+    CalcD["tri2_min"] = ["$STRUCTDIR/binary/dimer.in", "none", "all", "coords_min_tri", "nscf"]
+    CalcD["dimer_min"] = ["$STRUCTDIR/dimer.in", "none", "all", "coords_min", "nscf"]
+    CalcD["tri_min"] = ["$STRUCTDIR/binary/dimer.in", "none", "all", "coords_min_tri", "nscf"]
+
+
     CalcD["dimer2_rev"] = ["$STRUCTDIR/binary/dimer_rev.in", "relax", "all", "coords", "nscf"]
     CalcD["square2"] = ["$STRUCTDIR/binary/square.in", "vc-relax", "2Dxy", "2D", "nscf"]
     CalcD["caf2"] = ["$STRUCTDIR/binary/POSCAR_caf2", "vc-relax", "all", "vol-mid", "nscf"]
+
     CalcD["co2"] = ["$STRUCTDIR/binary/co2.in", "relax", "all", "coords-small", "nscf"]
+    CalcD["co2_v2"] = ["$STRUCTDIR/binary/co2_v2.in", "relax", "all", "coords-small", "nscf"]
+
     CalcD["square_ab2"] = ["$STRUCTDIR/binary/square_ab2.in", "vc-relax", "2Dxy", "2D", "nscf"]
     CalcD["mgf2"] = ["$STRUCTDIR/binary/POSCAR_mgf2", "vc-relax", "all", "vol", "nscf"]
     CalcD["hcp_v2"] = ["$STRUCTDIR/binary/hcp.in2", "vc-relax", "all", "vol-mid", "nscf"]
@@ -396,7 +408,8 @@ function setup_proto_data()
     CalcD["stuffhex_z_2"] = ["$STRUCTDIR/ternary/POSCAR_z_mgb2_2", "vc-relax", "all", "vol-mid", "nscf"]
     CalcD["stuffhex_z_3"] = ["$STRUCTDIR/ternary/POSCAR_z_mgb2_3", "vc-relax", "all", "vol-mid", "nscf"]
 
-    CalcD["rocksalt_2lay_abo2"] = ["$STRUCTDIR/ternary/rocksalt.in.2lay_abo2", "vc-relax", "2Dxy", "2D", "nscf"]
+    CalcD["rocksalt_2lay_abo2"] = ["$STRUCTDIR/ternary/rocksalt.in.2lay_abo2", "vc-relax", "2Dxy", "2D_tern", "nscf"]
+    CalcD["p4mmm"] = ["$STRUCTDIR/ternary/POSCAR_p4mmm", "vc-relax", "all", "3D_tern", "nscf"]
     CalcD["caf2_abc"] = ["$STRUCTDIR/ternary/POSCAR_caf2_ABC", "vc-relax", "all", "vol", "nscf"]
 
     CalcD["perov"] = ["$STRUCTDIR/ternary/POSCAR_abo3", "vc-relax", "all", "vol", "nscf"]
@@ -411,22 +424,28 @@ function setup_proto_data()
 
     CalcD["trimer_tern"] =       ["$STRUCTDIR/ternary/POSCAR_trimer_tern", "none", "2Dxy", "trimer_tern", "nscf"]
     CalcD["trimer_tern_right"] =       ["$STRUCTDIR/ternary/POSCAR_trimer_tern_right", "none", "2Dxy", "trimer_tern_right", "nscf"]
+    CalcD["trimer_tern_angle"] =       ["$STRUCTDIR/ternary/POSCAR_trimer_tern_angle", "none", "2Dxy", "trimer_tern_angle", "nscf"]
+
+    CalcD["trimer_tern_line"] =       ["$STRUCTDIR/ternary/POSCAR_trimer_tern_line", "none", "2Dxy", "trimer_tern_line", "nscf"]
+
 
     CalcD["hh_oxygen"] = ["$STRUCTDIR/ternary/POSCAR_hh_oxygen", "vc-relax", "all", "vol-oxygen", "nscf"]
     CalcD["hh_oxygen2"] = ["$STRUCTDIR/ternary/POSCAR_hh_oxygen2", "vc-relax", "all", "vol-oxygen", "nscf"]
     CalcD["hex_oxygen"] = ["$STRUCTDIR/ternary/hex_trim_3.in_oxygen", "vc-relax",  "2Dxy", "2D-oxygen", "nscf"]
 
+    CalcD[""] = ["$STRUCTDIR/ternary/hex_trim_3.in_oxygen", "vc-relax",  "2Dxy", "2D-oxygen", "nscf"]
 
 
 
 
 
-    core_mono = [     "sc", "atom",     "sc_inv",     "bcc",     "bcc_inv",     "fcc",     "hcp", "hcp_shape",      "diamond",     "graphene",     "hex",     "square",     "dimer", "hex_2lay", "bcc_2lay", "fcc_dense", "bcc_dense", "znse_dense"]
+
+    core_mono = [     "sc", "atom",     "sc_inv",     "bcc",     "bcc_inv",     "fcc",     "hcp", "hcp_shape",      "diamond",     "graphene",     "hex",     "square",     "dimer" ,"tri_min", "dimer_min", "trimer", "trimer2", "bcc_5lay", "fcc_5lay",  "hex_2lay", "bcc_2lay", "fcc_dense", "bcc_dense", "znse_dense"]
 
 
 
 
-    core_binary = [    "cscl",     "znse_shear",     "hbn",     "rocksalt",  "rocksalt_inv",   "znse",     "dimer2",     "square2", "hcp_v2", "rocksalt_shape", "rocksalt_2lay", "cscl_layers", "fcc_12", "fcc_21", "bcc_13", "bcc_31", "rocksalt_dense", "hcp_v2_dense", "znse_dense",  "distort", "227", "znseAABB", "trimer_ab2", "trimer2_ab2", "trimer_ba2", "trimer2_ba2"]
+    core_binary = [    "cscl",     "znse_shear",     "hbn",     "rocksalt",  "rocksalt_inv",   "znse",     "dimer2", "dimer2_min", "tri2_min", "square2", "hcp_v2", "rocksalt_shape", "rocksalt_2lay", "cscl_layers", "fcc_12", "fcc_21", "bcc_13", "bcc_31", "rocksalt_dense", "hcp_v2_dense", "znse_dense",  "distort", "227", "znseAABB", "trimer_ab2", "trimer2_ab2", "trimer_ba2", "trimer2_ba2"]
 
     A0 = [   "as_orth",    "ga_tet",    "ge_wurtz",    "pb_r3m",    "beta_sn",   "ga",    "bi",    "te",    "in",    "i2",    "li_p6mmm",    "hcp_shape",     "diamond_shear",   "n" ] #"bcc_tet.in",  same as POSCAR_ga_tet   #"as_221",  is simple cubic
     
@@ -448,7 +467,7 @@ function setup_proto_data()
     metals = [ "mg2si", "simg2",  "mgb2_12", "mgb2_21",    "ab2_71", "ba2_71"]
 
    # all_ternary = ["abc_line", "bac_line", "cab_line", "fcc_tern", "hex_trim", "hh1", "hh2", "hh3", "stuffhex_1", "stuffhex_2", "stuffhex_3","stuffhex_z_1", "stuffhex_z_2", "stuffhex_z_3", "rocksalt_2lay_abo2", "caf2_abc", "perov", "perov2", "perov3",  "perov4",  "perov5",  "perov6"  ]
-    core_ternary = ["abc_line", "bac_line", "cab_line", "fcc_tern", "hex_trim", "hh1", "hh2", "hh3", "stuffhex_1", "stuffhex_2", "stuffhex_3", "trimer_tern","trimer_tern_right" ]
+    core_ternary = ["abc_line", "bac_line", "cab_line", "fcc_tern", "hex_trim", "hh1", "hh2", "hh3", "stuffhex_1", "stuffhex_2", "stuffhex_3", "trimer_tern","trimer_tern_right","trimer_tern_line", "trimer_tern_angle", "p4mmm" ]
 
     pd = proto_data(CalcD, core_mono, core_binary, A0, A1B1, A1B2, A1B3, A1B4, A1B5, A1B6, A2B3, A2B5,A3B5, metals, short_bonds, core_ternary)
 
@@ -532,7 +551,7 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
         elseif newst == "vol-oxygen"
             ncalc = 4
         elseif newst == "2D-oxygen"
-            ncalc = 3
+            ncalc = 4
         elseif newst == "vol-dense"
             ncalc = length( [0.8 0.83 0.87 ])
         elseif newst == "vol-verydense"
@@ -541,6 +560,10 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
             ncalc = length( [0.80 0.85 0.9 0.95 1.0 1.05 1.1 1.2 1.3 1.5 ])
         elseif newst == "vol-huge"
             ncalc = length( [0.9 0.95 1.0 1.05 1.1 1.2 1.3 1.5 2.0 2.5 3.0 3.5 4.0 5.0])
+        elseif newst == "2D_tern"
+            ncalc = length( [0.90 0.95 1.0 1.05 ])
+        elseif newst == "3D_tern"
+            ncalc = length( [ 0.95 1.0 1.05 ])
         elseif newst == "2D"
             ncalc = length( [0.90 0.95 1.0 1.05 1.10])
         elseif newst == "2D-mid"
@@ -551,6 +574,14 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
             ncalc = length( [-0.06 -0.03 0.03 0.06])
         elseif newst == "coords"
             ncalc = length( [-0.20 -0.17 -0.14 -0.10 -0.07 -0.03 0.0 0.03 0.07 0.10 0.15 0.2 0.25 0.35 0.5])
+        elseif newst == "coords_min"
+            ncalc = 2
+        elseif newst == "coords_min_tri"
+            if T1 != T2
+                ncalc = 6
+            else
+                ncalc = 1
+            end
         elseif newst == "coords-short"
             ncalc = length( [-0.3 -0.27 -0.25])
         elseif newst == "coords-small"
@@ -558,7 +589,7 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
         elseif newst == "coords-small2"
             ncalc = length( [ -0.12  -0.06 0.0  0.06   ])
         elseif newst == "coords_super"
-            ncalc = length( 0.08:.01:0.25)
+            ncalc = length( 0.08:.03:0.2)
         elseif newst == "break_inv"
             ncalc = length( [0.01 0.02 0.05 0.07 ])
         elseif newst == "shear"
@@ -576,6 +607,10 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
             ncalc = 4
         elseif newst == "trimer_tern_right"
             ncalc = 9
+        elseif newst == "trimer_tern_line"
+            ncalc = 3
+        elseif newst == "trimer_tern_angle"
+            ncalc = 3
         else
             println("error newst: ", newst)
             ncalc = 1
@@ -609,6 +644,18 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
         try
             println("read crys")
             c = TightlyBound.CrystalMod.makecrys(file)
+
+            if newst == "2D_tern" || newst == "3D_tern"
+                #arrange in electronegativity order
+                en = [electronegativity[T1], electronegativity[T2], electronegativity[T3]]
+                ind = sortperm(en)
+                T = [deepcopy(T1), deepcopy(T2), deepcopy(T3)]
+                T1 = T[ind[1]]
+                T2 = T[ind[2]]
+                T3 = T[ind[3]]
+                println("electronegativity order $T1 $T2 $T3")
+            end
+
             
             for i in 1:c.nat
                 if c.types[i] == "A"
@@ -703,7 +750,7 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
             elseif newst == "2D-oxygen"
                 cx = makecrys(cnew.A, cnew.coords[2:3,:], cnew.types[2:3])
 
-                for x in [ 0.91, 0.95, 1.0  ]
+                for x in [ 0.91, 0.95, 1.0, 0.85  ]
                     c = deepcopy(cx)
                     c.A = c.A * x
                     push!(torun, deepcopy(c))
@@ -733,6 +780,18 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                     c.A = c.A * x
                     push!(torun, deepcopy(c))
                 end
+            elseif newst == "2D_tern"
+                for x in [0.90 0.95 1.0 1.05 ]
+                    c = deepcopy(cnew)
+                    c.A[1:2,:] = c.A[1:2,:] * x
+                    push!(torun, deepcopy(c))
+                end 
+            elseif newst == "3D_tern"
+                for x in [ 0.95 1.0 1.05 ]
+                    c = deepcopy(cnew)
+                    c.A = c.A * x
+                    push!(torun, deepcopy(c))
+                end 
             elseif newst == "2D"
                 for x in [0.90 0.95 1.0 1.05 1.10]
                     c = deepcopy(cnew)
@@ -931,7 +990,7 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                     push!(torun, deepcopy(c))
                 end
             elseif newst == "coords_super"
-                for x in 0.08:.01:0.25
+                for x in 0.08:.03:0.2
                     c = deepcopy(cnew)
                     c.coords[1,3] = -1.0*x
                     c.coords[2,3] = x
@@ -981,6 +1040,95 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                         end
                     end
                 end
+            elseif newst == "coords_min"
+                c = deepcopy(cnew)
+                t = c.types
+                a12 = get_twobody_dist(t[1], t[2])
+                c.A[:,:] = [10.0 0 0; 0 10.0 0; 0 0 16.0]
+                c.coords[1,:] .= 0.0
+                c.coords[2,:] .= 0.0
+                c.coords[2,3] = a12 / 16.0  * 0.99
+                push!(torun, deepcopy(c))
+                
+                c2 = deepcopy(c)
+                c2.coords[2,3] = a12 / 16.0 * 1.035
+                push!(torun, deepcopy(c2))
+
+            elseif newst == "coords_min_tri"
+
+                c = deepcopy(cnew)
+                t = c.types
+                a12 = get_twobody_dist(t[1], t[2])
+
+                A = [16.0 0 0; 0 8.0 0; 0 0 16.0]
+                coords1= zeros(3,3)
+                coords2= zeros(3,3)
+                tt1 = [t[1], t[2], t[1]]
+                tt2 = [t[2], t[1], t[2]]
+
+                a11 = get_twobody_dist(t[1], t[1])
+                a22 = get_twobody_dist(t[2], t[2])
+
+                coords1[2,3] = a12 / 16.0 * 1.05
+                coords2[2,3] = a12 / 16.0 * 1.05
+
+                coords1[3,1] = a11 / 16.0 * 1.05
+                coords2[3,1] = a22 / 16.0 * 1.05
+                
+                c1 = makecrys(A, coords1, tt1)
+                c2 = makecrys(A, coords2, tt2)
+
+                push!(torun, deepcopy(c1))
+
+                if t[1] != t[2]
+                    push!(torun, deepcopy(c2))
+                end
+
+                if t[1] != t[2]
+                    A = [8.0 0 0; 0 8.0 0; 0 0 22.0]
+
+                    tt1 = [t[1], t[2], t[2]]
+                    tt2 = [t[2], t[1], t[1]]
+
+                    coords1= zeros(3,3)
+                    coords2= zeros(3,3)
+
+                    coords1[2,3] = a12 / 22.0 * 1.05
+                    coords1[3,3] = -a12 / 22.0 * 1.05
+                    
+                    coords2[2,3] = a12 / 22.0 * 1.05
+                    coords2[3,3] = -a12 / 22.0 * 1.05
+                    
+                    c1 = makecrys(A, coords1, tt1)
+                    c2 = makecrys(A, coords2, tt2)
+
+                    push!(torun, deepcopy(c1))
+                    push!(torun, deepcopy(c2))
+
+                    A = [16.0 0 0; 0 8.0 0; 0 0 16.0]
+
+                    tt1 = [t[1], t[2], t[2]]
+                    tt2 = [t[2], t[1], t[1]]
+
+                    coords1= zeros(3,3)
+                    coords2= zeros(3,3)
+
+                    coords1[2,1] = a12 / 16.0 * 1.05
+                    coords1[3,3] = -a12 / 16.0 * 1.05
+                    
+                    coords2[2,1] = a12 / 16.0 * 1.05
+                    coords2[3,3] = -a12 / 16.0 * 1.05
+                    
+                    c1 = makecrys(A, coords1, tt1)
+                    c2 = makecrys(A, coords2, tt2)
+
+                    push!(torun, deepcopy(c1))
+                    push!(torun, deepcopy(c2))
+
+
+                end
+                
+                
             elseif newst == "trimer_tern_right"
                 println("trimer_tern right")
                 counter = 0
@@ -992,11 +1140,11 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                     a12 = get_twobody_dist(t[1], t[2])
                     a13 = get_twobody_dist(t[1], t[3])
                     coords = zeros(3,3)
-                    coords[2,1] = a12/12.0 * 1.05
-                    coords[3,2] = a13/12.0 * 1.05
+                    coords[2,1] = a12/12.0 * 1.02
+                    coords[3,2] = a13/12.0 * 1.02
                     c2 = makecrys(c.A, coords, t)
                     counterX = 0
-                    for x in 1.0:0.05:5.0
+                    for x in 1.0:0.02:5.0
                         c3 = deepcopy(c2)
                         c3.A[1,:] = c3.A[1,:] * x
                         c3.A[2,:] = c3.A[2,:] * x
@@ -1004,6 +1152,65 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                             push!(torun, deepcopy(c3))
                             counterX += 1
                             if counterX >= 3
+                                break
+                            end
+                        end
+                    end
+                end
+
+            elseif newst == "trimer_tern_line"
+                println("trimer_tern line")
+                counter = 0
+                c = deepcopy(cnew)
+                
+                orders = [[1,2,3], [2,1,3], [3,1,2]]
+                for o in orders
+                    t = c.types[o]
+                    a12 = get_twobody_dist(t[1], t[2])
+                    a13 = get_twobody_dist(t[1], t[3])
+                    coords = zeros(3,3)
+                    coords[2,3] = a12/16.0 * 1.04
+                    coords[3,3] = -a13/16.0 * 1.04
+                    c2 = makecrys(c.A, coords, t)
+                    counterX = 0
+                    for x in [1.0]
+                        c3 = deepcopy(c2)
+                        c3.A[1,:] = c3.A[1,:] * x
+                        c3.A[2,:] = c3.A[2,:] * x
+                        if check_frontier(c3)
+                            push!(torun, deepcopy(c3))
+                            counterX += 1
+                            if counterX >= 3
+                                break
+                            end
+                        end
+                    end
+                end
+
+            elseif newst == "trimer_tern_angle"
+                println("trimer_tern angle")
+                counter = 0
+                c = deepcopy(cnew)
+                
+                orders = [[1,2,3], [2,1,3], [3,1,2]]
+                for o in orders
+                    t = c.types[o]
+                    a12 = get_twobody_dist(t[1], t[2])
+                    a13 = get_twobody_dist(t[1], t[3])
+                    coords = zeros(3,3)
+                    coords[2,1] = a12/12.0 * 1.02
+                    coords[3,2] = a13/12.0 * 1.02 * cos(30/180)
+                    coords[3,1] = a13/12.0 * 1.02 * sin(30/180)
+                    c2 = makecrys(c.A, coords, t)
+                    counterX = 0
+                    for x in 1.0:0.02:5.0
+                        c3 = deepcopy(c2)
+                        c3.A[1,:] = c3.A[1,:] * x
+                        c3.A[2,:] = c3.A[2,:] * x
+                        if check_frontier(c3)
+                            push!(torun, deepcopy(c3))
+                            counterX += 1
+                            if counterX >= 1
                                 break
                             end
                         end
@@ -1357,6 +1564,17 @@ function oxidation_guess(atom1, atom2)
     if atom1 == atom2
         keep = [[atom1, atom1, :core_mono]]
         keep = push!(keep , [atom1, atom1, :A0])
+
+        bigmetals = ["Li", "Na", "K", "Rb", "Cs", "Be", "Mg", "Ca", "Sr", "Ba", "Sc", "Y", "La", "Hg", "H"]
+
+        if atom1 in bigmetals
+            push!(keep, [atom1, atom1, "sc_verydense"])
+            push!(keep, [atom1, atom1, "fcc_verydense"])
+            push!(keep, [atom1, atom1, "bcc_verydense"])
+            push!(keep, [atom1, atom1, "diamond_verydense"])
+        end
+
+
         return keep
     end
 
@@ -1655,13 +1873,21 @@ function oxidation_guess(atom1, atom2)
         push!(keep, [atom2, atom1, "pd3s"])
     end
 
-    bigmetals = ["Li", "Na", "K", "Rb", "Cs", "Be", "Mg", "Ca", "Sr", "Ba", "Sc", "Y", "La", "Hg"]
+    bigmetals = ["Li", "Na", "K", "Rb", "Cs", "Be", "Mg", "Ca", "Sr", "Ba", "Sc", "Y", "La", "Hg", "H"]
 
     if (atom1 in bigmetals && !(atom2 in stronganions)) || (atom2 in bigmetals && !(atom1 in stronganions)) 
         push!(keep, [atom1, atom2, "hh_oxygen"])
         push!(keep, [atom1, atom2, "hh_oxygen2"])
         push!(keep, [atom1, atom2, "hex_oxygen"])
     end
+
+    if atom1 == atom2 && atom1 in bigmetals
+        push!(keep, [atom1, atom1, "sc_verydense"])
+        push!(keep, [atom1, atom1, "fcc_verydense"])
+        push!(keep, [atom1, atom1, "bcc_verydense"])
+        push!(keep, [atom1, atom1, "diamond_verydense"])
+    end
+        
 
 #    for k in keep
 #        println(k)

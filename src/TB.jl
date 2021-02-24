@@ -2744,7 +2744,8 @@ function plot_compare_dft(tbc, bs; tbc2=missing)
     vbmD, cbmD = find_vbm_cbm(bs.eigs[:,1:end] , efermi_dft)
     vbm, cbm = find_vbm_cbm(vals , efermi_tbc)
 
-
+#    vbm = 0.0
+#    vbmD = 0.0
 
 
     plot(bs.eigs[:,1] .- vbmD , color="orange", lw=2, label="DFT", grid=false, box=true, legend=:topright)    

@@ -34,7 +34,7 @@ and mpi commands (if any)
     pw2wan_command_serial=`$qebin/pw2wannier90.x -input `
     pw2wan_command_parallel=`$mpi $nprocs $qebin/pw2wannier90.x -input `
 
-    #uses symmetry to transform QE scf calculation into full k-point grid, so that w90 can understand
+    #uses symmetry to transform QE scf calculation into full k-point grid, so that w90 can understand (not currently in use)
     og_command_serial=`$qebin/open_grid.x -input `
     og_command_parallel=`$qebin/open_grid.x -input `
     #    og_command_parallel=`$mpi $nprocs $qebin/open_grid.x -input `

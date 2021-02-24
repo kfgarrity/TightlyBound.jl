@@ -186,8 +186,8 @@ Solve for scf energy, also stores the updated electron density and h1 inside the
             delta_eden_old = delta_eden
             delta_eden = sum(abs.(e_den_NEW - e_denA))
 
-            if (delta_eden >= delta_eden_old*0.98 && iter > 2) || iter == 25
-                mixA = max(mixA * 0.5, 0.00001)
+            if (delta_eden >= delta_eden_old*0.99999 && iter > 2) || iter == 25
+                mixA = max(mixA * 0.5, 0.0001)
                 nreduce += 1
                 if nreduce > 10
                     mixA = 0.05
