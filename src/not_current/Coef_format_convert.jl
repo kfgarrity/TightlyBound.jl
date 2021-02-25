@@ -1,4 +1,6 @@
+#not currently used
 
+#=
 
 function get_data_info_oldversion(at_set, dim)
 
@@ -344,3 +346,4 @@ function fix_format_change(datH, totHnew, dim, at_list, data_info)
     return datHnew
 
 end
+=#

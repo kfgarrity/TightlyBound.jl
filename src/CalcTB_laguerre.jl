@@ -44,7 +44,7 @@ using ..Utility:parse_str_ARR_float
 using ..Utility:dict2str
 using ..Utility:str2tuplesdict
 
-include("Coef_format_convert.jl")
+#include("Coef_format_convert.jl")
 
 
 
@@ -310,10 +310,10 @@ function make_coefs(at_list, dim; datH=missing, datS=missing, cutoff=18.01, min_
         end
     end
 
-    if length(datH) < totH
-        println("dat convert ", at_list, dim)
-        datH = fix_format_change(datH, totH, dim, at_list, data_info)
-    end
+#    if length(datH) < totH
+#        println("dat convert ", at_list, dim)
+#        datH = fix_format_change(datH, totH, dim, at_list, data_info)
+#    end
 
     dist_frontier2 = Dict()
     if !ismissing(dist_frontier)

@@ -7,7 +7,7 @@ SRCDIR=TightlyBound.SRCDIR
 
 @testset "testing prototypes" begin
     @suppress begin 
-        include("$SRCDIR/Prototypes.jl")
+        include("$SRCDIR/../code_for_dataset_gen/Prototypes.jl")
         t =  oxidation_guess("Na", "Cl")
         tref = [["Na", "Cl", :core_binary],["Na", "Cl", :A1B1], ["Na", "Cl", "pd3te"], ["Na", "Cl", "bcc_5lay"], ["Na", "Cl", "fcc_5lay"]]
 
@@ -18,5 +18,8 @@ SRCDIR=TightlyBound.SRCDIR
 
         @test t == tref
 
+
     end
 end
+
+
