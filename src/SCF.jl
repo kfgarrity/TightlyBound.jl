@@ -128,6 +128,8 @@ Solve for scf energy, also stores the updated electron density and h1 inside the
     VALS = zeros(Float64, nk, tbc.tb.nwan)
                   
     energy_old = 1e12
+    delta_energy_old = 1e14
+
     conv = false
     
     energy_tot = 0.0
@@ -170,6 +172,8 @@ Solve for scf energy, also stores the updated electron density and h1 inside the
 
 #        println("S ", e_denA)
         nreduce = 0
+        e_den_NEW = deepcopy(e_denA)
+
         for iter = 1:ITERS
 
             dq_old = dq
@@ -186,21 +190,25 @@ Solve for scf energy, also stores the updated electron density and h1 inside the
             delta_eden_old = delta_eden
             delta_eden = sum(abs.(e_den_NEW - e_denA))
 
-            if (delta_eden >= delta_eden_old*0.99999 && iter > 2) || iter == 25
-                mixA = max(mixA * 0.5, 0.0001)
-                nreduce += 1
-                if nreduce > 10
-                    mixA = 0.05
-                    nreduce = -20
-                end
-                @printf("                               reduce mixing: % 6.4f   olderr:  % 10.8f  newerr: % 10.8f \n" , mixA ,delta_eden_old, delta_eden)
-            end
 
 #            println("delta eden ", e_den_NEW - e_denA)
             
             energy_charge, pot = ewald_energy(tbc, dq)
             
             energy_tot = etypes + energy_band + energy_charge
+
+            if (delta_eden >= delta_eden_old*0.99999 && iter > 2) || iter == 25 #|| delta_energy_old < abs(energy_old - energy_tot)
+                mixA = max(mixA * 0.5, 0.0001)
+                nreduce += 1
+                if nreduce > 10
+                    mixA = 0.1
+                    nreduce = -5
+                end
+                @printf("                               reduce mixing: % 6.4f   olderr:  % 10.8f  newerr: % 10.8f \n" , mixA ,delta_eden_old, delta_eden)
+#                println("delta_energy_old $delta_energy_old new ",  abs(energy_old - energy_tot), " " ,  delta_energy_old < abs(energy_old - energy_tot))
+
+            end
+
 
 
             if mixing_mode == :pulay
@@ -219,7 +227,7 @@ Solve for scf energy, also stores the updated electron density and h1 inside the
                 e_denA = e_denA * (1 - mixA ) + e_den_NEW * (mixA )  
             elseif iter < 3
                 if iter == 1
-                    mixA_temp = 0.5
+                    mixA_temp = 0.4
                 else
                     mixA_temp = 0.2
                 end
@@ -292,21 +300,25 @@ Solve for scf energy, also stores the updated electron density and h1 inside the
             else
 #                println("SCF CALC $iter energy   $energy_tot   en_diff ", abs(energy_tot - energy_old), "   dq_diff:   $delta_eden    ")
                 @printf("SCF CALC %04i energy  % 10.8f  en_diff:   %08E  dq_diff:   %08E \n", iter, energy_tot, abs(energy_tot - energy_old), delta_eden )
+#                println(e_denA)
             end
             
-            if abs(energy_old - energy_tot) < conv_thrA
-                if delta_eden < 0.05
+            if abs(energy_old - energy_tot) < conv_thrA * tbc.crys.nat
+                if delta_eden < 0.05 * tbc.crys.nat
                     convA = true
                     println()
                     println("YES convergence in $iter iters, energy $energy_tot   dq = ",  (round.(dq; digits=3)))
                     println("END SCF ------------------")
                     println()
+                    return convA, e_denA
                     break
                 end
             end
+
+            delta_energy_old = deepcopy(abs(energy_old - energy_tot))
             energy_old = deepcopy(energy_tot)
         end
-        return convA, e_denA
+        return convA, 0.5*(e_denA + e_den_NEW)
     end
 
 #    println("STEP1")
@@ -321,7 +333,9 @@ Solve for scf energy, also stores the updated electron density and h1 inside the
         if conv == false 
             println("pulay mix no convergence, switch to simple mixing")
             mixing_mode = :simple
-            e_den = get_neutral_eden(tbc)
+            e_denS = get_neutral_eden(tbc)
+            e_den = 0.5*(e_den + e_denS)
+            mix = 0.05
 
         end
     end
@@ -342,7 +356,7 @@ Solve for scf energy, also stores the updated electron density and h1 inside the
         mix = min(mix, 0.1)
         conv, e_den = innnerloop(mix, smearing, e_den, conv_thr, iters*2)
         
-        if energy_tot > 0.1 ||  abs(energy0 - energy_tot)/tbc.crys.nat > 0.4 || abs(energy1 - energy_tot)/tbc.crys.nat > 0.05
+        if energy_tot > 0.1  || abs(energy1 - energy_tot)/tbc.crys.nat > 0.05
             
             println("WARNING, energy too far from initial, restarting with more conservative settings")
             e_den = get_neutral_eden(tbc)

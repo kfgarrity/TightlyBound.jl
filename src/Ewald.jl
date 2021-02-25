@@ -147,17 +147,45 @@ function real_space(crys::crystal, kappa::Float64, U::Array{Float64}, starting_s
     coords_cart = crys.coords * crys.A
     
     converged = false
+    converged_old = false
     R0 = false
+
+    
+    N_list = [[1,1,1]]
+    a1 = sqrt(sum(crys.A[1,:].^2))
+    a2 = sqrt(sum(crys.A[2,:].^2))
+    a3 = sqrt(sum(crys.A[3,:].^2))
+    a = (minimum([a1,a2,a3]) - 0.0010) * 0.95
+
+    for N = 1:30
+
+        n1 = max(Int64(ceil( a * N / a1)), 2)
+        n2 = max(Int64(ceil( a * N / a2)), 2)
+        n3 = max(Int64(ceil( a * N / a3)), 2)
+
+        if [n1,n2,n3] != N_list[end]
+            N_list = push!(N_list, [n1,n2,n3])
+#            println("N_list ", (n1,n2,n3))
+        end
+    end
+
     
     newcontr = 0.0
     newcontrU = 0.0
     
-    for N = starting_size_rspace:20
+#    for N = starting_size_rspace:20
+#        Nx = N
+#        Ny = N
+#        Nz = N
+    Nxold = 0
+    Nyold = 0
+    Nzold = 0
+    for (Nx, Ny, Nz) in N_list
         gamma_ij_new[:,:] .= 0.0
         gamma_U_new[:,:] .= 0.0
-        for x = -N:N
-            for y = -N:N
-                for z = -N:N
+        for x = -Nx:Nx
+            for y = -Ny:Ny
+                for z = -Nz:Nz
                     if x != 0 || y != 0 || z != 0
                         R0 = false
                     else
@@ -165,7 +193,7 @@ function real_space(crys::crystal, kappa::Float64, U::Array{Float64}, starting_s
                     end
                     R[1,:] = [x,y,z] 
                     R[1,:] = R * crys.A
-                    if first_iter == true || (abs(x) > (N-1) || abs(y) > (N-1) || abs(z) > (N-1) )
+                    if first_iter == true || (abs(x) > Nxold || abs(y) > Nyold || abs(z) > Nzold )
                         for i = 1:crys.nat
                             for j = 1:crys.nat
                                 r = sum((coords_cart[i,:] - coords_cart[j,:] - R[1,:]).^2)^0.5
@@ -186,19 +214,24 @@ function real_space(crys::crystal, kappa::Float64, U::Array{Float64}, starting_s
         newcontr = sum(abs.(gamma_ij_new))
         newcontrU = sum(abs.(gamma_U_new))
 
-#        println("new $N real_space $newcontr $newcontrU")
+#        println("new $Nx $Ny $Nz real_space $newcontr $newcontrU")
 
         if newcontr < 1e-7 && newcontrU < 1e-7
-#            println("real_space YES converged $N : $newcontr")
-            converged = true
-            break
-#        else
-#            println("real_space NOT converged $N : $newcontr")
+            if converged_old == true
+                converged = true
+                break
+            end
+            converged_old = true
         end
         first_iter = false
         
         gamma_ij_tot += gamma_ij_new
         gamma_U_tot += gamma_U_new
+
+        Nxold = Nx
+        Nyold = Ny
+        Nzold = Nz
+
 
     end
 
@@ -222,7 +255,12 @@ function estimate_best_kappa(A)
 
     a = minimum([a1,a2,a3])
 
-    B = inv(A)
+#    println("a ", a)
+#    println(a1)
+#    println(a2)
+#    println(a3)
+
+    B = inv(A)'
 
     b1 = sqrt(sum(B[1,:].^2))
     b2 = sqrt(sum(B[2,:].^2))
@@ -230,10 +268,16 @@ function estimate_best_kappa(A)
     
     b = minimum([b1,b2,b3])
 
+#    println("b ", b)
+#    println(b1)
+#    println(b2)
+#    println(b3)
+
+
     tot = Float64[]
-    kappa_test = [0.00002 0.0001 0.0005 0.001 0.002 0.005 0.01 0.02 0.05 0.075 0.1 0.15 0.2 0.25 0.3 0.35 0.4 0.5 0.65 0.75 0.80 0.90 1.0 1.1 1.3 2.0 5.0 10.0 20.0 50.0 100.0]
+    kappa_test = [0.00002 0.0001 0.0005 0.001 0.002 0.005 0.01 0.02 0.05 0.075 0.1 0.15 0.17 0.2 0.22 0.25 0.27  0.3 0.33 0.35 0.4 0.5 0.65 0.75 0.80 0.90 1.0 1.1 1.3 2.0 5.0 10.0 20.0 50.0 100.0]
     for kappa = kappa_test
-        rs = erfc( kappa * a) / a * 20
+        rs = erfc( kappa * a) / a * 1
         ks = exp(-b^2 / 4.0 / kappa^2  * (2 * pi)^2 ) / (2*pi*b)^2
         push!(tot, rs + ks)
 #        println("$kappa rs $rs $ks $ks  tot ",rs + ks)
@@ -259,17 +303,42 @@ function k_space(crys::crystal, kappa, starting_size_kspace=2)
     coords_cart = crys.coords * crys.A
     
     converged = false
+    converged_old = false
     
     B = inv(crys.A)'
     vol = abs(det(crys.A))
 
+    N_list = [[1,1,1]]
+    b1 = sqrt(sum(B[1,:].^2))
+    b2 = sqrt(sum(B[2,:].^2))
+    b3 = sqrt(sum(B[3,:].^2))
+    b = (minimum([b1,b2,b3]) - 0.0010) * 0.95
+
+    for N = 1:30
+
+        n1 = max(Int64(ceil( b * N / b1)), 2)
+        n2 = max(Int64(ceil( b * N / b2)), 2)
+        n3 = max(Int64(ceil( b * N / b3)), 2)
+
+        if [n1,n2,n3] != N_list[end]
+            N_list = push!(N_list, [n1,n2,n3])
+        end
+    end
+
+
     newcontr = 0.0
     
-    for N = starting_size_kspace:25
+    Nxold = 0
+    Nyold = 0
+    Nzold = 0
+
+    for (Nx, Ny, Nz) in N_list
+
+#    for N = starting_size_kspace:25
         gamma_ij_new[:,:] .= 0.0
-        for kx = -N:N
-            for ky = -N:N
-                for kz = -N:N
+        for kx = -Nx:Nx
+            for ky = -Ny:Ny
+                for kz = -Nz:Nz
                     if kx == 0 && ky == 0 && kz == 0
                         continue
                     end
@@ -278,7 +347,7 @@ function k_space(crys::crystal, kappa, starting_size_kspace=2)
                     k2 = sum(K.^2) * (2*pi)^2
                     factor_k = (2*pi) * exp(-k2 / 4.0 / kappa^2  ) / k2
 
-                    if first_iter == true || abs(kx) > (N-1) || abs(ky) > (N-1) || abs(kz) > (N-1) 
+                    if first_iter == true || abs(kx) > Nxold || abs(ky) > Nyold || abs(kz) > Nzold
                         for i = 1:crys.nat
                             for j = 1:crys.nat
                                 kr = (K * (coords_cart[i,:] - coords_cart[j,:]) )[1]
@@ -296,16 +365,22 @@ function k_space(crys::crystal, kappa, starting_size_kspace=2)
         end
         first_iter = false
         newcontr = sum(abs.(gamma_ij_new))
-#        println("kspace $N newcontr $newcontr")
+
         if newcontr < 1e-7
-#            println("k_space YES converged $N : $newcontr")
-            converged = true
-            break
-#        else
-#            println("k_space NOT converged $N : $newcontr")
+            if converged_old == true
+                converged = true
+                break
+            end
+            converged_old = true #need convergence twice
+
         end
 
         gamma_ij_tot += 2.0*gamma_ij_new /vol
+        
+        Nxold = Nx
+        Nyold = Ny
+        Nzold = Nz
+
     end
 
     if converged == false
