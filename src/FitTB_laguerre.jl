@@ -129,13 +129,6 @@ function prepare_for_fitting(list_of_tbcs; kpoints = missing, dft_list = missing
 
     for (counter, tbc) in enumerate(tbc_list)
         
-#        if fast
-#        twobody_arrays, threebody_arrays, hvec, svec, Rvec, INDvec, h_onsite =  calc_tb_prepare(tbc, use_threebody=fit_threebody, use_threebody_onsite=fit_threebody_onsite)
-#        println("size HVEC slow!!!!!!! ", size(hvec)[1])
-
-#        println("typeof(tbc) ", typeof(tbc))
-        
-        #println("$counter tbc.tb.nr ", tbc.tb.nr)
 
         @time twobody_arrays, threebody_arrays, hvec, svec, Rvec, INDvec, h_onsite, ind_convert, dmin_types, dmin_types3 =  calc_tb_prepare_fast(tbc, use_threebody=fit_threebody, use_threebody_onsite=fit_threebody_onsite)
 
@@ -157,20 +150,6 @@ function prepare_for_fitting(list_of_tbcs; kpoints = missing, dft_list = missing
                 end
             end
 
-#            for key in keys(dmin_types3)
-#                for key2 in keys(starting_database)
-#                    if Set(key2) == key
-#                        if dmin_types3[key] < starting_database[key2].min_dist * 0.995 && length(key2) == 3
-#                            goodmin = false
-#                            println("WARNING, skipping fit structure due to distance shorter than starting_database $counter, three-body")
-#                            println(key, " " , key2, " ", dmin_types3[key] , " < " , starting_database[key2].min_dist)
-#                            println(tbc.crys)
-#                            println()
-#                            break
-#                        end
-#                    end
-#                end
-#            end
 
             if goodmin == true
                 violation_list, vio_bool = calc_frontier(tbc.crys, starting_database, test_frontier=true, verbose=false)

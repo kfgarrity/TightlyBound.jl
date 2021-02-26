@@ -16,6 +16,7 @@ using GZip
 using EzXML
 using XMLDict
 using Printf
+using SparseArrays
 #using Statistics
 
 using Base.Threads
@@ -2133,8 +2134,13 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
 #                println("coef")
 #                println(coef)
 #                println()
-                hmat = zeros(var_type, nkeep*nwan*nwan, coef.sizeH)
-                smat = zeros(var_type, nkeep*nwan*nwan, coef.sizeS)
+
+#                hmat = zeros(var_type, nkeep*nwan*nwan, coef.sizeH)
+#                smat = zeros(var_type, nkeep*nwan*nwan, coef.sizeS)
+
+                hmat = spzeros(var_type, nkeep*nwan*nwan, coef.sizeH)
+                smat = spzeros(var_type, nkeep*nwan*nwan, coef.sizeS)
+
 
                 twobody_arrays[at_set] = (hmat, smat, coef)
 
@@ -2153,7 +2159,9 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
                     if !haskey(threebody_arrays, at_set)
 #                        println("3bdy $at_set")
                         coef = make_coefs(at_set, 3)
-                        hmat = zeros(var_type, nkeep*nwan*nwan, coef.sizeH)
+#                        hmat = zeros(var_type, nkeep*nwan*nwan, coef.sizeH)
+                        hmat = spzeros(var_type, nkeep*nwan*nwan, coef.sizeH)
+
                         threebody_arrays[at_set] = (hmat, coef)
 
                     end
