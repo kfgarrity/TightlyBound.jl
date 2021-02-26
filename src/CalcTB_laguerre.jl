@@ -2135,14 +2135,14 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
 #                println(coef)
 #                println()
 
-#                hmat = zeros(var_type, nkeep*nwan*nwan, coef.sizeH)
-#                smat = zeros(var_type, nkeep*nwan*nwan, coef.sizeS)
+                hmat = zeros(var_type, nkeep*nwan*nwan, coef.sizeH)
+                smat = zeros(var_type, nkeep*nwan*nwan, coef.sizeS)
 
-                hmat = spzeros(var_type, nkeep*nwan*nwan, coef.sizeH)
-                smat = spzeros(var_type, nkeep*nwan*nwan, coef.sizeS)
+#                hmat = spzeros(var_type, nkeep*nwan*nwan, coef.sizeH)
+#                smat = spzeros(var_type, nkeep*nwan*nwan, coef.sizeS)
 
 
-                twobody_arrays[at_set] = (hmat, smat, coef)
+                twobody_arrays[at_set] = [hmat, smat, coef]
 
             end
         end
@@ -2159,10 +2159,10 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
                     if !haskey(threebody_arrays, at_set)
 #                        println("3bdy $at_set")
                         coef = make_coefs(at_set, 3)
-#                        hmat = zeros(var_type, nkeep*nwan*nwan, coef.sizeH)
-                        hmat = spzeros(var_type, nkeep*nwan*nwan, coef.sizeH)
+                        hmat = zeros(var_type, nkeep*nwan*nwan, coef.sizeH)
+#                        hmat = spzeros(var_type, nkeep*nwan*nwan, coef.sizeH)
 
-                        threebody_arrays[at_set] = (hmat, coef)
+                        threebody_arrays[at_set] = [hmat, coef]
 
                     end
 
@@ -2310,7 +2310,7 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
         hmat = hmat[1:counter,:]
         smat = smat[1:counter,:]
 
-        twobody_arrays[key] = (hmat, smat, coef)
+        twobody_arrays[key] = [hmat, smat, coef]
     end
 
     if use_threebody || use_threebody_onsite
@@ -2318,7 +2318,7 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
             hmat = threebody_arrays[key][1] 
             hmat = hmat[1:counter,:]
             coef = threebody_arrays[key][2] 
-            threebody_arrays[key] = (hmat, coef)
+            threebody_arrays[key] = [hmat, coef]
         end
     end
 
@@ -2623,7 +2623,7 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
             th =  deepcopy(twobody_arrays[key][1][keep,:])
             ts =  deepcopy(twobody_arrays[key][2][keep,:])
             coef = deepcopy(twobody_arrays[key][3])
-            twobody_arrays[key] = (th, ts, coef)
+            twobody_arrays[key] = [th, ts, coef]
 
         end
 
@@ -2632,7 +2632,7 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
             th =  deepcopy(threebody_arrays[key][1][keep,:])
             coef = deepcopy(threebody_arrays[key][2])
 
-            threebody_arrays[key] = (th, coef)
+            threebody_arrays[key] = [th, coef]
 
         end
         
@@ -2648,8 +2648,15 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
 #        end
 #    end
 
+    println("make sparse")
+    for k in keys(twobody_arrays)
+        twobody_arrays[k][1] = sparse(twobody_arrays[k][1])
+        twobody_arrays[k][2] = sparse(twobody_arrays[k][2])
+    end
+    for k in keys(threebody_arrays)
+        threebody_arrays[k][1] = sparse(threebody_arrays[k][1])
+    end
 
-    
 
 #    println("test correlation")
 #    for key in keys(threebody_arrays)

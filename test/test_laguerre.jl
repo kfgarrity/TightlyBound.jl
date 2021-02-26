@@ -32,7 +32,8 @@ function test1()
         c8 = makecrys([14.0 0 0; 0 7.0 0; 0 0 7.0], [0 0 0; 0.46 0 0 ], ["Li", "Li"]);
         c9 = makecrys([14.0 0 0; 0 7.0 0; 0 0 7.0], [0 0 0; 0.45 0 0 ], ["Li", "Li"]);
 
-        @suppress begin
+#        @suppress begin
+        if true
 
             database = Dict()
             database[("Li", "Li")] = TightlyBound.CalcTB.make_coefs(Set(["Li", "Li"]), 2)
