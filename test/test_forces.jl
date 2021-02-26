@@ -45,6 +45,7 @@ function test_force()
 
     @testset "testing force dimer" begin
 
+#        if true
         @suppress begin
             ft = open("$TESTDIR/data_forces/fil_MgS_dimer", "r"); 
             dirst = readlines(ft); 
@@ -53,8 +54,8 @@ function test_force()
             #        println(dirst)
 
 
-            for scf = [false true]
-                
+#            for scf = [false true]
+            for scf = [false, true]
                 tbc_list, dft_list = loaddata(dirst, scf=scf);
                 database_rec = TightlyBound.FitTB.do_fitting_recursive(tbc_list,dft_list = dft_list,  fit_threebody=false, fit_threebody_onsite=false);
 
@@ -65,7 +66,7 @@ function test_force()
 
                 enFD, f_cartFD = TightlyBound.Force_Stress.finite_diff(tbc_list[x].crys, database_rec,1, 3,   smearing = smearing);
 
-#                println(f_cartFD, "  ", f_cart[1,3])
+                println(scf, " ,  ", f_cartFD, "  ", f_cart[1,3])
                 
                 @test abs(f_cartFD - f_cart[1,3]) < 1e-3
 #                @test abs(f_cartFD - f_cart_fft[1,3]) < 1e-3

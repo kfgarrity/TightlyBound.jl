@@ -277,7 +277,7 @@ function finite_diff(crys::crystal, database, ind1, ind2; stress_mode=false, ste
 
     tbc0 = calc_tb_fast(crys, database, verbose=false)
 
-    energy_tot0, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc0, smearing=smearing, grid=grid)
+    energy_tot0, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc0, smearing=smearing, grid=grid, conv_thr = 1e-7)
 
 
     if stress_mode == false
@@ -292,7 +292,7 @@ function finite_diff(crys::crystal, database, ind1, ind2; stress_mode=false, ste
 
         tbc1 = calc_tb_fast(crys1, database, verbose=false)
 
-        energy_tot1, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc1, smearing=smearing, grid=grid)
+        energy_tot1, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc1, smearing=smearing, grid=grid, conv_thr = 1e-7)
 
 
         crys2 = deepcopy(crys)
@@ -303,7 +303,7 @@ function finite_diff(crys::crystal, database, ind1, ind2; stress_mode=false, ste
 
         tbc2 = calc_tb_fast(crys2, database, verbose=false)
 
-        energy_tot2, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc2, smearing=smearing, grid=grid)
+        energy_tot2, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc2, smearing=smearing, grid=grid, conv_thr = 1e-7)
         
         force = - (energy_tot1 - energy_tot2) / (2 * step)
 
@@ -323,7 +323,7 @@ function finite_diff(crys::crystal, database, ind1, ind2; stress_mode=false, ste
 
         tbc1 = calc_tb_fast(crys1, database, verbose=false)
 
-        energy_tot1, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc1, smearing=smearing, grid=grid)
+        energy_tot1, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc1, smearing=smearing, grid=grid, conv_thr = 1e-7)
 
 
         crys2 = deepcopy(crys)
@@ -335,7 +335,7 @@ function finite_diff(crys::crystal, database, ind1, ind2; stress_mode=false, ste
 
         tbc2 = calc_tb_fast(crys2, database, verbose=false)
 
-        energy_tot2, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc2, smearing=smearing, grid=grid)
+        energy_tot2, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc2, smearing=smearing, grid=grid, conv_thr = 1e-7)
 
         stress = -1.0* (energy_tot1 - energy_tot2) / (2 * step) / abs(det(crys.A))
 

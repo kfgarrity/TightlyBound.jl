@@ -56,7 +56,7 @@ function test_basics()
             
             @test sum(abs.(ham2 - ham)) < 1e-7
 
-            tbck = TightlyBound.TB.read_tb_crys_kspace("test/data_forces/al_fcc_projham_K.xml.gz")
+            tbck = TightlyBound.TB.read_tb_crys_kspace("$TESTDIR/data_forces/al_fcc_projham_K.xml.gz")
 
             vects3, vals3, ham3, S3,e3 =  Hk(tbck, [0 0 0 ])
 
