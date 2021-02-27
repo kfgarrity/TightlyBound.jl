@@ -219,6 +219,16 @@ end
 #    
 #end
 
+"""
+    read_tb_crys(filename, tbc::tb_crys)
+
+Reads and returns from `filename` a `tb_crys` object. See `write_tb_crys`
+
+If cannot find `"filename"`, will look for `"filename.xml"`, `"filename.gz"`, `"filename.xml.gz"`
+
+Can read gzipped files directly.
+
+"""
 function read_tb_crys(filename; directory=missing)
 """
 get tbc object from xml file, written by write_tb_crys (see below)
@@ -566,6 +576,12 @@ get tbc object from xml file, written by write_tb_crys (see below)
 end
 
 
+"""
+    write_tb_crys(filename, tbc::tb_crys)
+
+Writes to `filename` a `tb_crys` object, using xml formatting. See `read_tb_crys`
+
+"""
 function write_tb_crys(filename, tbc::tb_crys)
     """
     write xml tb_crys object
@@ -1059,12 +1075,35 @@ Load hr.dat file from wannier90
     end
 end
 
+
+"""
+    Hk(h::tb_crys_kspace, kpoint)
+
+Calculate band structure at a k-point from a `tb_crys_kspace`
+        
+#Returns
+- `vect` - Eigenvectors num_wan × num_wan complex matrix at kpoint
+- `vals` - Eigenvalues (num_wan)
+- `hk` - Hamiltonian at kpoint
+- `sk` - Overlap matrix at kpoint
+- `vals0` - <vect | Hk0 | vect> where Hk0 is the non-scf part of the Hamiltonian.
+
+#Arguments
+- `h::tb_crys_kspace` - tb_crys_kspace object
+- `kpoint` - e.g. [0.0,0.0,0.0]
+- `scf=missing` - default is to take SCF from h.
+"""
 function Hk(h::tb_crys_kspace, kpoint; scf=missing)
 
     return Hk(h.tb, kpoint, scf=scf)
 
 end
 
+"""
+    Hk(h::tb_k, kpoint)
+
+Calculate band structure at a k-point from `tb_k`.
+"""
 function Hk(h::tb_k, kpoint; scf=missing) 
 
     if ismissing(scf)
@@ -1300,6 +1339,15 @@ function compare_bands(h::tb, bs::bandstructure; energy_lim=missing, doplot=true
 end
 
 
+"""
+   calc_bands(tbc::tb_crys, kpoints::Array{Float64,2})
+
+Calculate bandstructure for k-points from k-point array. Returns eigenvalues.
+
+# Arguments
+- `tbc::tb_crys` - The tight binding object
+- `kpoints::Array{Float64,2}` - k-point array. e.g. [0.0 0.0 0.0; 0.0 0.0 0.1]
+"""
 function calc_bands(tbc::tb_crys, kpoints::Array{Float64,2})
 #    if tbc.scf == true
 #        h1, dq = get_h1(tbc, tbc.eden)
@@ -1309,7 +1357,11 @@ function calc_bands(tbc::tb_crys, kpoints::Array{Float64,2})
     return calc_bands(tbc.tb, kpoints)
 end
 
+"""
+   calc_bands(h, kpoints::Array{Float64,2})
 
+Calculate bandstructure for k-points from k-point array. h is a `tb` or `tb_k` object.
+"""
 function calc_bands(h, kpoints::Array{Float64,2})
 """
 calculate band structure at group of points
@@ -1344,6 +1396,12 @@ calculate band structure at group of points
 
 end    
 
+"""
+    plot_compare_tb(h1::tb_crys, h2::tb_crys; h3=missing)
+
+Plot a comparison between different tight binding objects `h1`, `h2`, and optionally `h3`. Options similar to `plot_bandstr` but more limited.
+
+"""
 function plot_compare_tb(h1::tb_crys, h2::tb_crys; h3=missing, kpath=[0.5 0 0 ; 0 0 0; 0.5 0.0 0.5], names = missing, npts=30, efermi = missing, yrange=missing, plot_hk=false,  align="vbm")
     if ismissing(h3)
         plot_compare_tb(h1.tb, h2.tb, h3=missing, kpath=kpath, names = names, npts=npts, efermi = efermi, yrange=yrange, plot_hk=plot_hk, align=align)
@@ -1353,6 +1411,9 @@ function plot_compare_tb(h1::tb_crys, h2::tb_crys; h3=missing, kpath=[0.5 0 0 ; 
 end
 
 
+"""
+    plot_compare_tb(h1::tb, h2::tb; h3=missing)
+"""
 function plot_compare_tb(h1::tb, h2::tb; h3=missing, kpath=[0.5 0 0 ; 0 0 0; 0.5 0.0 0.5], names = missing, npts=30, efermi = missing, yrange=missing, plot_hk=false, align="vbm")
     println("plot_compare_tb ")
     plot_bandstr(h1, kpath=kpath, names = names, npts=npts, efermi = efermi, color="green", MarkerSize=4, yrange=yrange, plot_hk=plot_hk, align=align, clear_previous=true)
@@ -1376,6 +1437,30 @@ function summarize_orb(orb::Symbol)
 end
 
     
+"""
+    plot_bandstr(h::tb_crys; kpath, names = missing, proj_types=missing, proj_orbs = missing, proj_nums=missing)
+
+Plot the band structure of a `tb_crys` object. Can also perform a projected band structure if you specify at least one of `proj_types`, `proj_orbs`, `proj_nums`.
+
+k-path specified by a kpath array and names.
+
+# Arguments
+- `h::tb_crys` - The tight-biding object we want to plot bands from. Only required argument.
+- `kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0 0 ;0 0 0.5]` - `nk` × 3 array k-point path (high symmetry points).
+- `npts=30,` - number of points between high-symmetry k-points.
+- `names=missing` - `nk` string array. Names of the high-symmetry k-points 
+- `proj_types=missing` - types to project onto. Either `proj_types="H"` or `proj_types=["H", "O"]` are valid.
+- `proj_orbs=missing` - orbitals to project onto. either `proj_orbs=:s` or `proj_orbs=[:s, :p]`.
+- `proj_nums=missing` - atom numbers to project onto. Either `proj_nums=1` or `proj_nums=[1, 2]`
+- `efermi=missing` - allows you to specify fermi energy. Default is to take from `h`
+- `color="blue"` - specify line color
+- `MarkerSize=missing"` - specify markersize
+- `yrange=missing"` - specify y-range. e.g. yrange=[-0.7, 0.3]
+- `plot_hk=false` - plot things besides the normal band structure. Can be one of `:Seig, :Heig, :Hreal, :Himag, :Sreal, :Simag` to plot H or S eigvals or components. Primarily for debugging.
+- `align="vbm"` - default or `"valence"` is to align valence band max to zero energy. Can also be `"min"`, which aligns on the minimum eigenvalue, or `"fermi"` or `"ef"`, which align on the Fermi level, 
+- `clear_pervious=true` - clears the plot before adding new stuff.
+- `do_display=true` - display the plot. If `false`, can be used with display-less nodes. You can still use `savefig` from `Plots` to produce saved images.
+"""
 function plot_bandstr(h::tb_crys; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0 0 ;0 0 0.5], names = missing, npts=30, efermi = missing, color="blue", MarkerSize=missing, yrange=missing, plot_hk=false, align = "vbm", proj_types = missing, proj_orbs = missing, proj_nums=missing, clear_previous=true, do_display=true)
 
 
@@ -1466,6 +1551,11 @@ end
 
 
 
+"""
+    plot_bandstr(h::tb)
+
+Plots using `tb`
+"""
 function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0 0 ;0 0 0.5], names = missing, npts=30, efermi = missing, color="blue", MarkerSize=missing, yrange=missing, plot_hk=false, align="vbm", proj_inds=missing, clear_previous=true, do_display=true)
 #function plot_bandstr( kpath; names = missing, npts=30, efermi = missing)
 
@@ -1677,6 +1767,11 @@ end
 #
 
 
+"""
+    Hk(h::tb, kpoint)
+
+Calculate band structure at a k-point from `tb`
+"""
 function Hk(h::tb, kpoint)
 
     T=typeof(real(h.H[1,1,1]))
@@ -1686,6 +1781,11 @@ function Hk(h::tb, kpoint)
     return Hk(hktemp, sktemp, h, kpoint)
 end
 
+"""
+    Hk(h::tb_crys, kpoint)
+
+Calculate band structure at a k-point from `tb_crys`
+"""
 function Hk(tbc::tb_crys, kpoint )
 
     
@@ -2673,7 +2773,17 @@ function symm_by_orbitals(crys::crystal, mat)
 end
 
 
-function plot_compare_dft(tbc, bs; tbc2=missing)
+"""
+    plot_compare_dft(tbc::tb_crys, bs; tbc2=missing)
+    
+Plots a band structure comparison between a tight-binding crystal object (`tb_crys`) and a
+band structure directly from dft (either a `dftout` or `bs` object). 
+
+The k-points are fixed by the `bs` object.
+
+tbc2 is an optional second `tbc_crys`.
+"""
+function plot_compare_dft(tbc::tb_crys, bs; tbc2=missing)
 
     if typeof(bs) == dftout
         bs = bs.bandstruct
@@ -2682,6 +2792,7 @@ function plot_compare_dft(tbc, bs; tbc2=missing)
     kpts = bs.kpts
     kweights = bs.kweights
 
+    
     vals = calc_bands(tbc.tb, kpts)
     
 

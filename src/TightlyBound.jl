@@ -34,6 +34,7 @@ using .TB:plot_compare_tb
 using .TB:plot_bandstr
 using .TB:plot_compare_dft
 using .TB:read_tb_crys
+using .TB:write_tb_crys
 
 export Hk
 export calc_bands
@@ -41,6 +42,7 @@ export plot_compare_tb
 export plot_bandstr
 export plot_compare_dft
 export read_tb_crys
+export write_tb_crys
 
 include("RunDFT.jl")
 
@@ -70,7 +72,6 @@ export relax_structure
 
 Find the lowest energy atomic configuration of crystal c.
 
-...
 # Arguments
 - `c::crystal`: the structure to relax, only required argument
 - `mode="vc-relax"`: Default (variable-cell relax) will relax structure and cell, anything else will relax structure only.
@@ -79,7 +80,6 @@ Find the lowest energy atomic configuration of crystal c.
 - `grid=missing`: k-point grid, e.g. [10,10,10], default chosen automatically
 - `nsteps=100`: maximum iterations
 - `update_grid=true`: update automatic k-point grid during relaxation
-...
 """
 function relax_structure(c::crystal; database=missing, smearing = 0.01, grid = missing, mode="vc-relax", nsteps=100, update_grid=true)
 
@@ -110,6 +110,20 @@ function relax_structure(c::crystal; database=missing, smearing = 0.01, grid = m
 
 end
 
+"""
+    scf_energy_force_stress(c::crystal; database = missing, smearing = 0.01, grid = missing)
+
+Calculate energy, force, and stress for a crystal.
+
+returns energy, force, stress, tight_binding_crystal_object
+
+
+# Arguments
+- `c::crystal`: the structure to calculate on. Only required argument.
+- `database=missing`: Source of coeficients. Will be loaded from pre-fit coefficients if missing.
+- `smearing=0.01`: Gaussian smearing temperature, in Ryd. Usually can leave as default.
+- `grid=missing`: k-point grid, e.g. [10,10,10], default chosen automatically
+"""
 function scf_energy_force_stress(c::crystal; database = missing, smearing = 0.01, grid = missing)
     
     energy_tot, tbc, conv_flag = scf_energy(c; database=database, smearing=smearing, grid = grid)
@@ -130,6 +144,16 @@ function scf_energy_force_stress(c::crystal; database = missing, smearing = 0.01
 
 end
 
+"""
+    scf_energy_force_stress(tbc::tb_crys; database = missing, smearing = 0.01, grid = missing)
+
+Calculate energy, force, and stress for a tight binding crystal
+object. This allows the calculation to run without re-doing the SCF
+calculation. Assumes SCF already done!
+
+returns energy, force, stress, tight_binding_crystal_object
+
+"""
 function scf_energy_force_stress(tbc::tb_crys; database = missing, smearing = 0.01, grid = missing, do_scf=false)
     
     if ismissing(database)
@@ -151,12 +175,24 @@ end
 
 
 
-function scf_energy(d::dftout; database = Dict(), smearing=0.01, grid = missing, conv_thr = 1e-5, iters = 75, mix = -1.0, mixing_mode=:pulay)
 
-    return scf_energy(d.crys, smearing=smearing, grid = grid, conv_thr = conv_thr, iters = iters, mix = mix, mixing_mode=mixing_mode)
+"""
+    scf_energy(c::crystal)
 
-end
+Calculate energy, force, and stress for a crystal. Does self-consistent-field (SCF) calculation if using self-consistent electrostatics.
 
+returns energy, tight-binding-crystal-object, error-flag
+
+# Arguments
+- `c::crystal`: the structure to calculate on. Only required argument.
+- `database=missing`: Source of coeficients. Will be loaded from pre-fit coefficients if missing.
+- `smearing=0.01`: Gaussian smearing temperature, in Ryd. Usually can leave as default.
+- `grid=missing`: k-point grid, e.g. [10,10,10], default chosen automatically
+- `conv_thr = 1e-5`: SCF convergence threshold (Ryd).
+- `iter = 75`: number of iterations before switch to more conservative settings.
+- `mix = -1.0`: initial mixing. -1.0 means use default mixing. Will automagically adjust mixing if SCF is failing to converge.
+- `mixing_mode =:pulay`: default is Pulay mixing (DIIS). Other option is :simple, for simple linear mixing of old and new electron-density. Will automatically switch to simple if Pulay fails.
+"""
 function scf_energy(c::crystal; database = missing, smearing=0.01, grid = missing, conv_thr = 1e-5, iters = 75, mix = -1.0, mixing_mode=:pulay)
     println()
     println("Begin scf_energy-------------")
@@ -185,6 +221,24 @@ function scf_energy(c::crystal; database = missing, smearing=0.01, grid = missin
 
 end
 
+
+"""
+    scf_energy(d::dftout)
+
+    SCF energy using crystal structure from DFT object.
+"""
+function scf_energy(d::dftout; database = Dict(), smearing=0.01, grid = missing, conv_thr = 1e-5, iters = 75, mix = -1.0, mixing_mode=:pulay)
+
+    return scf_energy(d.crys, smearing=smearing, grid = grid, conv_thr = conv_thr, iters = iters, mix = mix, mixing_mode=mixing_mode)
+
+end
+
+
+"""
+    scf_energy(tbc::tbc_crys)
+
+    SCF energy using crystal structure from TBC object.
+"""
 function scf_energy(tbc::tb_crys; smearing=0.01, grid = missing, e_den0 = missing, conv_thr = 1e-5, iters = 75, mix = -1.0, mixing_mode=:pulay)
 
     energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbc = SCF.scf_energy(tbc; smearing=smearing, grid = grid, e_den0 = e_den0, conv_thr = conv_thr, iters = iters, mix = mix, mixing_mode=mixing_mode)

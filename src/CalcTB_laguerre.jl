@@ -1222,7 +1222,24 @@ function trim_dist(tbc, cutoff=18.0001)
     return tbc_new
 
 end    
+
 ########################################################################################################################################################
+"""
+    calc_tb_fast(crys::crystal; database=missing, use_threebody=true, use_threebody_onsite=true)
+
+Construct `tb_crys` from crystal stucture, but does not solve. This is
+usually called internally by functions like `scf_energy`, but you can
+use it directly if you want. Until you do a SCF energy calculation, the
+electron density and Fermi level will be wrong.
+
+# Arguments
+-`crys::crystal` - Required crystal structure
+-`database=missing` - Source of coefficients. Will load from default source if not specified.
+-`use_threebody=true` - Use three-body off-site interactions. Only turn off for testing purposes.
+-`use_threebody_onsite=true` - Use three-body on-site interactions. Only turn off for testing purposes.
+-'verbose=true` - set to false for less output.
+-'var_type=missing` - variable type of `tb_crys`. Default is `Float64`.
+"""
 function calc_tb_fast(crys::crystal, database=missing; reference_tbc=missing, verbose=true, var_type=missing, use_threebody=true, use_threebody_onsite=true, gamma=missing, screening=1.0, set_maxmin=false)
 
     if verbose

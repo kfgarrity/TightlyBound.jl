@@ -20,9 +20,8 @@ export write_efs
 
 Holds basic crystal structure information, type T.
 
-...
 # Holds
-    - `A::Array{T,2}` 3 × 3 lattice vectors, Bohr (atomic units) internally.
+- `A::Array{T,2}` 3 × 3 lattice vectors, Bohr (atomic units) internally.
 - `coords::Array{T,2}` num_atoms × 3  atomic positions, fractional units.
 - `types::Array{String,1}` atomic names, like "H" or "Zn".
 - `nat::Int64` number of atoms.
