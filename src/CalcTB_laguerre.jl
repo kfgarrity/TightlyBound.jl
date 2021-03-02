@@ -32,6 +32,7 @@ using ..TB:make_tb
 using ..TB:make_kgrid
 using ..TB:Hk
 using ..TB:summarize_orb
+using ..TB:summarize_orb_num
 using ..TB:calc_energy
 using ..CrystalMod:get_grid
 using ..TB:myfft
@@ -146,7 +147,8 @@ struct coefs
     datS::Array{Float64,1}
     sizeH::Int64
     sizeS::Int64
-    inds::Dict{Tuple, Array{Int64,1}}
+    #    inds::Dict{Tuple, Array{Int64,1}}
+    inds::Dict{Array{Symbol}, Array{Int64,1}}
 #    names::Array{String,1}
     names::Set
     orbs::Array{Any,1}
@@ -322,6 +324,7 @@ function make_coefs(at_list, dim; datH=missing, datS=missing, cutoff=18.01, min_
         for key in keys(dist_frontier)
             if Set(key) == at_list && dim == length(key)
                 dist_frontier2[key] = dist_frontier[key]
+                dist_frontier2[Symbol.(key)] = dist_frontier[key]
             end
         end
     end
@@ -516,14 +519,15 @@ function plot_database(database, entry, t=missing)#::coefs)
 end
 
 
+
 function get_data_info(at_set, dim)
 
     
-    data_info = Dict{Tuple, Array{Int64,1}}()
+    data_info = Dict{Any, Array{Int64,1}}()
     orbs = []
     if dim == 2 #2body
 
-        at_list = [i for i in at_set]
+        at_list = Symbol.([i for i in at_set])
 #        println(at_list)
         if length(at_list) == 1
             at_list = [at_list[1], at_list[1]]
@@ -555,41 +559,41 @@ function get_data_info(at_set, dim)
                     end
 #                    push!(orbs, (o1, o2, symb))
                     if o1 == :s && o2 == :s
-                        data_info[(at1, o1, at2, o2, symb)] = tot+1:tot+n
-                        data_info[(at2, o2, at1, o1, symb)] = tot+1:tot+n
+                        data_info[[at1, o1, at2, o2, symb]] = tot+1:tot+n
+                        data_info[[at2, o2, at1, o1, symb]] = tot+1:tot+n
                         tot += n
                         
                     elseif (o1 == :s && o2 == :p ) || (o1 == :p && o2 == :s )
-                        data_info[(at1, o1, at2, o2, symb)] = tot+1:tot+n
-                        data_info[(at2, o2, at1, o1, symb)] = tot+1:tot+n
+                        data_info[[at1, o1, at2, o2, symb]] = tot+1:tot+n
+                        data_info[[at2, o2, at1, o1, symb]] = tot+1:tot+n
                         tot += n
 #                        if same_at
-#                            data_info[(o2, o1, symb)] = data_info[(o1, o2, symb)]
+#                            data_info[[o2, o1, symb]] = data_info[(o1, o2, symb)]
 #                        end
                         
                     elseif (o1 == :p && o2 == :p )
-                        data_info[(at1, o1, at2, o2, symb)] = tot+1:tot+n*2
-                        data_info[(at2, o2, at1, o1, symb)] = tot+1:tot+n*2
+                        data_info[[at1, o1, at2, o2, symb]] = tot+1:tot+n*2
+                        data_info[[at2, o2, at1, o1, symb]] = tot+1:tot+n*2
                         tot += n*2
 
 #                    elseif (o1 == :p && o2 == :p )
-#                        data_info[(at1, o1, at2, o2, symb)] = tot+1:tot+n*2
-#                        data_info[(at2, o2, at1, o1, symb)] = tot+1:tot+n*2
+#                        data_info[[at1, o1, at2, o2, symb]] = tot+1:tot+n*2
+#                        data_info[[at2, o2, at1, o1, symb]] = tot+1:tot+n*2
 #                        tot += n*2
 
                     elseif (o1 == :s && o2 == :d ) || (o1 == :d && o2 == :s )
-                        data_info[(at1, o1, at2, o2, symb)] = tot+1:tot+n
-                        data_info[(at2, o2, at1, o1, symb)] = tot+1:tot+n
+                        data_info[[at1, o1, at2, o2, symb]] = tot+1:tot+n
+                        data_info[[at2, o2, at1, o1, symb]] = tot+1:tot+n
                         tot += n
 
                     elseif (o1 == :p && o2 == :d ) || (o1 == :d && o2 == :p )
-                        data_info[(at1, o1, at2, o2, symb)] = tot+1:tot+n*2
-                        data_info[(at2, o2, at1, o1, symb)] = tot+1:tot+n*2
+                        data_info[[at1, o1, at2, o2, symb]] = tot+1:tot+n*2
+                        data_info[[at2, o2, at1, o1, symb]] = tot+1:tot+n*2
                         tot += n*2
 
                     elseif (o1 == :d && o2 == :d ) 
-                        data_info[(at1, o1, at2, o2, symb)] = tot+1:tot+n*3
-                        data_info[(at2, o2, at1, o1, symb)] = tot+1:tot+n*3
+                        data_info[[at1, o1, at2, o2, symb]] = tot+1:tot+n*3
+                        data_info[[at2, o2, at1, o1, symb]] = tot+1:tot+n*3
                         tot += n*3
 
 
@@ -613,30 +617,30 @@ function get_data_info(at_set, dim)
 
 #                    push!(orbs, (o1, o2, :O))
                     if o1 == :s && o2 == :s
-                        data_info[(atX, o1, o2, :O)] = tot+1:tot+n
-#                        println("data_info" , (atX, o1, o2, :O), tot+1:tot+n)
+                        data_info[[atX, o1, o2, :O]] = tot+1:tot+n
+#                        println("data_info"[, (atX, o1, o2, :O], tot+1:tot+n)
                         tot += n
                     elseif (o1 == :s && o2 == :p )
-                        data_info[(atX, o1, o2, :O)] = tot+1:tot+n
-                        data_info[(atX, o2, o1, :O)] = data_info[(atX, o1, o2, :O)]
+                        data_info[[atX, o1, o2, :O]] = tot+1:tot+n
+                        data_info[[atX, o2, o1, :O]] = data_info[[atX, o1, o2, :O]]
                         tot += n
                     elseif (o1 == :p && o2 == :p )
-                        data_info[(atX, o1, o2, :O)] = tot+1:tot+n*2
+                        data_info[[atX, o1, o2, :O]] = tot+1:tot+n*2
                         tot += n*2
 
                     elseif o1 == :s && o2 == :d
-                        data_info[(atX, o1, o2, :O)] = tot+1:tot+n
-                        data_info[(atX, o2, o1, :O)] = data_info[(atX, o1, o2, :O)]
+                        data_info[[atX, o1, o2, :O]] = tot+1:tot+n
+                        data_info[[atX, o2, o1, :O]] = data_info[[atX, o1, o2, :O]]
                         tot += n
 
                     elseif o1 == :p && o2 == :d
-                        data_info[(atX, o1, o2, :O)] = tot+1:tot+n
-                        data_info[(atX, o2, o1, :O)] = data_info[(atX, o1, o2, :O)]
+                        data_info[[atX, o1, o2, :O]] = tot+1:tot+n
+                        data_info[[atX, o2, o1, :O]] = data_info[[atX, o1, o2, :O]]
                         tot += n
 
                     elseif o1 == :d && o2 == :d
-                        data_info[(atX, o1, o2, :O)] = tot+1:tot+n*2
-                        data_info[(atX, o2, o1, :O)] = data_info[(atX, o1, o2, :O)]
+                        data_info[[atX, o1, o2, :O]] = tot+1:tot+n*2
+                        data_info[[atX, o2, o1, :O]] = data_info[[atX, o1, o2, :O]]
                         tot += n*2
 
                     end
@@ -650,7 +654,7 @@ function get_data_info(at_set, dim)
 #        if same_at #true onsite terms
 #           for o in orbs1
 ##                println("true onsite ", o)
-#                data_info[(at1, o, :A)] = [totH+1]
+#                data_info[[at1, o, :A]] = [totH+1]
 #                totH += 1
 #            end
 #        end
@@ -666,7 +670,7 @@ function get_data_info(at_set, dim)
         
         totS = 0 #no 3body overlap terms
 
-        at_list = [i for i in at_set]
+        at_list = Symbol.([i for i in at_set])
         sort!(at_list)
         
         if length(at_list) == 1
@@ -707,7 +711,7 @@ function get_data_info(at_set, dim)
 
             
         else
-            println("ERROR  get_data_info $dim $at_set $at_list")
+            println("ERROR  get_data_info dim $at_set $at_list")
         end
         
 
@@ -734,24 +738,24 @@ function get_data_info(at_set, dim)
 #                    push!(orbs, (o1, o2, symb))
 
                     if same_at
-                        data_info[(at1, o1, at2, o2, at3,  symb)] = collect(tot+1:tot+n)
-                        data_info[(at2, o2, at1, o1, at3,  symb)] = collect(tot+1:tot+n)
+                        data_info[[at1, o1, at2, o2, at3,  symb]] = collect(tot+1:tot+n)
+                        data_info[[at2, o2, at1, o1, at3,  symb]] = collect(tot+1:tot+n)
                     else                                                  #[1 2 3 4 5 6 7 8  9  10 11 12 13 14 15 16 17 18]
-                        data_info[(at1, o1, at2, o2, at3,  symb)] = collect(tot+1:tot+n)
-#                        data_info[(at2, o2, at1, o1, at3,  symb)] = tot .+ [1 4 6 2 5 3 7 10 12 8  11 9  13 16 18 14 17 15]' #switch 2 4 and 3 6
-#                        data_info[(at2, o2, at1, o1, at3,  symb)] = tot .+ [1 4 6 2 5 3 7 10 12 8  11 9  ]' #switch 2 4 and 3 6
-#                        data_info[(at2, o2, at1, o1, at3,  symb)] = tot .+ [1 3 2 4 5 7 6 8 9]' #switch 2 4 and 3 6
-#                        data_info[(at2, o2, at1, o1, at3,  symb)] = tot .+ [1 3 2 4 5 7 6]' #switch 2 4 and 3 6
-#                        data_info[(at2, o2, at1, o1, at3,  symb)] = tot .+ [1 3 2  4 6 5]' #switch 2 4 and 3 6
-#                        data_info[(at2, o2, at1, o1, at3,  symb)] = tot .+ [1 3 2 4 6 5  7 9 8 ]' #switch 2 4 and 3 6
-                        data_info[(at2, o2, at1, o1, at3,  symb)] = tot .+ [1, 3, 2, 4, 5, 7, 6  ] #switch 2 4 and 3 6
+                        data_info[[at1, o1, at2, o2, at3,  symb]] = collect(tot+1:tot+n)
+#                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1 4 6 2 5 3 7 10 12 8  11 9  13 16 18 14 17 15]' #switch 2 4 and 3 6
+#                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1 4 6 2 5 3 7 10 12 8  11 9  ]' #switch 2 4 and 3 6
+#                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1 3 2 4 5 7 6 8 9]' #switch 2 4 and 3 6
+#                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1 3 2 4 5 7 6]' #switch 2 4 and 3 6
+#                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1 3 2  4 6 5]' #switch 2 4 and 3 6
+#                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1 3 2 4 6 5  7 9 8 ]' #switch 2 4 and 3 6
+                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1, 3, 2, 4, 5, 7, 6  ] #switch 2 4 and 3 6
                     end
                     
                     
                     tot += n
 
 #                    if same_at
-#                        data_info[(o2, o1, symb)] = data_info[(o1, o2, symb)]
+#                        data_info[[o2, o1, symb]] = data_info[[o1, o2, symb]]
 #                    end
                         
                     
@@ -780,22 +784,22 @@ function get_data_info(at_set, dim)
 
             tot=start
             for o1 in orbs1
-#                data_info[(at1, o1,at2, at3,  symb)] = collect(tot+1:tot+n)
-#                data_info[(at1, o1,at3, at2,  symb)] = collect(tot+1:tot+n)
+#                data_info[[at1, o1,at2, at3,  symb]] = collect(tot+1:tot+n]
+#                data_info[[at1, o1,at3, at2,  symb]] = collect(tot+1:tot+n)
 
 #                push!(orbs, (at1, o1,at2, at3,  symb))
 #                push!(orbs, (at1, o1,at3, at2,  symb))
 
                 if same_at
-                    data_info[(at1, o1,at2, at3,  symb)] = collect(tot+1:tot+n)
-                    data_info[(at1, o1,at3, at2,  symb)] = collect(tot+1:tot+n)
+                    data_info[[at1, o1,at2, at3,  symb]] = collect(tot+1:tot+n)
+                    data_info[[at1, o1,at3, at2,  symb]] = collect(tot+1:tot+n)
                 else
-                    data_info[(at1, o1,at2, at3,  symb)] = collect(tot+1:tot+n)
-#                    data_info[(at1, o1,at3, at2,  symb)] = collect(tot+1:tot+n)
-                    data_info[(at1, o1,at3, at2,  symb)] = tot .+ [1, 3, 2, 4]
+                    data_info[[at1, o1,at2, at3,  symb]] = collect(tot+1:tot+n)
+#                    data_info[[at1, o1,at3, at2,  symb]] = collect(tot+1:tot+n)
+                    data_info[[at1, o1,at3, at2,  symb]] = tot .+ [1, 3, 2, 4]
 
-#                    data_info[(at1, o1,at2, at3,  symb)] = collect(tot+1:tot+n)
-#                    data_info[(at1, o1,at3, at2,  symb)] = tot .+ [1 3 2 4]'
+#                    data_info[[at1, o1,at2, at3,  symb]] = collect(tot+1:tot+n)
+#                    data_info[[at1, o1,at3, at2,  symb]] = tot .+ [1 3 2 4]'
                 end
                 tot += n                               #       1 2 3 4 5 6 7 8
 
@@ -887,9 +891,9 @@ function distances_etc(crys, cutoff, cutoff2=missing)
                 found = false
                 found2 = false                
                 for a = 1:crys.nat
-                    ta = crys.types[a]
+                    ta = crys.stypes[a]
                     for b = 1:crys.nat
-                        tb = crys.types[b]            
+                        tb = crys.stypes[b]            
                         dR = ( -crys.coords[a,:] .+ crys.coords[b,:] .+ R_f[:])'*crys.A
                         dist = sum(dR.^2)^0.5
 #                        if dist < 7.0 
@@ -946,10 +950,10 @@ function distances_etc_3bdy_parallel(crys, cutoff=missing, cutoff2=missing; var_
 
     dmin_types = Dict()
     dmin_types3 = Dict()
-    for t1 = crys.types
-        for t2 in crys.types
+    for t1 = crys.stypes
+        for t2 in crys.stypes
             dmin_types[Set((t1,t2))] = get_cutoff(t1,t2)[1]
-            for t3 in crys.types
+            for t3 in crys.stypes
                 dmin_types3[Set((t1,t2,t3))] = get_cutoff(t1,t2,t3)
             end
         end
@@ -1004,9 +1008,9 @@ function distances_etc_3bdy_parallel(crys, cutoff=missing, cutoff2=missing; var_
 
                 found = false
                 for a = 1:crys.nat
-                    ta = crys.types[a]
+                    ta = crys.stypes[a]
                     for b = 1:crys.nat
-                        tb = crys.types[b]            
+                        tb = crys.stypes[b]            
 #                        println(R_f2)
 #                        println(coords_ab[:,a,b])
                         dR = coords_ab[:,a,b] + R_f2[:,id]
@@ -1070,9 +1074,9 @@ function distances_etc_3bdy_parallel(crys, cutoff=missing, cutoff2=missing; var_
     keep_counter = 0
     
     for a = 1:crys.nat
-        ta = crys.types[a]
+        ta = crys.stypes[a]
         for b = 1:crys.nat
-            tb = crys.types[b]            
+            tb = crys.stypes[b]            
             ind = dist_arr[a,b,:,1] .> 1e-7
             
             dmin = minimum( dist_arr[a,b,ind,1])
@@ -1122,13 +1126,13 @@ function distances_etc_3bdy_parallel(crys, cutoff=missing, cutoff2=missing; var_
     if threebody
 #        println("THREE")
         @threads for a = 1:crys.nat
-        ta = crys.types[a]
+        ta = crys.stypes[a]
         id = threadid()
         array_ind3X = AI3[id]
         array_floats3X = AF3[id]
 
         for b = 1:crys.nat
-            tb = crys.types[b]
+            tb = crys.stypes[b]
             cutoff = get_cutoff(ta,tb)[1]
             for c1 = ind_cutoff[(a,b)]
 
@@ -1143,7 +1147,7 @@ function distances_etc_3bdy_parallel(crys, cutoff=missing, cutoff2=missing; var_
 
                 for c = 1:crys.nat
                     
-                    tc = crys.types[c]
+                    tc = crys.stypes[c]
                     cutoff3 = get_cutoff(ta,tb,tc)
 
                     cut_ab2 = cutoff_fn(dist_ab, cutoff3 - cutoff_length, cutoff3)
@@ -1272,11 +1276,11 @@ function distances_etc_3bdy(crys, cutoff=missing, cutoff2=missing; var_type=Floa
 
     dmin_types = Dict()
     dmin_types3 = Dict()
-    for t1 = crys.types
-        for t2 in crys.types
+    for t1 = crys.stypes
+        for t2 in crys.stypes
 #            dmin_types[Set((t1,t2))] = cutoff
             dmin_types[Set((t1,t2))] = get_cutoff(t1,t2)[1]
-            for t3 in crys.types
+            for t3 in crys.stypes
 #                dmin_types3[Set((t1,t2,t3))] = cutoff2
                 dmin_types3[Set((t1,t2,t3))] = get_cutoff(t1,t2,t3)
             end
@@ -1305,9 +1309,9 @@ function distances_etc_3bdy(crys, cutoff=missing, cutoff2=missing; var_type=Floa
                 found = false
                 found2 = false                
                 for a = 1:crys.nat
-                    ta = crys.types[a]
+                    ta = crys.stypes[a]
                     for b = 1:crys.nat
-                        tb = crys.types[b]            
+                        tb = crys.stypes[b]            
 
                         dR[:] = ( coords_ab[:,a,b]  .+ R_f[:])'*crys.A
 
@@ -1390,9 +1394,9 @@ function distances_etc_3bdy(crys, cutoff=missing, cutoff2=missing; var_type=Floa
 
     if threebody
     for a = 1:crys.nat
-        ta = crys.types[a]
+        ta = crys.stypes[a]
         for b = 1:crys.nat
-            tb = crys.types[b]
+            tb = crys.stypes[b]
             cutoff = get_cutoff(ta,tb)[1]
 
 
@@ -1413,7 +1417,7 @@ function distances_etc_3bdy(crys, cutoff=missing, cutoff2=missing; var_type=Floa
                 cut_ab = cutoff_fn(dist_ab, cutoff - cutoff_length, cutoff)
         
                 for c = 1:crys.nat
-                    tc = crys.types[c]
+                    tc = crys.stypes[c]
                     cutoff3 = get_cutoff(ta,tb,tc)
                     cut_ab2 = cutoff_fn(dist_ab, cutoff3 - cutoff_length, cutoff3)
 
@@ -1771,6 +1775,25 @@ function calc_tb_fast(crys::crystal, database=missing; reference_tbc=missing, ve
         memory2_th=zeros(var_type, 3, nthreads())
         memoryV_th=zeros(var_type, n_3body, nthreads())
 
+#        v =Array{Symbol}(undef, 6, nthreads())
+        
+
+#        sdict = Dict()
+#        sumdict = Dict()
+#        for a1 = 1:crys.nat
+#            sdict[a1] = Symbol[]
+#            sumdict[a1] = Symbol[]
+#            
+#            for o1 = orb2ind[a1]
+#                a1a,t1,s1 = ind2orb[o1]
+#                sum1 = summarize_orb(s1)
+#                push!(sdict[a1], s1)
+#                push!(sumdict[a1], sum1)
+#            end
+#            
+#        end
+                
+        
 
         if verbose println("3body") end
         @time if use_threebody || use_threebody_onsite
@@ -1784,7 +1807,7 @@ function calc_tb_fast(crys::crystal, database=missing; reference_tbc=missing, ve
                 a3 = array_ind3[counter,3]
 
                 cind1 = array_ind3[counter,4]
-                cind2 = array_ind3[counter,5]
+#                cind2 = array_ind3[counter,5]
 
                 dist = array_floats3[counter, 1]
                 dist31 = array_floats3[counter, 2]
@@ -1806,33 +1829,55 @@ function calc_tb_fast(crys::crystal, database=missing; reference_tbc=missing, ve
 
                 cut = array_floats3[counter, 13]
 
-                t1 = crys.types[a1]
-                t2 = crys.types[a2]
-                t3 = crys.types[a3]
+                t1 = crys.stypes[a1]
+                t2 = crys.stypes[a2]
+                t3 = crys.stypes[a3]
 
+                v = [t1,:s,t2,:s,t3,:H]
 
+                
                 if haskey(database, (t1, t2, t3))
                     cdat = database[(t1,t2,t3)]
                     if use_threebody
-#                    if false
+
                         
                         three_body_H(dist, dist31, dist32,t1==t2, memory0=memory0, memory1=memory1, memory2=memory2, memoryV=memoryV) #puts what we need in memoryV
 
-                
                         for o1 = orb2ind[a1]
                             a1a,t1,s1 = ind2orb[o1]
-                            
                             sum1 = summarize_orb(s1)
 
+                            sym31 = symmetry_factor(s1,:s,lmn31, [1.0])
+
+                            
+                            v[2] = sum1
                             for o2 = orb2ind[a2]
+
                                 a2a,t2,s2 = ind2orb[o2]
                                 
                                 sum2 = summarize_orb(s2)
+                                v[4] = sum2
 
+                                sym32 = symmetry_factor(s2,:s,lmn32, [1.0])    
+                                ind = cdat.inds[v]
+                                s = length(ind)
+                                h = ( (@view memoryV[1:s])'* (@view cdat.datH[ind]))[1] * 10^3        
+
+                                @inbounds H_thread[o1, o2, cind1, id] += h  * cut * sym31 * sym32
+                                
+
+                                #                                
                                 #o1 = summarize_orb(orb1)
                                 #o2 = summarize_orb(orb2)    
-                                
-                                ind = cdat.inds[(t1,sum1,t2,sum2,t3,:H)]
+
+#                                v = (t1,sum1,t2,sum2,t3,:H)
+                                #                                ind = cdat.inds[[t1,sum1,t2,sum2,t3,:H]]
+                                #                                ind = cdat.inds[v]
+
+                                #                                ind = cdat.inds[v]
+#                                ind = cdat.inds[[t1,sum1,t2,sum2,t3,:H]]
+#                                ind = cdat.inds[v]
+#                        if true
 
 
                                 #                            h=0.0
@@ -1840,17 +1885,18 @@ function calc_tb_fast(crys::crystal, database=missing; reference_tbc=missing, ve
 #                                h = calc_threebody(t1,t2,t3,s1,s2,dist,dist31,dist32,lmn, lmn31,lmn32, database, memory0, memory1, memory2, memoryV, set_maxmin=set_maxmin)
 
 #                                h = calc_threebody(cdat, t1,t2,t3,s1,s2,dist,dist31,dist32,lmn, lmn31,lmn32, database, memory0, memory1, memory2, memoryV, precalc=true, set_maxmin=set_maxmin)
-                                h = calc_threebody(cdat,ind, t1,t2,t3,s1,s2,dist,dist31,dist32,lmn, lmn31,lmn32, memoryV=memoryV, precalc=true, set_maxmin=set_maxmin)
+ #                               h = calc_threebody(cdat,ind  , t1,t2,t3,s1,s2,dist,dist31,dist32,lmn, lmn31,lmn32, memoryV=memoryV, precalc=true, set_maxmin=set_maxmin)
 #                                h = 0.0
+#                              @inbounds H_thread[o1, o2, cind1, id] += h  * cut
 
-                                @inbounds H_thread[o1, o2, cind1, id] += h  * cut
+  
 
-                            end
                         end
-                    end
+                        end
+                        end
                     ############################################
                     if use_threebody_onsite
-                    #if true
+                    #if false
                         cut2 = array_floats3[counter, 14]
                         for o1 = orb2ind[a1]
                             a1a,t1,s1 = ind2orb[o1]
@@ -1879,13 +1925,13 @@ function calc_tb_fast(crys::crystal, database=missing; reference_tbc=missing, ve
 
         ############ONSITE
         if verbose println("onsite") end
-        for c = 1:nkeep_ab
+        @time for c = 1:nkeep_ab
             #        ind_arr[c,:] = R_keep_ab[c][4:6]
             cind = R_keep_ab[c,1]
             a1 = R_keep_ab[c,2]
             a2 = R_keep_ab[c,3]
-            t1 = crys.types[a1]
-            t2 = crys.types[a2]
+            t1 = crys.stypes[a1]
+            t2 = crys.stypes[a2]
 
             dist = dist_arr[a1,a2,cind,1]
             lmn[:] = dist_arr[a1,a2,cind,2:4]
@@ -2000,8 +2046,8 @@ function calc_frontier(crys::crystal, frontier; var_type=Float64, test_frontier=
         cham = R_keep_ab[c,7]
         a1 = R_keep_ab[c,2]
         a2 = R_keep_ab[c,3]
-        t1= crys.types[a1]
-        t2= crys.types[a2]
+        t1= crys.stypes[a1]
+        t2= crys.stypes[a2]
         dist = dist_arr[a1,a2,cind,1]
 
         if test_frontier
@@ -2060,9 +2106,9 @@ function calc_frontier(crys::crystal, frontier; var_type=Float64, test_frontier=
         dist31 = array_floats3[counter, 2]
         dist32 = array_floats3[counter, 3]
                 
-        t1 = crys.types[a1]
-        t2 = crys.types[a2]
-        t3 = crys.types[a3]
+        t1 = crys.stypes[a1]
+        t2 = crys.stypes[a2]
+        t3 = crys.stypes[a3]
         
         if t1 == t2
             tmp1 = min(dist31, dist32)
@@ -2476,8 +2522,8 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
 
     twobody_arrays = Dict()
 
-    for c in crys.types
-        for c2 in crys.types
+    for c in crys.stypes
+        for c2 in crys.stypes
             at_set = Set((c, c2))
 
             if !haskey(twobody_arrays, at_set)
@@ -2507,9 +2553,9 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
 
     if use_threebody || use_threebody_onsite
 
-        for c in crys.types
-            for c2 in crys.types
-                for c3 in crys.types
+        for c in crys.stypes
+            for c2 in crys.stypes
+                for c3 in crys.stypes
                     at_set = Set((c, c2, c3))
                     if !haskey(threebody_arrays, at_set)
 #                        println("3bdy $at_set")
@@ -2631,8 +2677,8 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
 
                 coef = twobody_arrays[at_set][3]
 
-                ih = coef.inds[(t1,sum1,t2,sum2,:H)]
-                is = coef.inds[(t1,sum1,t2,sum2,:S)]
+                ih = coef.inds[[t1,sum1,t2,sum2,:H]]
+                is = coef.inds[[t1,sum1,t2,sum2,:S]]
 
                 twobody_arrays[at_set][1][ind,ih] += h[:] * cut
                 twobody_arrays[at_set][2][ind,is] += s[:] * cut
@@ -2700,9 +2746,9 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
             cut = array_floats3[counter, 13]
             cut2 = array_floats3[counter, 14]
 
-            t1 = crys.types[a1]
-            t2 = crys.types[a2]
-            t3 = crys.types[a3]
+            t1 = crys.stypes[a1]
+            t2 = crys.stypes[a2]
+            t3 = crys.stypes[a3]
 
             at_set3 = Set((t1, t2, t3))
 
@@ -2738,13 +2784,13 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
                             
                             
                             coef = threebody_arrays[at_set3][2]
-                            if !((t1, sum1,t2, sum2,t3, :H) in keys(coef.inds))
+                            if !([t1, sum1,t2, sum2,t3, :H] in keys(coef.inds))
                                 println("err")
                                 println((t1, sum1,t2, sum2,t3, :H))
                                 println(at_set3)
                             end
                             
-                            ih = coef.inds[(t1, sum1,t2, sum2,t3, :H)]
+                            ih = coef.inds[[t1, sum1,t2, sum2,t3, :H]]
 
 
 
@@ -2770,7 +2816,7 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
                     h = fit_threebody_onsite(t1,t2,t3,s1,dist,dist31,dist32)
                                     
                     coef = threebody_arrays[at_set3][2]
-                    ih = coef.inds[(t1,sum1,t2,t3,:O)]
+                    ih = coef.inds[[t1,sum1,t2,t3,:O]]
                     threebody_arrays[at_set3][1][ind,ih] += h[:] * cut2
                     #threebody_arrays[at_set3][1][ind,ih] += [h] * cut2
 
@@ -2792,8 +2838,8 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
         a1 = R_keep_ab[c,2]
         a2 = R_keep_ab[c,3]
 
-        t1 = crys.types[a1]
-        t2 = crys.types[a2]
+        t1 = crys.stypes[a1]
+        t2 = crys.stypes[a2]
         cutoff_onX = get_cutoff(t1,t2)[2]
 
         at_set = Set((t1,t2))
@@ -2847,7 +2893,7 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
                     
                     coef = twobody_arrays[at_set][3]
 
-                    io = coef.inds[(t1, sum1,sum2,:O)]
+                    io = coef.inds[[t1, sum1,sum2,:O]]
                     twobody_arrays[at_set][1][ind,io] += o[:] * cut
 
 #                    println("cath $t1 $t2 $sum1 $sum2 $at_set $t1a $t2a $a1 $a2 $o1 $o2")
@@ -4165,8 +4211,8 @@ function calc_twobody(t1,t2,orb1,orb2,dist,lmn, database)
     s1=summarize_orb(orb1)
     s2=summarize_orb(orb2)
 
-    indH = c.inds[(t1,s1,t2,s2,:H)]
-    indS = c.inds[(t1,s1,t2,s2,:S)]
+    indH = c.inds[[t1,s1,t2,s2,:H]]
+    indS = c.inds[[t1,s1,t2,s2,:S]]
     
     H1 =  two_body_H(dist, c.datH[indH[1:n_2body]])
     S1 =  two_body_S(dist, c.datS[indS[1:n_2body_S]])
@@ -4282,7 +4328,7 @@ function calc_twobody_onsite(t1,t2,orb1,orb2, dist,lmn, database)
     o1 = summarize_orb(orb1)
     o2 = summarize_orb(orb2)    
 
-    indO = c.inds[(t1,o1,o2,:O)]
+    indO = c.inds[[t1,o1,o2,:O]]
 
 
     if orb1 == orb2
@@ -4357,7 +4403,7 @@ function calc_threebody_onsite(t1,t2,t3,orb1,dist12,dist13,dist23, database; set
 
 #    o2 = summarize_orb(orb2)    
 
-    indO = c.inds[(t1,o1,t2,t3,:O)]
+    indO = c.inds[[t1,o1,t2,t3,:O]]
 
     #    sameat = (t2 == t3 || t1 == t2 || t1 == t3)
     sameat = (t2 == t3)
@@ -4459,8 +4505,11 @@ function calc_threebody(c,ind, t1,t2,t3,orb1,orb2,dist,dist31,dist32,lmn12, lmn3
 
 
 #    H=0.0
+
+
     sym31 = symmetry_factor(orb1,:s,lmn31, [1.0])
     sym32 = symmetry_factor(orb2,:s,lmn32, [1.0])    
+
 #    sym31=1.0
 #    sym32=1.0
 

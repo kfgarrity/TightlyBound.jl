@@ -121,6 +121,10 @@ atoms["Pb"] = makeatom("Pb", 82, 6, 4.0,  207.2,   4.0,   10,   [:s, :p], -163.6
 atoms["Bi"] = makeatom("Bi", 83, 6, 5.0,  209.0,   5.0,   10,   [:s, :p], -184.68674216, [-14.4080, -4.4700], 0.0, 0.4996092);
 
 
+for key in keys(atoms)
+    atoms[Symbol(key)] = atoms[key]
+end
+
 
 #U = IE - EA  (ionization energy - electron affinity
 
@@ -221,6 +225,10 @@ atom_radius[ "Bi" ] =  146
 atom_radius[ "Po" ] =  140
 atom_radius[ "At" ] =  140
 
+for key in keys(atom_radius)
+    atom_radius[Symbol(key)] = atom_radius[key]
+end
+
 
 atom_prefered_oxidation = Dict()
 
@@ -310,6 +318,10 @@ atom_prefered_oxidation[ "Pb" ] = [4, 2, -4, 0]
 atom_prefered_oxidation[ "Bi" ] = [3, -3, 0]
 atom_prefered_oxidation[ "Po" ] = [-2, 0]
 atom_prefered_oxidation[ "At" ] = [-1, 0]
+
+for key in keys(atom_prefered_oxidation)
+    atom_prefered_oxidation[Symbol(key)] = atom_prefered_oxidation[key]
+end
 
 
 cutoff_dist = Dict()
@@ -424,6 +436,10 @@ min_dimer_dist_dict["Sn"] =  4.14125
 min_dimer_dist_dict["I"] =  4.02336
 min_dimer_dist_dict["Cd"] =  4.29162
 min_dimer_dist_dict["Pb"] =  4.35765
+
+for key in keys(min_dimer_dist_dict)
+    min_dimer_dist_dict[Symbol(key)] = min_dimer_dist_dict[key]
+end
 
 
 ########

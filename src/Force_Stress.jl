@@ -53,7 +53,7 @@ function get_energy_force_stress(crys::crystal, database; smearing = 0.01, grid 
     return get_energy_force_stress_fft(tbc, database, do_scf=tbc.scf, grid = grid, smearing=smearing)
 end
 
-function get_energy_force_stress(tbc::tb_crys, database; do_scf=false, smearing = 0.01, grid = missing, e_den0=missing, vv = missing)
+function get_energy_force_stress(tbc::tb_crys, database; do_scf=false, smearing = 0.01, grid = missing, e_den0=missing, vv = missing, cs = 4)
 
     if ismissing(grid)
         grid = get_grid(tbc.crys)
@@ -245,6 +245,8 @@ function get_energy_force_stress(tbc::tb_crys, database; do_scf=false, smearing 
 
 #    x0 = inv_reshape_vec(ct.coords, ct.nat)
 
+    chunksize=min(cs, 3*ct.nat + 6)
+    cfg = ForwardDiff.GradientConfig(f, zeros(3*ct.nat + 6), ForwardDiff.Chunk{chunksize}())
     g = ForwardDiff.gradient(f, zeros(3*ct.nat + 6)  )
 
     x, stress = reshape_vec(g, ct.nat)
@@ -778,9 +780,9 @@ function safe_mode_energy(crys::crystal, database; var_type=Float64)
     warned = zeros(Bool, crys.nat)
     
     for a1 = 1:crys.nat
-        t1 = crys.types[a1]
+        t1 = crys.stypes[a1]
         for a2 = 1:crys.nat
-            t2 = crys.types[a2]
+            t2 = crys.stypes[a2]
             dmin = database[(t1,t2)].min_dist * 0.979
             for c = 1:nkeep
                 cind = R_keep_ab[c,1]
@@ -885,10 +887,16 @@ function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smear
             
 
             x_r, x_r_strain = reshape_vec(x, ct.nat, strain_mode=true)
+
+            #x_r, x_r_strain = reshape_vec(x, 0, strain_mode=true)
+
             A = ct.A * (I(3) + x_r_strain)
             crys_dual = makecrys( A , ct.coords + x_r, ct.types)
 
+            #crys_dual = makecrys( A , ct.coords , ct.types)
+
             #        gamma_dual=zeros(T, ct.nat,ct.nat)
+            #println("gamma")
             if database["scf"] == true
                 scf = true
                 kappa = estimate_best_kappa(ct.A)
@@ -898,9 +906,7 @@ function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smear
                 gamma_dual=zeros(T, ct.nat,ct.nat)
             end
 
-
-            tbc_dual = calc_tb_fast(crys_dual, database; verbose=false, var_type=T, use_threebody=true, use_threebody_onsite=true, gamma=gamma_dual , check_frontier=false)
-
+            tbc_dual = calc_tb_fast(crys_dual, database; verbose=true, var_type=T, use_threebody=true, use_threebody_onsite=true, gamma=gamma_dual , check_frontier=false)
             ret = zeros(T, size_ret * 2 + 1)
 
             
@@ -917,18 +923,22 @@ function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smear
             return ret
         end
 
-
-        begin
+#        println("jac")
+        @time begin
 
             ret = ham(zeros(3*ct.nat + 6))
 
-            chunksize=min(8, 3*ct.nat + 6)
+            #ret = ham(zeros( 6))
+
+            chunksize=min(9, 3*ct.nat + 6)
             
             cfg = ForwardDiff.JacobianConfig(ham, zeros(3*ct.nat + 6), ForwardDiff.Chunk{chunksize}())
+            #cfg = ForwardDiff.JacobianConfig(ham, zeros( 6), ForwardDiff.Chunk{chunksize}())
             g = ForwardDiff.jacobian(ham, zeros(3*ct.nat + 6) , cfg ) ::  Array{Float64,2}
+#            g = ForwardDiff.jacobian(ham, zeros( 6) , cfg ) ::  Array{Float64,2}
 
         end
-        
+        println("end jac")
         #    function f_es(x::Vector)
         #        x_r, x_r_strain = reshape_vec(x, ct.nat, strain_mode=true)
         #        A = ct.A * (I(3) + x_r_strain)
@@ -956,7 +966,7 @@ function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smear
 
         #    return 0,0,0
         
-        ham_orig = ham(zeros(3*ct.nat + 6))
+#        ham_orig = ham(zeros(3*ct.nat + 6))
 
         #    println("size of g ", size(g))
         #    println("eltype ", eltype(g))

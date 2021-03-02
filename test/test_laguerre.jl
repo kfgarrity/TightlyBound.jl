@@ -36,7 +36,7 @@ function test1()
 #        if true
 
             database = Dict()
-            database[("Li", "Li")] = TightlyBound.CalcTB.make_coefs(Set(["Li", "Li"]), 2)
+            database[(:Li, :Li)] = TightlyBound.CalcTB.make_coefs(Set(["Li", "Li"]), 2)
             
             tbc1 = TightlyBound.CalcTB.calc_tb_fast(c1, database, use_threebody=false);
             tbc2 = TightlyBound.CalcTB.calc_tb_fast(c2, database, use_threebody=false);
@@ -52,7 +52,7 @@ function test1()
             newdatabase = TightlyBound.FitTB.do_fitting(tbc_list, fit_threebody=false, do_plot=false)
             #        println("newdartabase")
             #        println(newdatabase[("Li", "Li")])
-            @test sum(abs.(newdatabase[("Li", "Li")].datH .- database[("Li", "Li")].datH)) ≤ 1e-5
+            @test sum(abs.(newdatabase[(:Li, :Li)].datH .- database[(:Li, :Li)].datH)) ≤ 1e-5
         end
 
     end

@@ -17,6 +17,8 @@ using LinearAlgebra
 using ..CrystalMod:crystal
 ###using ..CalcTB:distances_etc_3bdy
 using SpecialFunctions
+import Base.Threads.@spawn
+#using Base.Threads
 
 
 
@@ -50,9 +52,11 @@ function electrostatics_getgamma(crys::crystal;  kappa=missing, noU=false, onlyU
 
 #R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero = distances_etc_3bdy(crys,cutoff2X, 0.0)
 
+#    println("estimate")
     if ismissing(kappa)
 #        kappa_default = 0.25
         kappa = estimate_best_kappa(crys.A)
+#        println("kappa $kappa")
     end
     kappa = Float64(kappa)
 
@@ -69,19 +73,40 @@ function electrostatics_getgamma(crys::crystal;  kappa=missing, noU=false, onlyU
 
     gamma_onsiteU = get_onsite(crys, U)
 
-    gamma_rs, gamma_U = real_space(crys, kappa, U, starting_size_rspace)
+    T = typeof(crys.coords[1,1])
+    gamma_rs = zeros(T, crys.nat, crys.nat)
+    gamma_U = zeros(T, crys.nat, crys.nat)
+    gamma_k = zeros(T, crys.nat, crys.nat)
+    gamma_self = zeros(T, crys.nat, crys.nat)
+
+
+    #can do these at same time.
+    rs = @spawn begin
+    #rs = begin    
+        gamma_rs, gamma_U = real_space(crys, kappa, U, starting_size_rspace)
+    end
+    
 #    println("gamma_rs")
 #    println(gamma_rs)
-    gamma_k = k_space(crys, kappa, starting_size_kspace)
+#    println("ks")
+    ks = @spawn begin
+    #ks = begin
+        gamma_k = k_space(crys, kappa, starting_size_kspace)
+    end
 #    println("gamma_k")
 #    println(gamma_k)
 
-    #self
-    gamma_self = zeros(Float64, crys.nat, crys.nat)
-    for i = 1:crys.nat
-        gamma_self[i,i] -= kappa / sqrt(pi) * 2.0
+    self = @spawn begin 
+        #self
+        for i = 1:crys.nat
+            gamma_self[i,i] -= kappa / sqrt(pi) * 2.0
+        end
     end
-
+    
+    wait(ks)
+    wait(self)
+    wait(rs)
+    
     if false #for debugging
         println("gamma_rs")
         println(gamma_rs)
@@ -142,9 +167,21 @@ function real_space(crys::crystal, kappa::Float64, U::Array{Float64}, starting_s
         useU = false
     end
 
-    R = zeros(T, 1,3)
+    #    R = zeros(T,1, 3)
+    R = zeros(T, 3)
+    Ra = zeros(T, 3)
+    Rb = zeros(T, 3)
     
     coords_cart = crys.coords * crys.A
+    coords_cartT = coords_cart'
+
+    coords_cartTij = zeros(T, 3, crys.nat, crys.nat)
+    for i = 1:crys.nat
+        for j = 1:crys.nat
+            coords_cartTij[:,i,j] = (@view coords_cartT[:,i]) - (@view coords_cartT[:,j]) 
+        end
+    end
+    
     
     converged = false
     converged_old = false
@@ -180,28 +217,37 @@ function real_space(crys::crystal, kappa::Float64, U::Array{Float64}, starting_s
     Nxold = 0
     Nyold = 0
     Nzold = 0
+
+    At = crys.A'
+    
     for (Nx, Ny, Nz) in N_list
         gamma_ij_new[:,:] .= 0.0
         gamma_U_new[:,:] .= 0.0
         for x = -Nx:Nx
+            Ra[1] = x
             for y = -Ny:Ny
+                Ra[2] = y
                 for z = -Nz:Nz
+                    Ra[3] = z
                     if x != 0 || y != 0 || z != 0
                         R0 = false
                     else
                         R0 = true
                     end
-                    R[1,:] = [x,y,z] 
-                    R[1,:] = R * crys.A
+                    R[:] = At * Ra 
                     if first_iter == true || (abs(x) > Nxold || abs(y) > Nyold || abs(z) > Nzold )
                         for i = 1:crys.nat
                             for j = 1:crys.nat
-                                r = sum((coords_cart[i,:] - coords_cart[j,:] - R[1,:]).^2)^0.5
+                                #                                Rb = (@view coords_cartT[:,i]) - (@view coords_cartT[:,j]) - (@view R[:])
+                                Rb = (@view coords_cartTij[:,i, j])  - (@view R[:])
+                                r = (Rb'*Rb).^0.5
+#                                r = sum(( (@view coords_cartT[:,i]) - (@view coords_cartT[:,j]) - (@view R[:]) ).^2)^0.5
+                                #r = sum(( (coords_cart[i,:]) - (coords_cart[j,:]) - ( R[1,:] ) ).^2)^0.5
                                 if i != j ||  R0 == false
-                                    gamma_ij_new[i,j] += erfc( kappa * r) / r
+                                    @inbounds gamma_ij_new[i,j] += erfc( kappa * r) / r
 
                                     if useU
-                                        gamma_U_new[i,j] += -erfc( Uconst[i,j] * r) / r  #see eq 3 in prb 66 075212, or koskinen comp mater sci 47 (2009) 237
+                                        @inbounds gamma_U_new[i,j] += -erfc( Uconst[i,j] * r) / r  #see eq 3 in prb 66 075212, or koskinen comp mater sci 47 (2009) 237
                                     end
                                 end
                             end
@@ -216,8 +262,8 @@ function real_space(crys::crystal, kappa::Float64, U::Array{Float64}, starting_s
 
 #        println("new $Nx $Ny $Nz real_space $newcontr $newcontrU")
 
-        if newcontr < 1e-7 && newcontrU < 1e-7
-            if converged_old == true
+        if newcontr < 1e-5 && newcontrU < 1e-5
+            if converged_old == true || (newcontr < 1e-7 && newcontrU < 1e-7)
                 converged = true
                 break
             end
@@ -245,6 +291,8 @@ function real_space(crys::crystal, kappa::Float64, U::Array{Float64}, starting_s
     return gamma_ij_tot, gamma_U_tot
 
 end
+
+
 
 
 function estimate_best_kappa(A)
@@ -275,12 +323,12 @@ function estimate_best_kappa(A)
 
 
     tot = Float64[]
-    kappa_test = [0.00002 0.0001 0.0005 0.001 0.002 0.005 0.01 0.02 0.05 0.075 0.1 0.15 0.17 0.2 0.22 0.25 0.27  0.3 0.33 0.35 0.4 0.5 0.65 0.75 0.80 0.90 1.0 1.1 1.3 2.0 5.0 10.0 20.0 50.0 100.0]
+    kappa_test = [0.00002 0.0001 0.0005 0.001 0.002 0.005 0.01 0.015 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1 0.12 0.15 0.17 0.2 0.22 0.25 0.27  0.3 0.33 0.35 0.4 0.5 0.65 0.75 0.80 0.90 1.0 1.1 1.3 2.0 5.0 10.0 20.0 50.0 100.0]
     for kappa = kappa_test
-        rs = erfc( kappa * a) / a * 1
+        rs = erfc( kappa * a) / a * 10
         ks = exp(-b^2 / 4.0 / kappa^2  * (2 * pi)^2 ) / (2*pi*b)^2
         push!(tot, rs + ks)
-#        println("$kappa rs $rs $ks $ks  tot ",rs + ks)
+#        println("$kappa rs $rs ks $ks  tot ",rs + ks)
     end
     i = argmin(tot)
     kappa = kappa_test[i]
@@ -342,7 +390,7 @@ function k_space(crys::crystal, kappa, starting_size_kspace=2)
                     if kx == 0 && ky == 0 && kz == 0
                         continue
                     end
-                    K[1,:] = [kx,ky,kz] 
+                    K[1,:] .= [kx,ky,kz] 
                     K = K * B
                     k2 = sum(K.^2) * (2*pi)^2
                     factor_k = (2*pi) * exp(-k2 / 4.0 / kappa^2  ) / k2
@@ -350,7 +398,7 @@ function k_space(crys::crystal, kappa, starting_size_kspace=2)
                     if first_iter == true || abs(kx) > Nxold || abs(ky) > Nyold || abs(kz) > Nzold
                         for i = 1:crys.nat
                             for j = 1:crys.nat
-                                kr = (K * (coords_cart[i,:] - coords_cart[j,:]) )[1]
+                                kr = (K * ( (@view coords_cart[i,:]) - (@view coords_cart[j,:]) ) )[1]
 
                                 exp_c = exp(2*pi*im*kr)
                                 temp = real(exp_c )
@@ -366,8 +414,8 @@ function k_space(crys::crystal, kappa, starting_size_kspace=2)
         first_iter = false
         newcontr = sum(abs.(gamma_ij_new))
 
-        if newcontr < 1e-7
-            if converged_old == true
+        if newcontr < 1e-5
+            if converged_old == true || newcontr < 1e-7
                 converged = true
                 break
             end

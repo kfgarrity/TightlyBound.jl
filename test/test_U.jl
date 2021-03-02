@@ -13,15 +13,15 @@ function testU()
 #        Atomdata.atoms["Xa"].energy_offset = 0.0
         @suppress begin
             cscl = makecrys([1.0 0 0; 0 1.0 0; 0 0 1.0]*10.0, [0 0 0; 0.5 0.5 0.5], ["X", "Xa"]);
-            coefXX = TightlyBound.CalcTB.make_coefs(Set(("X", "X")),2, fillzeros=true)
-            coefXXa = TightlyBound.CalcTB.make_coefs(Set(("X", "Xa")),2, fillzeros=true)
-            coefXaXa = TightlyBound.CalcTB.make_coefs(Set(("Xa", "Xa")),2, fillzeros=true)
+            coefXX = TightlyBound.CalcTB.make_coefs(Set((:X, :X)),2, fillzeros=true)
+            coefXXa = TightlyBound.CalcTB.make_coefs(Set((:X, :Xa)),2, fillzeros=true)
+            coefXaXa = TightlyBound.CalcTB.make_coefs(Set((:Xa, :Xa)),2, fillzeros=true)
 
             database = Dict()
-            database[("X", "X")] = coefXX
-            database[("X", "Xa")] = coefXXa
-            database[("Xa", "X")] = coefXXa
-            database[("Xa", "Xa")] = coefXaXa
+            database[(:X, :X)] = coefXX
+            database[(:X, :Xa)] = coefXXa
+            database[(:Xa, :X)] = coefXXa
+            database[(:Xa, :Xa)] = coefXaXa
             database["scf"] = true
             database["SCF"] = true
 
@@ -74,10 +74,10 @@ function test_nacl()
             coefXaXa = TightlyBound.CalcTB.make_coefs(Set(("Cl", "Cl")),2, fillzeros=true)
 
             database = Dict()
-            database[("Na", "Na")] = coefXX
-            database[("Na", "Cl")] = coefXXa
-            database[("Cl", "Na")] = coefXXa
-            database[("Cl", "Cl")] = coefXaXa
+            database[(:Na, :Na)] = coefXX
+            database[(:Na, :Cl)] = coefXXa
+            database[(:Cl, :Na)] = coefXXa
+            database[(:Cl, :Cl)] = coefXaXa
             database["scf"] = true
             database["SCF"] = true
 
@@ -124,10 +124,10 @@ function test_nacl2()
             coefXaXa = TightlyBound.CalcTB.make_coefs(Set(("Cl", "Cl")),2, fillzeros=true)
 
             database = Dict()
-            database[("Na", "Na")] = coefXX
-            database[("Na", "Cl")] = coefXXa
-            database[("Cl", "Na")] = coefXXa
-            database[("Cl", "Cl")] = coefXaXa
+            database[(:Na, :Na)] = coefXX
+            database[(:Na, :Cl)] = coefXXa
+            database[(:Cl, :Na)] = coefXXa
+            database[(:Cl, :Cl)] = coefXaXa
             database["scf"] = true
             database["SCF"] = true
 

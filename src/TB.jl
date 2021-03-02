@@ -780,9 +780,9 @@ function make_tb_crys(ham::tb,crys::crystal, nelec::Float64, dftenergy::Float64;
             eden = get_neutral_eden(crys, ham.nwan)
         end
     end
-    
-    if ismissing(gamma) 
-#        println("ewald time")
+
+    @time if ismissing(gamma) 
+        println("gamma")
         gamma = electrostatics_getgamma(crys, screening=screening) #do this once and for all
     end
 
@@ -1431,6 +1431,18 @@ function summarize_orb(orb::Symbol)
         return :p
     elseif orb == :d || orb == :dz2 || orb == :dxz || orb == :dyz || orb == :dx2_y2 || orb == :dxy
         return :d
+    else
+        println("not coded yet $orb summarize_orb")
+    end
+end
+
+function summarize_orb_num(orb::Symbol)
+    if orb == :s
+        return 0
+    elseif orb == :p || orb == :px || orb == :py || orb == :pz
+        return 1
+    elseif orb == :d || orb == :dz2 || orb == :dxz || orb == :dyz || orb == :dx2_y2 || orb == :dxy
+        return 2
     else
         println("not coded yet $orb summarize_orb")
     end

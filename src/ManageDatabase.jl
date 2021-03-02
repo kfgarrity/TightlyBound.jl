@@ -26,9 +26,10 @@ function prepare_database(c::crystal)
 end
 
 function prepare_database(at_list)
-
+    
     println("prepare atoms ", at_list)
-#    println("database_list ", database_list)
+    at_list = Symbol.(at_list)
+    #    println("database_list ", database_list)
     s = Set(at_list)
     for s1 in s
         for s2 in s
@@ -46,7 +47,7 @@ function add_to_database(s::Set)#
 
     at_arr = collect(s)
     if length(s) == 1
-        a1 = at_arr[1]
+        a1 = Symbol(at_arr[1])
         if !haskey(database_cached , (a1, a1))
 #            f = "$defaultdatdir/v0.1_dat_2body_scf_pbesol_el.$a1.xml"
             f =  "$datdir1/coef.el.2bdy.$a1.xml.gz"
@@ -102,8 +103,8 @@ function add_to_database(s::Set)#
  
     elseif length(s) == 2
 
-        a1 = at_arr[1]
-        a2 = at_arr[2]
+        a1 = Symbol(at_arr[1])
+        a2 = Symbol(at_arr[2])
         if !haskey(database_cached , (a1, a2))
             
 #            fab = "$defaultdatdir/v0.1_dat_2body_scf_pbesol_binary.$a1.$a2.xml"

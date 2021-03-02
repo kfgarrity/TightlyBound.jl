@@ -31,6 +31,7 @@ mutable struct crystal{T}
     A::Array{T,2}
     coords::Array{T,2}
     types::Array{String,1}
+    stypes::Array{Symbol,1}
     nat::Int64
 
 end
@@ -154,7 +155,7 @@ H    0.00000  0.00000  0.00000
 ```
 """
 function makecrys(A,coords,types)
-    T = typeof(coords[1,1])
+    T = typeof(A[1,1])
 
     #entering integer coords or A messes everything up later
     if T == Int64
@@ -169,6 +170,10 @@ function makecrys(A,coords,types)
         types = types[:]
     end
 
+    if typeof(types[1]) == Symbol
+        types = String.(types)
+    end
+    
     nat = length(types)
 
     if nat != size(coords,1)
@@ -202,7 +207,8 @@ function makecrys(A,coords,types)
     end
 
     nat = size(coords)[1]
-    return crystal{T}(A, coords, types, nat)
+    stypes = Symbol.(types)
+    return crystal{T}(A, coords, types, stypes, nat)
 end
 
 
@@ -591,7 +597,7 @@ function orbital_index(c::crystal)
 
     atomtypes = []
     ntypes=0
-    for t in c.types
+    for t in c.stypes
         if !(t in atomtypes)
             ntypes += 1
             push!(atomtypes, t)
@@ -610,7 +616,7 @@ function orbital_index(c::crystal)
 #    for at in atomtypes
 #        for (i, t) in enumerate(c.types)
 #            if t == at
-    for (i,t) in enumerate(c.types)
+    for (i,t) in enumerate(c.stypes)
         atom = atoms[t]
         nsemi += atom.nsemicore
         nval += atom.nval
