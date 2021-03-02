@@ -176,7 +176,7 @@ function get_energy_force_stress(tbc::tb_crys, database; do_scf=false, smearing 
         end
         
 
-        tbc_dual = calc_tb_fast(crys_dual, database; verbose=false, var_type=T, use_threebody=true, use_threebody_onsite=true, gamma=gamma_dual)
+        tbc_dual = calc_tb_fast(crys_dual, database; verbose=false, var_type=T, use_threebody=true, use_threebody_onsite=true, gamma=gamma_dual, check_frontier=false)
 
         nwan = tbc.tb.nwan
 
@@ -275,7 +275,7 @@ function finite_diff(crys::crystal, database, ind1, ind2; stress_mode=false, ste
     end
 
 
-    tbc0 = calc_tb_fast(crys, database, verbose=false)
+    tbc0 = calc_tb_fast(crys, database, verbose=false, check_frontier=false)
 
     energy_tot0, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc0, smearing=smearing, grid=grid, conv_thr = 1e-7)
 
@@ -290,7 +290,7 @@ function finite_diff(crys::crystal, database, ind1, ind2; stress_mode=false, ste
 
         crys1.coords = cart1 * inv(crys1.A)
 
-        tbc1 = calc_tb_fast(crys1, database, verbose=false)
+        tbc1 = calc_tb_fast(crys1, database, verbose=false, check_frontier=false)
 
         energy_tot1, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc1, smearing=smearing, grid=grid, conv_thr = 1e-7)
 
@@ -301,7 +301,7 @@ function finite_diff(crys::crystal, database, ind1, ind2; stress_mode=false, ste
 
         crys2.coords = cart2 * inv(crys2.A)
 
-        tbc2 = calc_tb_fast(crys2, database, verbose=false)
+        tbc2 = calc_tb_fast(crys2, database, verbose=false, check_frontier=false)
 
         energy_tot2, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc2, smearing=smearing, grid=grid, conv_thr = 1e-7)
         
@@ -321,7 +321,7 @@ function finite_diff(crys::crystal, database, ind1, ind2; stress_mode=false, ste
        
         crys1.A = crys1.A *(I(3) + strain)
 
-        tbc1 = calc_tb_fast(crys1, database, verbose=false)
+        tbc1 = calc_tb_fast(crys1, database, verbose=false, check_frontier=false)
 
         energy_tot1, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc1, smearing=smearing, grid=grid, conv_thr = 1e-7)
 
@@ -333,7 +333,7 @@ function finite_diff(crys::crystal, database, ind1, ind2; stress_mode=false, ste
        
         crys2.A = crys2.A *(I(3) + strain)
 
-        tbc2 = calc_tb_fast(crys2, database, verbose=false)
+        tbc2 = calc_tb_fast(crys2, database, verbose=false, check_frontier=false)
 
         energy_tot2, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc2, smearing=smearing, grid=grid, conv_thr = 1e-7)
 
@@ -899,7 +899,7 @@ function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smear
             end
 
 
-            tbc_dual = calc_tb_fast(crys_dual, database; verbose=false, var_type=T, use_threebody=true, use_threebody_onsite=true, gamma=gamma_dual )
+            tbc_dual = calc_tb_fast(crys_dual, database; verbose=false, var_type=T, use_threebody=true, use_threebody_onsite=true, gamma=gamma_dual , check_frontier=false)
 
             ret = zeros(T, size_ret * 2 + 1)
 
