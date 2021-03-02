@@ -21,21 +21,21 @@ Begin scf_energy-------------
 
 Load TB parameters from file
 prepare atoms [&quot;Al&quot;, &quot;P&quot;]
-add_to_database Set([&quot;Al&quot;])
-found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.2bdy.Al.xml.gz
-added to cache (&quot;Al&quot;, &quot;Al&quot;)
-found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.3bdy.Al.xml.gz
-added to cache (&quot;Al&quot;, &quot;Al&quot;, &quot;Al&quot;)
-add_to_database Set([&quot;Al&quot;, &quot;P&quot;])
-found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.2bdy.Al.P.xml.gz
-added to cache (&quot;Al&quot;, &quot;P&quot;) twobody
-found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.3bdy.Al.P.xml.gz
-added to cache (&quot;Al&quot;, &quot;P&quot;) threebody
-add_to_database Set([&quot;P&quot;])
+add_to_database Set([:P])
 found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.2bdy.P.xml.gz
-added to cache (&quot;P&quot;, &quot;P&quot;)
+added to cache (:P, :P)
 found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.3bdy.P.xml.gz
-added to cache (&quot;P&quot;, &quot;P&quot;, &quot;P&quot;)
+added to cache (:P, :P, :P)
+add_to_database Set([:P, :Al])
+found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.2bdy.Al.P.xml.gz
+added to cache (:P, :Al) twobody
+found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.3bdy.Al.P.xml.gz
+added to cache (:P, :Al) threebody
+add_to_database Set([:Al])
+found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.2bdy.Al.xml.gz
+added to cache (:Al, :Al)
+found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.3bdy.Al.xml.gz
+added to cache (:Al, :Al, :Al)
 
 construct
 
@@ -43,16 +43,19 @@ construct
 Construct tight-binding model from crystal structure
 
 distances
-  3.793941 seconds (6.13 M allocations: 299.426 MiB, 3.40% gc time)
+  3.722132 seconds (6.26 M allocations: 305.887 MiB, 2.24% gc time)
 CHECK FRONTIER - everything fine
 2body
-  2.002716 seconds (4.59 M allocations: 227.626 MiB, 4.93% gc time)
+  2.036362 seconds (4.77 M allocations: 237.756 MiB, 4.32% gc time)
 3body
-  1.353458 seconds (4.51 M allocations: 213.772 MiB, 5.89% gc time)
+  1.218462 seconds (4.29 M allocations: 206.392 MiB, 5.53% gc time)
 onsite
+  0.177789 seconds (506.27 k allocations: 26.552 MiB, 11.72% gc time)
+gamma
+  2.442412 seconds (5.50 M allocations: 264.887 MiB, 3.23% gc time)
 -----
 
-  9.834141 seconds (17.79 M allocations: 867.875 MiB, 3.38% gc time)
+ 11.068380 seconds (23.01 M allocations: 1.096 GiB, 3.26% gc time)
 ------
 Do SCF
 Mixing mode: pulay
@@ -72,17 +75,17 @@ SCF CALC 0006 energy  -0.74966297  en_diff:   3.069377E-04  dq_diff:   6.258844E
 SCF CALC 0007 energy  -0.74960074  en_diff:   6.222484E-05  dq_diff:   1.251561E-03
 SCF CALC 0008 energy  -0.74958830  en_diff:   1.244401E-05  dq_diff:   2.503266E-04
 
-YES convergence in 8 iters, energy -0.7495883008255473   dq = [-1.113, 1.113]
+YES convergence in 8 iters, energy -0.7495883007919362   dq = [-1.113, 1.113]
 END SCF ------------------
 
 scf_energy success, done
 
-The energy is -0.7495883008255473 Ryd</pre><p>This returns the non-magnetic atomization energy, and a tight-binding object with the SCF electron density calculated.</p><h2 id="**Plot-the-band-structure.**"><a class="docs-heading-anchor" href="#**Plot-the-band-structure.**"><strong>Plot the band structure.</strong></a><a id="**Plot-the-band-structure.**-1"></a><a class="docs-heading-anchor-permalink" href="#**Plot-the-band-structure.**" title="Permalink"></a></h2><p>Using the tight-binding object from above. Note: SCF must be done first to get meaningful results.</p><pre><code class="language-julia">plot_bandstr(tbc_alp, do_display=false);</code></pre><pre class="documenter-example-output">plot_bandstr
+The energy is -0.7495883007919362 Ryd</pre><p>This returns the non-magnetic atomization energy, and a tight-binding object with the SCF electron density calculated.</p><h2 id="**Plot-the-band-structure.**"><a class="docs-heading-anchor" href="#**Plot-the-band-structure.**"><strong>Plot the band structure.</strong></a><a id="**Plot-the-band-structure.**-1"></a><a class="docs-heading-anchor-permalink" href="#**Plot-the-band-structure.**" title="Permalink"></a></h2><p>Using the tight-binding object from above. Note: SCF must be done first to get meaningful results.</p><pre><code class="language-julia">plot_bandstr(tbc_alp, do_display=false);</code></pre><pre class="documenter-example-output">plot_bandstr
 clear
 align vbm
 color = blue markersize = 0</pre><p><img src="../alp.png" alt="AlP plot"/></p><p>Use <em>do_display=true</em> to produce an interactive plot.</p><p>The default just picks some random kpoints, but you can add your own kpath. We also project onto the <em>s</em> orbital of Al.</p><pre><code class="language-julia">kpath=[0.0 0.0 0.0; 0.5 0.5 0.5; 0.0 0.5 0.5];
 knames=[&quot;Γ&quot;, &quot;X&quot;, &quot;V&quot;];
-plot_bandstr(tbc_alp, kpath=kpath, names=knames, npts=100, proj_orbs=[:s], proj_types=[&quot;Al&quot;], do_display=false);</code></pre><pre class="documenter-example-output">proj_inds [1]
+plot_bandstr(tbc_alp, kpath=kpath, names=knames, npts=100, proj_orbs=[:s], proj_types=[&quot;Al&quot;], do_display=false);</code></pre><pre class="documenter-example-output">proj_inds Int64[]
 plot_bandstr
 clear
 align vbm</pre><p><img src="../alp2.png" alt="AlP plot"/></p><h2 id="**Calculate-force-/-stress**"><a class="docs-heading-anchor" href="#**Calculate-force-/-stress**"><strong>Calculate force / stress</strong></a><a id="**Calculate-force-/-stress**-1"></a><a class="docs-heading-anchor-permalink" href="#**Calculate-force-/-stress**" title="Permalink"></a></h2><pre><code class="language-julia">energy, force, stress, tbc = scf_energy_force_stress(tbc_alp);
@@ -96,26 +99,61 @@ println(&quot;Stress&quot;)
 show(stdout, &quot;text/plain&quot;, stress)</code></pre><pre class="documenter-example-output">prepare atoms [&quot;Al&quot;, &quot;P&quot;]
 
 Calculate Force, Stress (no scf)
-  0.077540 seconds (773.52 k allocations: 32.718 MiB, 18.02% gc time)
-  0.055368 seconds (400.28 k allocations: 22.209 MiB, 23.64% gc time)
-  0.151556 seconds (1.52 M allocations: 59.366 MiB, 8.11% gc time)
-  3.101975 seconds (5.24 M allocations: 325.540 MiB, 3.94% gc time)
-  4.829717 seconds (9.79 M allocations: 418.729 MiB, 3.04% gc time)
-  3.138400 seconds (6.80 M allocations: 344.892 MiB, 4.06% gc time)
-  0.155747 seconds (842.89 k allocations: 111.138 MiB, 13.44% gc time)
-  0.079269 seconds (400.28 k allocations: 44.813 MiB, 26.79% gc time)
-  0.183746 seconds (1.52 M allocations: 114.955 MiB, 10.64% gc time)
-  0.064971 seconds (773.52 k allocations: 32.718 MiB)
-  0.044133 seconds (400.28 k allocations: 22.209 MiB)
-  0.154272 seconds (1.52 M allocations: 59.366 MiB, 10.76% gc time)
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.082462 seconds (773.75 k allocations: 32.724 MiB, 22.10% gc time)
+2body
+  0.044986 seconds (402.64 k allocations: 23.102 MiB)
+3body
+  0.163776 seconds (1.54 M allocations: 64.728 MiB, 10.67% gc time)
+onsite
+  0.008271 seconds (97.68 k allocations: 5.102 MiB)
+  0.000000 seconds
+-----
+
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  3.064987 seconds (5.17 M allocations: 333.127 MiB, 3.24% gc time)
+2body
+  5.193082 seconds (10.37 M allocations: 441.974 MiB, 3.09% gc time)
+3body
+  3.229216 seconds (6.63 M allocations: 344.608 MiB, 4.04% gc time)
+onsite
+  0.225394 seconds (746.51 k allocations: 39.145 MiB, 10.12% gc time)
+  0.000000 seconds
+-----
+
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.169109 seconds (843.11 k allocations: 122.518 MiB, 14.73% gc time)
+2body
+  0.090107 seconds (402.64 k allocations: 49.291 MiB, 26.64% gc time)
+3body
+  0.232279 seconds (1.54 M allocations: 126.438 MiB, 17.82% gc time)
+onsite
+  0.014064 seconds (97.68 k allocations: 10.816 MiB)
+  0.000000 seconds
+-----
+
+ 24.538435 seconds (53.99 M allocations: 2.770 GiB, 4.23% gc time)
+end jac
 done
 ----
-energy -0.7495858097098367
+energy -0.7495858096762164
 
 Forces
 2×3 Array{Float64,2}:
- 2.00584e-17  1.53835e-17  1.68581e-17
- 0.0          0.0          0.0
+ -4.88117e-13  -4.88129e-13  -4.88117e-13
+  0.0           0.0           0.0
 Stress
 3×3 Array{Float64,2}:
  0.00143705  0.0         0.0
@@ -134,13 +172,16 @@ show(stdout, &quot;text/plain&quot;, stress)</code></pre><pre class="documenter-
 Construct tight-binding model from crystal structure
 
 distances
-  0.060431 seconds (773.52 k allocations: 32.718 MiB)
+  0.063085 seconds (773.75 k allocations: 32.724 MiB)
 CHECK FRONTIER - everything fine
 2body
-  0.038592 seconds (400.28 k allocations: 22.209 MiB)
+  0.072214 seconds (402.64 k allocations: 23.102 MiB, 38.02% gc time)
 3body
-  0.166087 seconds (1.52 M allocations: 59.366 MiB, 14.66% gc time)
+  0.176391 seconds (1.54 M allocations: 64.728 MiB, 12.77% gc time)
 onsite
+  0.008151 seconds (97.68 k allocations: 5.102 MiB)
+gamma
+  0.001806 seconds (8.62 k allocations: 923.750 KiB)
 -----
 
 ------
@@ -162,28 +203,66 @@ SCF CALC 0006 energy  -0.74966297  en_diff:   3.069377E-04  dq_diff:   6.258844E
 SCF CALC 0007 energy  -0.74960074  en_diff:   6.222484E-05  dq_diff:   1.251561E-03
 SCF CALC 0008 energy  -0.74958830  en_diff:   1.244401E-05  dq_diff:   2.503266E-04
 
-YES convergence in 8 iters, energy -0.7495883008255473   dq = [-1.113, 1.113]
+YES convergence in 8 iters, energy -0.7495883007919362   dq = [-1.113, 1.113]
 END SCF ------------------
 
 starting vec
 [0.0, 0.0, 0.0, 0.25, 0.25, 0.25, 4.9132898822133235, 4.9132898822133235, 0.0, 4.9132898822133235, 0.0, 4.9132898822133235, 0.0, 4.9132898822133235, 4.9132898822133235]
 
-  0.059445 seconds (773.52 k allocations: 32.718 MiB)
-  0.042536 seconds (400.28 k allocations: 22.209 MiB)
-  0.154806 seconds (1.52 M allocations: 59.366 MiB, 12.86% gc time)
-  0.145580 seconds (842.89 k allocations: 111.138 MiB, 9.99% gc time)
-  0.070428 seconds (400.28 k allocations: 44.813 MiB, 21.66% gc time)
-  0.174176 seconds (1.52 M allocations: 114.955 MiB, 9.85% gc time)
-  0.164091 seconds (842.89 k allocations: 111.138 MiB, 18.93% gc time)
-  0.057363 seconds (400.28 k allocations: 44.813 MiB)
-  0.205883 seconds (1.52 M allocations: 114.955 MiB, 18.27% gc time)
-  0.066422 seconds (773.52 k allocations: 32.718 MiB)
-  0.061452 seconds (400.28 k allocations: 22.209 MiB, 26.14% gc time)
-  0.142365 seconds (1.52 M allocations: 59.366 MiB)
-FCALL 1 en:  -0.7495883008255473  fsum:  5.3082393404280665e-17  ssum:  0.004311079231453531    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-  0.066775 seconds (569.69 k allocations: 25.801 MiB, 29.42% gc time)
-  0.033526 seconds (317.07 k allocations: 17.615 MiB)
-  0.133956 seconds (1.18 M allocations: 45.882 MiB, 17.76% gc time)
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.084675 seconds (773.75 k allocations: 32.724 MiB, 20.98% gc time)
+2body
+  0.044396 seconds (402.64 k allocations: 23.102 MiB)
+3body
+  0.172357 seconds (1.54 M allocations: 64.728 MiB, 11.12% gc time)
+onsite
+  0.010001 seconds (97.68 k allocations: 5.102 MiB)
+  0.000000 seconds
+-----
+
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.179779 seconds (843.11 k allocations: 122.518 MiB, 20.12% gc time)
+2body
+  0.067796 seconds (402.64 k allocations: 49.291 MiB)
+3body
+  0.222002 seconds (1.54 M allocations: 126.438 MiB, 15.33% gc time)
+onsite
+  0.012799 seconds (97.68 k allocations: 10.816 MiB)
+  0.000000 seconds
+-----
+
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.157017 seconds (843.11 k allocations: 122.518 MiB, 9.75% gc time)
+2body
+  0.087050 seconds (402.64 k allocations: 49.291 MiB, 19.89% gc time)
+3body
+  0.228557 seconds (1.54 M allocations: 126.438 MiB, 15.46% gc time)
+onsite
+  0.013880 seconds (97.68 k allocations: 10.816 MiB)
+  0.000000 seconds
+-----
+
+  1.310151 seconds (8.60 M allocations: 776.410 MiB, 14.49% gc time)
+end jac
+FCALL 1 en:  -0.7495883007919362  fsum:  1.4643637609493722e-12  ssum:  0.004311079238824323    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  0.049545 seconds (569.98 k allocations: 25.811 MiB)
+  0.038908 seconds (318.19 k allocations: 18.298 MiB)
+  0.141518 seconds (1.19 M allocations: 50.061 MiB, 15.99% gc time)
+  0.009991 seconds (98.26 k allocations: 5.101 MiB)
+gamma
+  0.002054 seconds (8.62 k allocations: 923.750 KiB)
 
 START SCF ----------------
 SCF CALC 0001 energy  -0.77225730
@@ -194,22 +273,57 @@ SCF CALC 0005 energy  -0.77446117  en_diff:   1.521359E-04  dq_diff:   1.769047E
 SCF CALC 0006 energy  -0.77449098  en_diff:   2.981293E-05  dq_diff:   3.550355E-04
 SCF CALC 0007 energy  -0.77449697  en_diff:   5.990601E-06  dq_diff:   7.092859E-05
 
-YES convergence in 7 iters, energy -0.7744969723754964   dq = [-1.024, 1.024]
+YES convergence in 7 iters, energy -0.7744969723953301   dq = [-1.024, 1.024]
 END SCF ------------------
 
-  0.052588 seconds (569.69 k allocations: 25.801 MiB)
-  0.037010 seconds (317.07 k allocations: 17.615 MiB)
-  0.128229 seconds (1.18 M allocations: 45.882 MiB, 14.16% gc time)
-  0.124318 seconds (632.46 k allocations: 95.555 MiB, 14.87% gc time)
-  0.065864 seconds (317.07 k allocations: 35.524 MiB, 31.64% gc time)
-  0.157249 seconds (1.18 M allocations: 88.893 MiB, 13.94% gc time)
-  0.121652 seconds (632.46 k allocations: 95.555 MiB, 14.25% gc time)
-  0.046184 seconds (317.07 k allocations: 35.524 MiB)
-  0.144402 seconds (1.18 M allocations: 88.893 MiB, 13.96% gc time)
-  0.069315 seconds (569.69 k allocations: 25.801 MiB, 30.59% gc time)
-  0.033444 seconds (317.07 k allocations: 17.615 MiB)
-  0.118768 seconds (1.18 M allocations: 45.882 MiB)
-FCALL 2 en:  -0.7744969723754964  fsum:  4.5849968358887336e-18  ssum:  0.0016069425636169444    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.049677 seconds (569.98 k allocations: 25.811 MiB)
+2body
+  0.037743 seconds (318.19 k allocations: 18.298 MiB)
+3body
+  0.132390 seconds (1.19 M allocations: 50.061 MiB, 11.28% gc time)
+onsite
+  0.009954 seconds (98.26 k allocations: 5.101 MiB)
+  0.000000 seconds
+-----
+
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.129435 seconds (632.75 k allocations: 105.537 MiB, 13.60% gc time)
+2body
+  0.073390 seconds (318.19 k allocations: 39.046 MiB, 29.77% gc time)
+3body
+  0.167063 seconds (1.19 M allocations: 97.807 MiB, 12.54% gc time)
+onsite
+  0.013566 seconds (98.26 k allocations: 10.838 MiB)
+  0.000000 seconds
+-----
+
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.130036 seconds (632.75 k allocations: 105.537 MiB, 13.75% gc time)
+2body
+  0.052337 seconds (318.19 k allocations: 39.046 MiB)
+3body
+  0.167577 seconds (1.19 M allocations: 97.807 MiB, 12.87% gc time)
+onsite
+  0.015006 seconds (98.26 k allocations: 10.838 MiB)
+  0.000000 seconds
+-----
+
+  1.014733 seconds (6.68 M allocations: 631.271 MiB, 13.43% gc time)
+end jac
+FCALL 2 en:  -0.7744969723953301  fsum:  1.1063830462924468e-13  ssum:  0.0016069425615332536    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
 SCF CALC 0001 energy  -0.77225730
@@ -220,219 +334,409 @@ SCF CALC 0005 energy  -0.77446117  en_diff:   1.521359E-04  dq_diff:   1.769047E
 SCF CALC 0006 energy  -0.77449098  en_diff:   2.981293E-05  dq_diff:   3.550355E-04
 SCF CALC 0007 energy  -0.77449697  en_diff:   5.990601E-06  dq_diff:   7.092859E-05
 
-YES convergence in 7 iters, energy -0.7744969723754964   dq = [-1.024, 1.024]
+YES convergence in 7 iters, energy -0.7744969723953301   dq = [-1.024, 1.024]
 END SCF ------------------
 
-  0.031070 seconds (380.37 k allocations: 19.095 MiB)
-  0.026670 seconds (238.91 k allocations: 13.274 MiB)
-  0.069945 seconds (703.83 k allocations: 27.531 MiB)
+  0.041390 seconds (380.57 k allocations: 19.102 MiB, 22.08% gc time)
+  0.025972 seconds (240.34 k allocations: 13.809 MiB)
+  0.074972 seconds (708.63 k allocations: 29.952 MiB)
+  0.006872 seconds (62.74 k allocations: 3.251 MiB)
+gamma
+  0.001356 seconds (6.34 k allocations: 674.703 KiB)
 
 START SCF ----------------
-SCF CALC 0001 energy  -0.71432966
-SCF CALC 0002 energy  -0.72644196  en_diff:   1.211230E-02  dq_diff:   2.715953E-01
-SCF CALC 0003 energy  -0.72887595  en_diff:   2.433985E-03  dq_diff:   2.027603E-01
-SCF CALC 0004 energy  -0.73349083  en_diff:   4.614888E-03  dq_diff:   4.749218E-02
+SCF CALC 0001 energy  -0.71432965
+SCF CALC 0002 energy  -0.72644196  en_diff:   1.211231E-02  dq_diff:   2.715953E-01
+SCF CALC 0003 energy  -0.72887594  en_diff:   2.433986E-03  dq_diff:   2.027603E-01
+SCF CALC 0004 energy  -0.73349083  en_diff:   4.614889E-03  dq_diff:   4.749219E-02
 SCF CALC 0005 energy  -0.73460707  en_diff:   1.116240E-03  dq_diff:   8.334104E-03
 SCF CALC 0006 energy  -0.73478124  en_diff:   1.741699E-04  dq_diff:   1.817437E-03
-SCF CALC 0007 energy  -0.73482172  en_diff:   4.047196E-05  dq_diff:   3.394380E-04
-SCF CALC 0008 energy  -0.73482890  en_diff:   7.180810E-06  dq_diff:   7.122809E-05
+SCF CALC 0007 energy  -0.73482171  en_diff:   4.047197E-05  dq_diff:   3.394380E-04
+SCF CALC 0008 energy  -0.73482889  en_diff:   7.180811E-06  dq_diff:   7.122810E-05
 
-YES convergence in 8 iters, energy -0.7348288961050234   dq = [-0.633, 0.633]
+YES convergence in 8 iters, energy -0.7348288936730197   dq = [-0.633, 0.633]
 END SCF ------------------
 
-  0.036436 seconds (380.37 k allocations: 19.095 MiB)
-  0.027161 seconds (238.91 k allocations: 13.274 MiB)
-  0.072586 seconds (703.83 k allocations: 27.531 MiB)
-  0.059411 seconds (395.02 k allocations: 59.446 MiB)
-  0.035758 seconds (238.91 k allocations: 26.771 MiB)
-  0.097453 seconds (703.83 k allocations: 53.297 MiB, 21.01% gc time)
-  0.078620 seconds (395.02 k allocations: 59.446 MiB, 25.85% gc time)
-  0.037145 seconds (238.91 k allocations: 26.771 MiB)
-  0.078456 seconds (703.83 k allocations: 53.297 MiB)
-  0.032490 seconds (380.37 k allocations: 19.095 MiB)
-  0.026847 seconds (238.91 k allocations: 13.274 MiB)
-  0.071371 seconds (703.83 k allocations: 27.531 MiB)
-FCALL 3 en:  -0.7348288961050234  fsum:  3.5054240341946556e-15  ssum:  0.0022134653995154836    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.031782 seconds (380.57 k allocations: 19.102 MiB)
+2body
+  0.028500 seconds (240.34 k allocations: 13.809 MiB)
+3body
+  0.075077 seconds (708.63 k allocations: 29.952 MiB)
+onsite
+  0.006881 seconds (62.74 k allocations: 3.251 MiB)
+  0.000000 seconds
+-----
+
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.082503 seconds (395.23 k allocations: 65.296 MiB, 24.85% gc time)
+2body
+  0.039599 seconds (240.34 k allocations: 29.446 MiB)
+3body
+  0.107848 seconds (708.63 k allocations: 58.555 MiB, 20.92% gc time)
+onsite
+  0.008716 seconds (62.74 k allocations: 6.917 MiB)
+  0.000000 seconds
+-----
+
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.061416 seconds (395.23 k allocations: 65.296 MiB)
+2body
+  0.061850 seconds (240.34 k allocations: 29.446 MiB, 34.21% gc time)
+3body
+  0.090749 seconds (708.63 k allocations: 58.555 MiB)
+onsite
+  0.008805 seconds (62.74 k allocations: 6.917 MiB)
+  0.000000 seconds
+-----
+
+  0.614152 seconds (4.23 M allocations: 406.837 MiB, 10.46% gc time)
+end jac
+FCALL 3 en:  -0.7348288936730197  fsum:  2.482384039833576e-9  ssum:  0.002213465284636739    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
-SCF CALC 0001 energy  -0.71432966
-SCF CALC 0002 energy  -0.72644196  en_diff:   1.211230E-02  dq_diff:   2.715953E-01
-SCF CALC 0003 energy  -0.72887595  en_diff:   2.433985E-03  dq_diff:   2.027603E-01
-SCF CALC 0004 energy  -0.73349083  en_diff:   4.614888E-03  dq_diff:   4.749218E-02
+SCF CALC 0001 energy  -0.71432965
+SCF CALC 0002 energy  -0.72644196  en_diff:   1.211231E-02  dq_diff:   2.715953E-01
+SCF CALC 0003 energy  -0.72887594  en_diff:   2.433986E-03  dq_diff:   2.027603E-01
+SCF CALC 0004 energy  -0.73349083  en_diff:   4.614889E-03  dq_diff:   4.749219E-02
 SCF CALC 0005 energy  -0.73460707  en_diff:   1.116240E-03  dq_diff:   8.334104E-03
 SCF CALC 0006 energy  -0.73478124  en_diff:   1.741699E-04  dq_diff:   1.817437E-03
-SCF CALC 0007 energy  -0.73482172  en_diff:   4.047196E-05  dq_diff:   3.394380E-04
-SCF CALC 0008 energy  -0.73482890  en_diff:   7.180810E-06  dq_diff:   7.122809E-05
+SCF CALC 0007 energy  -0.73482171  en_diff:   4.047197E-05  dq_diff:   3.394380E-04
+SCF CALC 0008 energy  -0.73482889  en_diff:   7.180811E-06  dq_diff:   7.122810E-05
 
-YES convergence in 8 iters, energy -0.7348288961050234   dq = [-0.633, 0.633]
+YES convergence in 8 iters, energy -0.7348288936730197   dq = [-0.633, 0.633]
 END SCF ------------------
 
-  0.059802 seconds (552.86 k allocations: 25.289 MiB, 20.94% gc time)
-  0.033257 seconds (303.63 k allocations: 16.858 MiB)
-  0.117245 seconds (1.16 M allocations: 45.229 MiB)
+  0.048195 seconds (553.11 k allocations: 25.298 MiB)
+  0.033222 seconds (304.75 k allocations: 17.512 MiB)
+  0.120519 seconds (1.17 M allocations: 49.351 MiB)
+  0.008931 seconds (81.19 k allocations: 4.251 MiB)
+gamma
+  0.001352 seconds (6.34 k allocations: 674.703 KiB)
 
 START SCF ----------------
-SCF CALC 0001 energy  -0.78689169
-SCF CALC 0002 energy  -0.78411221  en_diff:   2.779486E-03  dq_diff:   1.756262E-01
-SCF CALC 0003 energy  -0.78330555  en_diff:   8.066576E-04  dq_diff:   1.353972E-01
-SCF CALC 0004 energy  -0.78113762  en_diff:   2.167931E-03  dq_diff:   2.868670E-02
-SCF CALC 0005 energy  -0.78062865  en_diff:   5.089731E-04  dq_diff:   5.572243E-03
-SCF CALC 0006 energy  -0.78053085  en_diff:   9.779130E-05  dq_diff:   1.129435E-03
-SCF CALC 0007 energy  -0.78051078  en_diff:   2.007684E-05  dq_diff:   2.244524E-04
-SCF CALC 0008 energy  -0.78050681  en_diff:   3.971788E-06  dq_diff:   4.502473E-05
+SCF CALC 0001 energy  -0.78689167
+SCF CALC 0002 energy  -0.78411218  en_diff:   2.779491E-03  dq_diff:   1.756260E-01
+SCF CALC 0003 energy  -0.78330552  en_diff:   8.066588E-04  dq_diff:   1.353970E-01
+SCF CALC 0004 energy  -0.78113759  en_diff:   2.167933E-03  dq_diff:   2.868668E-02
+SCF CALC 0005 energy  -0.78062862  en_diff:   5.089738E-04  dq_diff:   5.572237E-03
+SCF CALC 0006 energy  -0.78053082  en_diff:   9.779137E-05  dq_diff:   1.129434E-03
+SCF CALC 0007 energy  -0.78051075  en_diff:   2.007686E-05  dq_diff:   2.244521E-04
+SCF CALC 0008 energy  -0.78050678  en_diff:   3.971791E-06  dq_diff:   4.502469E-05
 
-YES convergence in 8 iters, energy -0.7805068059999789   dq = [-0.878, 0.878]
+YES convergence in 8 iters, energy -0.7805067756622099   dq = [-0.878, 0.878]
 END SCF ------------------
 
-  0.051636 seconds (552.87 k allocations: 25.289 MiB)
-  0.050472 seconds (303.63 k allocations: 16.858 MiB, 31.64% gc time)
-  0.101582 seconds (1.16 M allocations: 45.229 MiB)
-  0.114719 seconds (591.98 k allocations: 83.203 MiB, 19.79% gc time)
-  0.045302 seconds (303.63 k allocations: 33.996 MiB)
-  0.147611 seconds (1.16 M allocations: 87.631 MiB, 16.13% gc time)
-  0.113596 seconds (591.98 k allocations: 83.203 MiB, 19.76% gc time)
-  0.044780 seconds (303.63 k allocations: 33.996 MiB)
-  0.144980 seconds (1.16 M allocations: 87.631 MiB, 16.32% gc time)
-  0.047553 seconds (552.87 k allocations: 25.289 MiB)
-  0.055369 seconds (303.63 k allocations: 16.858 MiB, 43.25% gc time)
-  0.101552 seconds (1.16 M allocations: 45.229 MiB)
-FCALL 4 en:  -0.7805068059999789  fsum:  5.266901406241614e-17  ssum:  0.000565236435879087    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.048619 seconds (553.11 k allocations: 25.298 MiB)
+2body
+  0.035917 seconds (304.75 k allocations: 17.512 MiB)
+3body
+  0.140299 seconds (1.17 M allocations: 49.351 MiB, 14.38% gc time)
+onsite
+  0.006734 seconds (81.19 k allocations: 4.251 MiB)
+  0.000000 seconds
+-----
+
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.119062 seconds (592.22 k allocations: 91.582 MiB, 18.51% gc time)
+2body
+  0.053357 seconds (304.75 k allocations: 37.367 MiB)
+3body
+  0.172769 seconds (1.17 M allocations: 96.422 MiB, 13.72% gc time)
+onsite
+  0.011514 seconds (81.19 k allocations: 9.023 MiB)
+  0.000000 seconds
+-----
+
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.119850 seconds (592.22 k allocations: 91.582 MiB, 19.22% gc time)
+2body
+  0.052258 seconds (304.75 k allocations: 37.367 MiB)
+3body
+  0.211958 seconds (1.17 M allocations: 96.422 MiB, 30.44% gc time)
+onsite
+  0.011634 seconds (81.19 k allocations: 9.023 MiB)
+  0.000000 seconds
+-----
+
+  1.001829 seconds (6.43 M allocations: 589.040 MiB, 15.32% gc time)
+end jac
+FCALL 4 en:  -0.7805067756622099  fsum:  1.4439685767792371e-8  ssum:  0.0005652347032449512    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
-SCF CALC 0001 energy  -0.78689169
-SCF CALC 0002 energy  -0.78411221  en_diff:   2.779486E-03  dq_diff:   1.756262E-01
-SCF CALC 0003 energy  -0.78330555  en_diff:   8.066576E-04  dq_diff:   1.353972E-01
-SCF CALC 0004 energy  -0.78113762  en_diff:   2.167931E-03  dq_diff:   2.868670E-02
-SCF CALC 0005 energy  -0.78062865  en_diff:   5.089731E-04  dq_diff:   5.572243E-03
-SCF CALC 0006 energy  -0.78053085  en_diff:   9.779130E-05  dq_diff:   1.129435E-03
-SCF CALC 0007 energy  -0.78051078  en_diff:   2.007684E-05  dq_diff:   2.244524E-04
-SCF CALC 0008 energy  -0.78050681  en_diff:   3.971788E-06  dq_diff:   4.502473E-05
+SCF CALC 0001 energy  -0.78689167
+SCF CALC 0002 energy  -0.78411218  en_diff:   2.779491E-03  dq_diff:   1.756260E-01
+SCF CALC 0003 energy  -0.78330552  en_diff:   8.066588E-04  dq_diff:   1.353970E-01
+SCF CALC 0004 energy  -0.78113759  en_diff:   2.167933E-03  dq_diff:   2.868668E-02
+SCF CALC 0005 energy  -0.78062862  en_diff:   5.089738E-04  dq_diff:   5.572237E-03
+SCF CALC 0006 energy  -0.78053082  en_diff:   9.779137E-05  dq_diff:   1.129434E-03
+SCF CALC 0007 energy  -0.78051075  en_diff:   2.007686E-05  dq_diff:   2.244521E-04
+SCF CALC 0008 energy  -0.78050678  en_diff:   3.971791E-06  dq_diff:   4.502469E-05
 
-YES convergence in 8 iters, energy -0.7805068059999789   dq = [-0.878, 0.878]
+YES convergence in 8 iters, energy -0.7805067756622099   dq = [-0.878, 0.878]
 END SCF ------------------
 
-  0.048776 seconds (569.70 k allocations: 25.801 MiB)
-  0.043216 seconds (317.45 k allocations: 17.621 MiB, 27.91% gc time)
-  0.117697 seconds (1.18 M allocations: 45.882 MiB, 10.55% gc time)
+  0.060325 seconds (570.04 k allocations: 25.815 MiB, 16.63% gc time)
+  0.036373 seconds (318.57 k allocations: 18.304 MiB)
+  0.135446 seconds (1.19 M allocations: 50.061 MiB, 11.07% gc time)
+  0.007823 seconds (81.29 k allocations: 4.254 MiB)
+gamma
+  0.001377 seconds (6.34 k allocations: 674.703 KiB)
 
 START SCF ----------------
-SCF CALC 0001 energy  -0.78270180
-SCF CALC 0002 energy  -0.78226225  en_diff:   4.395563E-04  dq_diff:   2.246715E-02
-SCF CALC 0003 energy  -0.78214460  en_diff:   1.176472E-04  dq_diff:   1.733413E-02
-SCF CALC 0004 energy  -0.78184132  en_diff:   3.032788E-04  dq_diff:   3.647883E-03
-SCF CALC 0005 energy  -0.78177471  en_diff:   6.660978E-05  dq_diff:   7.137517E-04
-SCF CALC 0006 energy  -0.78176185  en_diff:   1.286186E-05  dq_diff:   1.440257E-04
+SCF CALC 0001 energy  -0.78270175
+SCF CALC 0002 energy  -0.78226220  en_diff:   4.395539E-04  dq_diff:   2.246693E-02
+SCF CALC 0003 energy  -0.78214455  en_diff:   1.176464E-04  dq_diff:   1.733396E-02
+SCF CALC 0004 energy  -0.78184127  en_diff:   3.032766E-04  dq_diff:   3.647850E-03
+SCF CALC 0005 energy  -0.78177466  en_diff:   6.660937E-05  dq_diff:   7.137449E-04
+SCF CALC 0006 energy  -0.78176180  en_diff:   1.286177E-05  dq_diff:   1.440243E-04
 
-YES convergence in 6 iters, energy -0.7817618498965497   dq = [-0.911, 0.911]
+YES convergence in 6 iters, energy -0.7817618016952886   dq = [-0.911, 0.911]
 END SCF ------------------
 
-  0.052124 seconds (569.70 k allocations: 25.801 MiB)
-  0.046654 seconds (317.45 k allocations: 17.621 MiB, 25.93% gc time)
-  0.124762 seconds (1.18 M allocations: 45.882 MiB, 10.30% gc time)
-  0.159225 seconds (645.66 k allocations: 96.304 MiB, 16.53% gc time)
-  0.045521 seconds (317.45 k allocations: 35.542 MiB)
-  0.133849 seconds (1.18 M allocations: 88.893 MiB, 11.26% gc time)
-  0.131904 seconds (632.48 k allocations: 95.615 MiB, 19.94% gc time)
-  0.047992 seconds (317.45 k allocations: 35.542 MiB)
-  0.155731 seconds (1.18 M allocations: 88.893 MiB, 18.27% gc time)
-  0.050441 seconds (569.70 k allocations: 25.801 MiB)
-  0.043169 seconds (317.45 k allocations: 17.621 MiB, 28.01% gc time)
-  0.124662 seconds (1.18 M allocations: 45.882 MiB, 10.94% gc time)
-FCALL 5 en:  -0.7817618498965497  fsum:  1.0218666945476237e-16  ssum:  0.00017826889812355698    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.048078 seconds (570.04 k allocations: 25.815 MiB)
+2body
+  0.037488 seconds (318.57 k allocations: 18.304 MiB)
+3body
+  0.133381 seconds (1.19 M allocations: 50.061 MiB, 10.84% gc time)
+onsite
+  0.008248 seconds (81.29 k allocations: 4.254 MiB)
+  0.000000 seconds
+-----
+
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.177252 seconds (645.98 k allocations: 106.274 MiB, 18.41% gc time)
+2body
+  0.053940 seconds (318.57 k allocations: 39.067 MiB)
+3body
+  0.179694 seconds (1.19 M allocations: 97.807 MiB, 19.43% gc time)
+onsite
+  0.010481 seconds (81.29 k allocations: 9.030 MiB)
+  0.000000 seconds
+-----
+
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.122627 seconds (632.80 k allocations: 105.585 MiB, 9.52% gc time)
+2body
+  0.068478 seconds (318.57 k allocations: 39.067 MiB, 24.05% gc time)
+3body
+  0.158490 seconds (1.19 M allocations: 97.807 MiB, 10.70% gc time)
+onsite
+  0.011131 seconds (81.29 k allocations: 9.030 MiB)
+  0.000000 seconds
+-----
+
+  1.036304 seconds (6.63 M allocations: 625.942 MiB, 13.72% gc time)
+end jac
+FCALL 5 en:  -0.7817618016952886  fsum:  3.0797847591666506e-8  ssum:  0.00017826843859286733    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
-SCF CALC 0001 energy  -0.78270180
-SCF CALC 0002 energy  -0.78226225  en_diff:   4.395563E-04  dq_diff:   2.246715E-02
-SCF CALC 0003 energy  -0.78214460  en_diff:   1.176472E-04  dq_diff:   1.733413E-02
-SCF CALC 0004 energy  -0.78184132  en_diff:   3.032788E-04  dq_diff:   3.647883E-03
-SCF CALC 0005 energy  -0.78177471  en_diff:   6.660978E-05  dq_diff:   7.137517E-04
-SCF CALC 0006 energy  -0.78176185  en_diff:   1.286186E-05  dq_diff:   1.440257E-04
+SCF CALC 0001 energy  -0.78270175
+SCF CALC 0002 energy  -0.78226220  en_diff:   4.395539E-04  dq_diff:   2.246693E-02
+SCF CALC 0003 energy  -0.78214455  en_diff:   1.176464E-04  dq_diff:   1.733396E-02
+SCF CALC 0004 energy  -0.78184127  en_diff:   3.032766E-04  dq_diff:   3.647850E-03
+SCF CALC 0005 energy  -0.78177466  en_diff:   6.660937E-05  dq_diff:   7.137449E-04
+SCF CALC 0006 energy  -0.78176180  en_diff:   1.286177E-05  dq_diff:   1.440243E-04
 
-YES convergence in 6 iters, energy -0.7817618498965497   dq = [-0.911, 0.911]
+YES convergence in 6 iters, energy -0.7817618016952886   dq = [-0.911, 0.911]
 END SCF ------------------
 
-  0.054405 seconds (685.55 k allocations: 29.640 MiB)
-  0.045727 seconds (373.37 k allocations: 20.685 MiB)
-  0.142252 seconds (1.31 M allocations: 51.055 MiB, 11.70% gc time)
+  0.060012 seconds (685.95 k allocations: 29.656 MiB)
+  0.054896 seconds (376.03 k allocations: 21.532 MiB, 24.99% gc time)
+  0.147465 seconds (1.32 M allocations: 55.738 MiB, 10.11% gc time)
+  0.008226 seconds (98.64 k allocations: 5.113 MiB)
+gamma
+  0.001626 seconds (8.62 k allocations: 923.750 KiB)
 
 START SCF ----------------
-SCF CALC 0001 energy  -0.77413559
-SCF CALC 0002 energy  -0.77287950  en_diff:   1.256094E-03  dq_diff:   8.611209E-02
-SCF CALC 0003 energy  -0.77252038  en_diff:   3.591158E-04  dq_diff:   6.710663E-02
-SCF CALC 0004 energy  -0.77151040  en_diff:   1.009986E-03  dq_diff:   1.379332E-02
-SCF CALC 0005 energy  -0.77129349  en_diff:   2.169084E-04  dq_diff:   2.734897E-03
-SCF CALC 0006 energy  -0.77125048  en_diff:   4.301139E-05  dq_diff:   5.483511E-04
-SCF CALC 0007 energy  -0.77124183  en_diff:   8.646559E-06  dq_diff:   1.095870E-04
+SCF CALC 0001 energy  -0.77413576
+SCF CALC 0002 energy  -0.77287967  en_diff:   1.256095E-03  dq_diff:   8.611194E-02
+SCF CALC 0003 energy  -0.77252055  en_diff:   3.591160E-04  dq_diff:   6.710651E-02
+SCF CALC 0004 energy  -0.77151056  en_diff:   1.009986E-03  dq_diff:   1.379330E-02
+SCF CALC 0005 energy  -0.77129365  en_diff:   2.169084E-04  dq_diff:   2.734893E-03
+SCF CALC 0006 energy  -0.77125064  en_diff:   4.301139E-05  dq_diff:   5.483502E-04
+SCF CALC 0007 energy  -0.77124200  en_diff:   8.646560E-06  dq_diff:   1.095868E-04
 
-YES convergence in 7 iters, energy -0.7712418323561931   dq = [-1.044, 1.044]
+YES convergence in 7 iters, energy -0.7712419965969871   dq = [-1.044, 1.044]
 END SCF ------------------
 
-  0.073388 seconds (685.56 k allocations: 29.640 MiB, 16.39% gc time)
-  0.039643 seconds (373.37 k allocations: 20.685 MiB)
-  0.144926 seconds (1.31 M allocations: 51.055 MiB, 11.86% gc time)
-  0.135892 seconds (755.43 k allocations: 105.916 MiB, 10.92% gc time)
-  0.071944 seconds (373.37 k allocations: 41.755 MiB, 23.46% gc time)
-  0.163355 seconds (1.31 M allocations: 98.934 MiB, 10.87% gc time)
-  0.138131 seconds (755.43 k allocations: 105.916 MiB, 11.50% gc time)
-  0.072284 seconds (373.37 k allocations: 41.755 MiB, 23.73% gc time)
-  0.166681 seconds (1.31 M allocations: 98.934 MiB, 11.19% gc time)
-  0.078136 seconds (685.56 k allocations: 29.640 MiB, 21.25% gc time)
-  0.040498 seconds (373.37 k allocations: 20.685 MiB)
-  0.133244 seconds (1.31 M allocations: 51.055 MiB)
-FCALL 6 en:  -0.7712418323561931  fsum:  5.747269694993317e-17  ssum:  0.0020050503622931143    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.060517 seconds (685.95 k allocations: 29.656 MiB)
+2body
+  0.053131 seconds (376.03 k allocations: 21.532 MiB, 22.17% gc time)
+3body
+  0.147843 seconds (1.32 M allocations: 55.738 MiB, 10.23% gc time)
+onsite
+  0.008149 seconds (98.64 k allocations: 5.113 MiB)
+  0.000000 seconds
+-----
+
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.157893 seconds (755.81 k allocations: 116.760 MiB, 18.71% gc time)
+2body
+  0.061559 seconds (376.03 k allocations: 45.947 MiB)
+3body
+  0.188201 seconds (1.32 M allocations: 108.890 MiB, 16.60% gc time)
+onsite
+  0.013422 seconds (98.64 k allocations: 10.864 MiB)
+  0.000000 seconds
+-----
+
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.158715 seconds (755.81 k allocations: 116.760 MiB, 19.46% gc time)
+2body
+  0.061737 seconds (376.03 k allocations: 45.947 MiB)
+3body
+  0.188956 seconds (1.32 M allocations: 108.890 MiB, 17.44% gc time)
+onsite
+  0.013266 seconds (98.64 k allocations: 10.864 MiB)
+  0.000000 seconds
+-----
+
+  1.129819 seconds (7.62 M allocations: 709.588 MiB, 13.41% gc time)
+end jac
+FCALL 6 en:  -0.7712419965969871  fsum:  1.211638528204614e-7  ssum:  0.002005033799851632    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
-SCF CALC 0001 energy  -0.77413559
-SCF CALC 0002 energy  -0.77287950  en_diff:   1.256094E-03  dq_diff:   8.611209E-02
-SCF CALC 0003 energy  -0.77252038  en_diff:   3.591158E-04  dq_diff:   6.710663E-02
-SCF CALC 0004 energy  -0.77151040  en_diff:   1.009986E-03  dq_diff:   1.379332E-02
-SCF CALC 0005 energy  -0.77129349  en_diff:   2.169084E-04  dq_diff:   2.734897E-03
-SCF CALC 0006 energy  -0.77125048  en_diff:   4.301139E-05  dq_diff:   5.483511E-04
-SCF CALC 0007 energy  -0.77124183  en_diff:   8.646559E-06  dq_diff:   1.095870E-04
+SCF CALC 0001 energy  -0.77413576
+SCF CALC 0002 energy  -0.77287967  en_diff:   1.256095E-03  dq_diff:   8.611194E-02
+SCF CALC 0003 energy  -0.77252055  en_diff:   3.591160E-04  dq_diff:   6.710651E-02
+SCF CALC 0004 energy  -0.77151056  en_diff:   1.009986E-03  dq_diff:   1.379330E-02
+SCF CALC 0005 energy  -0.77129365  en_diff:   2.169084E-04  dq_diff:   2.734893E-03
+SCF CALC 0006 energy  -0.77125064  en_diff:   4.301139E-05  dq_diff:   5.483502E-04
+SCF CALC 0007 energy  -0.77124200  en_diff:   8.646560E-06  dq_diff:   1.095868E-04
 
-YES convergence in 7 iters, energy -0.7712418323561931   dq = [-1.044, 1.044]
+YES convergence in 7 iters, energy -0.7712419965969871   dq = [-1.044, 1.044]
 END SCF ------------------
 
-  0.051529 seconds (569.70 k allocations: 25.801 MiB)
-  0.038766 seconds (317.45 k allocations: 17.621 MiB)
-  0.129810 seconds (1.18 M allocations: 45.882 MiB, 14.51% gc time)
+  0.050414 seconds (570.10 k allocations: 25.818 MiB)
+  0.034629 seconds (318.57 k allocations: 18.304 MiB)
+  0.130246 seconds (1.19 M allocations: 50.061 MiB, 9.72% gc time)
+  0.007226 seconds (81.29 k allocations: 4.254 MiB)
+gamma
+  0.001362 seconds (6.34 k allocations: 674.703 KiB)
 
 START SCF ----------------
-SCF CALC 0001 energy  -0.77818797
-SCF CALC 0002 energy  -0.77996575  en_diff:   1.777775E-03  dq_diff:   7.859187E-02
-SCF CALC 0003 energy  -0.78042088  en_diff:   4.551355E-04  dq_diff:   6.060370E-02
-SCF CALC 0004 energy  -0.78155933  en_diff:   1.138449E-03  dq_diff:   1.273495E-02
-SCF CALC 0005 energy  -0.78179994  en_diff:   2.406052E-04  dq_diff:   2.497988E-03
-SCF CALC 0006 energy  -0.78184633  en_diff:   4.639316E-05  dq_diff:   5.033511E-04
-SCF CALC 0007 energy  -0.78185571  en_diff:   9.381220E-06  dq_diff:   1.003778E-04
+SCF CALC 0001 energy  -0.77818790
+SCF CALC 0002 energy  -0.77996569  en_diff:   1.777787E-03  dq_diff:   7.859186E-02
+SCF CALC 0003 energy  -0.78042082  en_diff:   4.551381E-04  dq_diff:   6.060368E-02
+SCF CALC 0004 energy  -0.78155928  en_diff:   1.138454E-03  dq_diff:   1.273495E-02
+SCF CALC 0005 energy  -0.78179988  en_diff:   2.406064E-04  dq_diff:   2.497987E-03
+SCF CALC 0006 energy  -0.78184628  en_diff:   4.639337E-05  dq_diff:   5.033511E-04
+SCF CALC 0007 energy  -0.78185566  en_diff:   9.381264E-06  dq_diff:   1.003778E-04
 
-YES convergence in 7 iters, energy -0.7818557111448771   dq = [-0.923, 0.923]
+YES convergence in 7 iters, energy -0.7818556595600321   dq = [-0.923, 0.923]
 END SCF ------------------
 
-  0.053070 seconds (569.70 k allocations: 25.801 MiB)
-  0.038834 seconds (317.45 k allocations: 17.621 MiB)
-  0.282725 seconds (1.18 M allocations: 45.882 MiB, 60.45% gc time)
-  0.113550 seconds (632.48 k allocations: 95.615 MiB, 15.70% gc time)
-  0.047085 seconds (317.45 k allocations: 35.542 MiB)
-  0.138060 seconds (1.18 M allocations: 88.893 MiB, 17.27% gc time)
-  0.103533 seconds (632.48 k allocations: 95.615 MiB, 15.98% gc time)
-  0.057660 seconds (317.45 k allocations: 35.542 MiB, 19.65% gc time)
-  0.139232 seconds (1.18 M allocations: 88.893 MiB, 17.54% gc time)
-  0.048053 seconds (569.70 k allocations: 25.801 MiB)
-  0.043833 seconds (317.45 k allocations: 17.621 MiB, 24.17% gc time)
-  0.120406 seconds (1.18 M allocations: 45.882 MiB, 10.17% gc time)
-FCALL 7 en:  -0.7818557111448771  fsum:  1.124636232026059e-16  ssum:  7.18723117667056e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.059446 seconds (570.10 k allocations: 25.818 MiB, 15.80% gc time)
+2body
+  0.034547 seconds (318.57 k allocations: 18.304 MiB)
+3body
+  0.128224 seconds (1.19 M allocations: 50.061 MiB, 9.90% gc time)
+onsite
+  0.008198 seconds (81.29 k allocations: 4.254 MiB)
+  0.000000 seconds
+-----
+
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.138939 seconds (632.88 k allocations: 105.591 MiB, 19.14% gc time)
+2body
+  0.065319 seconds (318.57 k allocations: 39.067 MiB, 21.71% gc time)
+3body
+  0.157809 seconds (1.19 M allocations: 97.807 MiB, 8.87% gc time)
+onsite
+  0.011019 seconds (81.29 k allocations: 9.030 MiB)
+  0.000000 seconds
+-----
+
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+  0.136720 seconds (632.88 k allocations: 105.591 MiB, 18.66% gc time)
+2body
+  0.054334 seconds (318.57 k allocations: 39.067 MiB)
+3body
+  0.178348 seconds (1.19 M allocations: 97.807 MiB, 16.78% gc time)
+onsite
+  0.011245 seconds (81.29 k allocations: 9.030 MiB)
+  0.000000 seconds
+-----
+
+  1.008693 seconds (6.62 M allocations: 625.269 MiB, 14.38% gc time)
+end jac
+FCALL 7 en:  -0.7818556595600321  fsum:  3.886489062726339e-8  ssum:  7.190984359025017e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
-SCF CALC 0001 energy  -0.77818797
-SCF CALC 0002 energy  -0.77996575  en_diff:   1.777775E-03  dq_diff:   7.859187E-02
-SCF CALC 0003 energy  -0.78042088  en_diff:   4.551355E-04  dq_diff:   6.060370E-02
-SCF CALC 0004 energy  -0.78155933  en_diff:   1.138449E-03  dq_diff:   1.273495E-02
-SCF CALC 0005 energy  -0.78179994  en_diff:   2.406052E-04  dq_diff:   2.497988E-03
-SCF CALC 0006 energy  -0.78184633  en_diff:   4.639316E-05  dq_diff:   5.033511E-04
-SCF CALC 0007 energy  -0.78185571  en_diff:   9.381220E-06  dq_diff:   1.003778E-04
+SCF CALC 0001 energy  -0.77818790
+SCF CALC 0002 energy  -0.77996569  en_diff:   1.777787E-03  dq_diff:   7.859186E-02
+SCF CALC 0003 energy  -0.78042082  en_diff:   4.551381E-04  dq_diff:   6.060368E-02
+SCF CALC 0004 energy  -0.78155928  en_diff:   1.138454E-03  dq_diff:   1.273495E-02
+SCF CALC 0005 energy  -0.78179988  en_diff:   2.406064E-04  dq_diff:   2.497987E-03
+SCF CALC 0006 energy  -0.78184628  en_diff:   4.639337E-05  dq_diff:   5.033511E-04
+SCF CALC 0007 energy  -0.78185566  en_diff:   9.381264E-06  dq_diff:   1.003778E-04
 
-YES convergence in 7 iters, energy -0.7818557111448771   dq = [-0.923, 0.923]
+YES convergence in 7 iters, energy -0.7818556595600321   dq = [-0.923, 0.923]
 END SCF ------------------
 
 
@@ -459,23 +763,23 @@ res
     ∇f(x) calls:   7
 
 Final crystal
-A1=     5.26505  5.26505  0.00000
+A1=     5.26505  5.26505  -0.00000
 A2=     5.26505  -0.00000  5.26505
 A3=     -0.00000  5.26505  5.26505
 
-Al   0.00000  0.00000  0.00000
+Al   -0.00000  -0.00000  -0.00000
 P    0.25000  0.25000  0.25000
 
 
 Relax done
-Energy new -0.7818557111448771
+Energy new -0.7818556595600321
 
 Force
 2×3 Array{Float64,2}:
- 4.57291e-17  3.70467e-17  2.96879e-17
- 0.0          0.0          0.0
+ -6.47748e-9  -6.47748e-9  -6.47748e-9
+  6.47748e-9   6.47748e-9   6.47748e-9
 Stress
 3×3 Array{Float64,2}:
- 2.39574e-6  0.0         0.0
- 0.0         2.39574e-6  0.0
- 0.0         0.0         2.39574e-6</pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 2 March 2021 01:12">Tuesday 2 March 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+  2.39613e-6   -4.32454e-10  -4.32454e-10
+ -4.32454e-10   2.39613e-6   -4.32454e-10
+ -4.32454e-10  -4.32454e-10   2.39613e-6</pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 2 March 2021 18:18">Tuesday 2 March 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
