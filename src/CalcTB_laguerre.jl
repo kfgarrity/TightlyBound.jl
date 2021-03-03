@@ -46,6 +46,8 @@ using ..Utility:parse_str_ARR_float
 using ..Utility:dict2str
 using ..Utility:str2tuplesdict
 
+using Random
+
 #include("Coef_format_convert.jl")
 
 
@@ -1092,7 +1094,7 @@ function distances_etc_3bdy_parallel(crys, cutoff=missing, cutoff2=missing; var_
                 r = Rind[i,:]
                 ikeep = R_dict[r]
                 
-                R_keep_ab[keep_counter,:] = [i, a, b, 0, 0, 0, ikeep ]
+                R_keep_ab[keep_counter,:] = [i, a, b, r[1], r[2], r[3], ikeep ]
             end
             
             ind3 = findall(dist_arr[a,b,:,1] .< cutoff3bX)
@@ -1234,7 +1236,7 @@ function distances_etc_3bdy_parallel(crys, cutoff=missing, cutoff2=missing; var_
 
 end
 
-
+#=
 function distances_etc_3bdy(crys, cutoff=missing, cutoff2=missing; var_type=Float64)
 
     if ismissing(cutoff)
@@ -1481,6 +1483,8 @@ function distances_etc_3bdy(crys, cutoff=missing, cutoff2=missing; var_type=Floa
     return R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3
     
 end
+=#
+
 ########################################################################################################################################################
 
 function trim_dist(tbc, cutoff=18.0001)
@@ -1604,20 +1608,25 @@ function calc_tb_fast(crys::crystal, database=missing; reference_tbc=missing, ve
 
     if verbose println("distances") end
 
-    @time if (use_threebody || use_threebody_onsite ) && !ismissing(database)
-        parallel =true
-        if parallel
-            R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy_parallel(crys,cutoff2X, cutoff3bX,var_type=var_type)
-        else
-            R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy(crys,cutoff2X, cutoff3bX,var_type=var_type)
-        end        
+    if (use_threebody || use_threebody_onsite ) && !ismissing(database)
+#        parallel =true
+#        if parallel
+
+        R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy_parallel(crys,cutoff2X, cutoff3bX,var_type=var_type)
+
+        #        else
+#            R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy(crys,cutoff2X, cutoff3bX,var_type=var_type)
+#        end        
     else
-        parallel = true
-        if parallel
-            R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy_parallel(crys,cutoff2X, 0.0,var_type=var_type)
-        else
-            R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy(crys,cutoff2X, 0.0,var_type=var_type)
-        end
+#        parallel = true
+#        if parallel
+
+        R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy_parallel(crys,cutoff2X, 0.0,var_type=var_type)
+
+    #else
+    #        R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy(crys,cutoff2X, 0.0,var_type=var_type)
+        #    end
+        
     end
 
     #    R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero = distances_etc_3bdy(crys,cutoff2X, 7.0)
@@ -1709,7 +1718,7 @@ function calc_tb_fast(crys::crystal, database=missing; reference_tbc=missing, ve
     if !ismissing(database)
 
         if verbose println("2body") end
-        @time @threads for c = 1:nkeep_ab
+        @threads for c = 1:nkeep_ab
             #        ind_arr[c,:] = R_keep_ab[c][4:6]
             cind = R_keep_ab[c,1]
             cham = R_keep_ab[c,7]
@@ -1796,7 +1805,7 @@ function calc_tb_fast(crys::crystal, database=missing; reference_tbc=missing, ve
         
 
         if verbose println("3body") end
-        @time if use_threebody || use_threebody_onsite
+        if use_threebody || use_threebody_onsite
             #        if false
             @threads for counter = 1:size(array_ind3)[1]
 #            for counter = 1:size(array_ind3)[1]
@@ -1925,7 +1934,7 @@ function calc_tb_fast(crys::crystal, database=missing; reference_tbc=missing, ve
 
         ############ONSITE
         if verbose println("onsite") end
-        @time for c = 1:nkeep_ab
+        for c = 1:nkeep_ab
             #        ind_arr[c,:] = R_keep_ab[c][4:6]
             cind = R_keep_ab[c,1]
             a1 = R_keep_ab[c,2]
@@ -2021,7 +2030,7 @@ function calc_frontier(crys::crystal, frontier; var_type=Float64, test_frontier=
     if ismissing(diststuff)
 #        println("distances")
         #        R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy(crys,cutoff2X, cutoff3bX,var_type=var_type)
-        R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy(crys,cutoff2X, cutoff3bX,var_type=Float64)
+        R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy_parallel(crys,cutoff2X, cutoff3bX,var_type=Float64)
     else
         R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = diststuff
     end
@@ -2499,14 +2508,44 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
     ind2orb, orb2ind, etotal, nval = orbital_index(crys)
 
     if use_threebody || use_threebody_onsite
-        println("distances")
-        @time R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy(crys,cutoff2X, cutoff3bX)
+        #println("distances")
+        R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy_parallel(crys,cutoff2X, cutoff3bX)
     else
-        R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy(crys,cutoff2X, 0.0)
+        R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy_parallel(crys,cutoff2X, 0.0)
     end
 
-    println("size(array_ind3) ", size(array_ind3))
+#    R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy_parallel(crys,cutoff2X, 0.0)
 
+    
+
+
+    
+#    println("size(array_ind3) ", size(array_ind3))
+
+    #    R_keepP, R_keep_abP, array_ind3P, array_floats3P, dist_arrP, c_zeroP, dmin_typesP, dmin_types3P = distances_etc_3bdy_parallel(crys,cutoff2X, cutoff3bX)
+
+#    R_keepP, R_keep_abP, array_ind3P, array_floats3P, dist_arrP, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy_parallel(crys,cutoff2X, 0.0)
+
+    
+    
+    
+    
+#    println("c_zero $c_zero $c_zeroP")
+#    println(sum(R_keep, dims=1), " R_keep " , sum(R_keepP, dims=1))
+#    println(sum(R_keep_ab, dims=1), " R_keep_ab " , sum(R_keep_abP, dims=1))
+#    println(sum(array_floats3P, dims=1), " array_floats3P ", sum(array_floats3, dims=1))
+#    println(sum(dist_arr), " dist_arr " , sum(dist_arrP))
+
+#    for key in keys(dmin_types)
+#        println("dmin ", dmin_types[key], " ", dmin_typesP[key])
+#    end
+
+#    for key in keys(dmin_types3)
+#        println("dmin ", dmin_types3[key], " ", dmin_types3P[key])
+#    end
+
+#    println("xxxxxxxxxxx")
+    
     
     if size(reference_tbc.tb.ind_arr)[1] > 1
         c_zero_ref = reference_tbc.tb.r_dict[[0,0,0]]

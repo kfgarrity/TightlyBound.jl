@@ -25,7 +25,7 @@ using ..CrystalMod:makecrys
 
 
 using ..CalcTB:calc_tb_fast
-using ..CalcTB:distances_etc_3bdy
+using ..CalcTB:distances_etc_3bdy_parallel
 using ..TB:calc_energy_charge_fft
 using ..TB:tb_crys
 using ..TB:types_energy
@@ -770,7 +770,7 @@ end
 
 function safe_mode_energy(crys::crystal, database; var_type=Float64)
 
-    diststuff = distances_etc_3bdy(crys,10.0, 0.0, var_type=var_type)
+    diststuff = distances_etc_3bdy_parallel(crys,10.0, 0.0, var_type=var_type)
     R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types = diststuff
     nkeep = size(R_keep_ab)[1]
     
@@ -906,7 +906,7 @@ function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smear
                 gamma_dual=zeros(T, ct.nat,ct.nat)
             end
 
-            tbc_dual = calc_tb_fast(crys_dual, database; verbose=true, var_type=T, use_threebody=true, use_threebody_onsite=true, gamma=gamma_dual , check_frontier=false)
+            tbc_dual = calc_tb_fast(crys_dual, database; verbose=false, var_type=T, use_threebody=true, use_threebody_onsite=true, gamma=gamma_dual , check_frontier=false)
             ret = zeros(T, size_ret * 2 + 1)
 
             

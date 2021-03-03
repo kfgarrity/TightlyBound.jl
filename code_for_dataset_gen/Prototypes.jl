@@ -6,7 +6,7 @@ using ..TightlyBound.Atomdata:min_dimer_dist_dict
 using ..TightlyBound.Atomdata:sub_list
 using ..TightlyBound.Atomdata:electronegativity
 using ..TightlyBound.QE:loadXML
-using ..TightlyBound.CalcTB:distances_etc_3bdy
+using ..TightlyBound.CalcTB:distances_etc_3bdy_parallel
 using ..TightlyBound.CalcTB:calc_frontier
 using ..TightlyBound.ManageDatabase:prepare_database
 
@@ -89,7 +89,7 @@ end
 =#
 
 function check_twobody_dist(crys)
-    R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy(crys,10.0, 0.0)
+    R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy_parallel(crys,10.0, 0.0)
     ret = true
     for t1 in crys.types
         for t2 in crys.types
