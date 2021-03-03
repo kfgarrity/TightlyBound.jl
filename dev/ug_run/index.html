@@ -49,7 +49,7 @@ CHECK FRONTIER - everything fine
 onsite
 -----
 
- 13.350936 seconds (23.32 M allocations: 1.113 GiB, 3.53% gc time)
+ 12.403753 seconds (23.32 M allocations: 1.113 GiB, 3.27% gc time)
 ------
 Do SCF
 Mixing mode: pulay
@@ -93,7 +93,7 @@ println(&quot;Stress&quot;)
 show(stdout, &quot;text/plain&quot;, stress)</code></pre><pre class="documenter-example-output">prepare atoms [&quot;Al&quot;, &quot;P&quot;]
 
 Calculate Force, Stress (no scf)
- 28.338929 seconds (53.47 M allocations: 2.745 GiB, 5.35% gc time)
+ 26.295068 seconds (53.47 M allocations: 2.745 GiB, 5.63% gc time)
 end jac
 done
 ----
@@ -152,7 +152,7 @@ END SCF ------------------
 starting vec
 [0.0, 0.0, 0.0, 0.25, 0.25, 0.25, 4.9132898822133235, 4.9132898822133235, 0.0, 4.9132898822133235, 0.0, 4.9132898822133235, 0.0, 4.9132898822133235, 4.9132898822133235]
 
-  1.731345 seconds (8.60 M allocations: 776.376 MiB, 13.12% gc time)
+  1.504734 seconds (8.60 M allocations: 776.376 MiB, 12.37% gc time)
 end jac
 FCALL 1 en:  -0.7495883007919372  fsum:  1.4643538648175532e-12  ssum:  0.004311079238824329    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -168,7 +168,7 @@ SCF CALC 0007 energy  -0.77449697  en_diff:   5.990601E-06  dq_diff:   7.092859E
 YES convergence in 7 iters, energy -0.774496972395331   dq = [-1.024, 1.024]
 END SCF ------------------
 
-  1.330478 seconds (6.68 M allocations: 631.232 MiB, 11.65% gc time)
+  1.198719 seconds (6.68 M allocations: 631.232 MiB, 12.10% gc time)
 end jac
 FCALL 2 en:  -0.774496972395331  fsum:  1.1045424271297239e-13  ssum:  0.0016069425615332358    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -198,7 +198,7 @@ SCF CALC 0008 energy  -0.73482889  en_diff:   7.180811E-06  dq_diff:   7.122810E
 YES convergence in 8 iters, energy -0.7348288936730197   dq = [-0.633, 0.633]
 END SCF ------------------
 
-  0.825482 seconds (4.23 M allocations: 406.806 MiB, 9.78% gc time)
+  0.744361 seconds (4.23 M allocations: 406.806 MiB, 10.45% gc time)
 end jac
 FCALL 3 en:  -0.7348288936730197  fsum:  2.4823845854301347e-9  ssum:  0.00221346528463675    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -229,7 +229,7 @@ SCF CALC 0008 energy  -0.78050678  en_diff:   3.971791E-06  dq_diff:   4.502469E
 YES convergence in 8 iters, energy -0.7805067756622082   dq = [-0.878, 0.878]
 END SCF ------------------
 
-  1.266991 seconds (6.43 M allocations: 588.999 MiB, 10.25% gc time)
+  1.127715 seconds (6.43 M allocations: 588.999 MiB, 10.70% gc time)
 end jac
 FCALL 4 en:  -0.7805067756622082  fsum:  1.4439689951641499e-8  ssum:  0.0005652347032448668    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -258,7 +258,7 @@ SCF CALC 0006 energy  -0.78176180  en_diff:   1.286177E-05  dq_diff:   1.440243E
 YES convergence in 6 iters, energy -0.7817618016952904   dq = [-0.911, 0.911]
 END SCF ------------------
 
-  1.387641 seconds (6.63 M allocations: 625.905 MiB, 13.51% gc time)
+  1.221264 seconds (6.63 M allocations: 625.905 MiB, 11.59% gc time)
 end jac
 FCALL 5 en:  -0.7817618016952904  fsum:  3.079785626626101e-8  ssum:  0.0001782684385928831    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -286,7 +286,7 @@ SCF CALC 0007 energy  -0.77124200  en_diff:   8.646560E-06  dq_diff:   1.095868E
 YES convergence in 7 iters, energy -0.7712419965969861   dq = [-1.044, 1.044]
 END SCF ------------------
 
-  1.524929 seconds (7.62 M allocations: 709.550 MiB, 11.42% gc time)
+  1.684361 seconds (7.62 M allocations: 709.550 MiB, 32.12% gc time)
 end jac
 FCALL 6 en:  -0.7712419965969861  fsum:  1.2116383615418e-7  ssum:  0.0020050337998513703    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -315,7 +315,7 @@ SCF CALC 0007 energy  -0.78185566  en_diff:   9.381264E-06  dq_diff:   1.003778E
 YES convergence in 7 iters, energy -0.7818556595600339   dq = [-0.923, 0.923]
 END SCF ------------------
 
-  1.341352 seconds (6.62 M allocations: 625.229 MiB, 13.74% gc time)
+  1.104907 seconds (6.62 M allocations: 625.229 MiB, 11.42% gc time)
 end jac
 FCALL 7 en:  -0.7818556595600339  fsum:  3.886489226541089e-8  ssum:  7.19098435907104e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -349,7 +349,7 @@ res
     |g(x)|                 = 6.64e-05 ≤ 7.0e-04
 
  * Work counters
-    Seconds run:   18  (vs limit Inf)
+    Seconds run:   16  (vs limit Inf)
     Iterations:    2
     f(x) calls:    7
     ∇f(x) calls:   7
@@ -374,4 +374,4 @@ Stress
 3×3 Array{Float64,2}:
   2.39613e-6   -4.32454e-10  -4.32454e-10
  -4.32454e-10   2.39613e-6   -4.32454e-10
- -4.32454e-10  -4.32454e-10   2.39613e-6</pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 3 March 2021 01:09">Wednesday 3 March 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ -4.32454e-10  -4.32454e-10   2.39613e-6</pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 3 March 2021 01:28">Wednesday 3 March 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
