@@ -54,6 +54,7 @@ using ..CalcTB:get_data_info
 
 #include("Atomdata.jl")
 
+#=
 function do_fitting_renorm(list_of_tbcs; kpoints = [0 0 0; 0 0 0.5; 0 0.5 0.5; 0.5 0.5 0.5], atoms_to_fit=missing, fit_threebody=false , do_plot=true)
 
     println("AAAAAAAAAAAAAAAAA - START S")
@@ -71,6 +72,8 @@ function do_fitting_renorm(list_of_tbcs; kpoints = [0 0 0; 0 0 0.5; 0 0.5 0.5; 0
     return tbc_renorm, database
     
 end
+=#
+
 
 function do_fitting(list_of_tbcs; kpoints = missing,  atoms_to_fit=missing, fit_threebody=true, fit_threebody_onsite=true, do_plot = true)
 
@@ -705,7 +708,7 @@ function do_fitting_linear(list_of_tbcs; kpoints = missing, dft_list = missing, 
 
 end
 
-
+#=
 function change_S(YS_old, YS_new, YH, YH_new, ncalc, ind_BIG)
 
     try 
@@ -793,8 +796,9 @@ function change_S(YS_old, YS_new, YH, YH_new, ncalc, ind_BIG)
     end
     
 end
+=#
 
-
+#=
 function do_optim_S(list_of_tbcs, dft_list ,  atoms_to_fit=missing, fit_threebody=false, fit_threebody_onsite=false)
 
     ncalc = length(list_of_tbcs)
@@ -900,6 +904,8 @@ function do_optim_S(list_of_tbcs, dft_list ,  atoms_to_fit=missing, fit_threebod
 
     
 end
+=#
+
 
 function make_database(ch, cs,  KEYS, HIND, SIND, DMIN_TYPES, DMIN_TYPES3; scf=false, starting_database=missing, tbc_list=missing)
     println("make_database")
@@ -1291,6 +1297,7 @@ function fourierspace(tbc, kpoints, X_H, X_S, Y_H, Y_S, Xhc, Xsc, rind, Rvec, IN
     return X_Hnew', X_Snew', Y_Hnew, Y_Snew, Xhc_Hnew, Xsc_Snew
 end
 
+#=
 function convert_H_S(tbc_old, tbc_newS, grid=missing)
     #renormalizes the Hamiltonian of tbc_oldA with the overlap matrix (S) of tbc_newSA
     #also ensures the energy is correct and the distances cutoff is correct.
@@ -1361,6 +1368,7 @@ function convert_H_S(tbc_old, tbc_newS, grid=missing)
     return tbc_renorm
                 
 end
+=#
 
 #=
 function do_fitting_nonlinear(list_of_tbcs; dft_list=missing, kpoints = [0 0 0; 0 0 0.5; 0 0.5 0.5; 0.5 0.5 0.5],  atoms_to_fit=missing, fit_threebody=true, do_plot = false)
