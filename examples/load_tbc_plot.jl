@@ -14,7 +14,7 @@ tbc = read_tb_crys(filname)
 
 println(tbc)
 
-#this are all legal plotting commands
+#these are all legal plotting commands
 
 #plot_bandstr(tbc) #default plotting
 

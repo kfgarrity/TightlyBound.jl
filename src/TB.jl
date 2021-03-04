@@ -75,6 +75,22 @@ end
 
 
     
+"""
+    mutable struct tb{T}
+
+Holds key tight-binding information in real-space. Like hr_dat file from Wannier90. Also part of the `tb_crys` object.
+
+# Holds
+- `H::Array{Complex{T},3}` Hamiltonian. `nw`×`nw`×`nr`
+- `ind_array::Array{Int64,3}` `nr`×3 , holds the r-space supercells of the TB object.
+- `r_dict::Dict` keys are three Ints like [0,0,0], returns the corresponding `ind_array` index.
+- `nwan::Int` Number of orbitals (generalized wannier functions).
+- `nr::Int64` number of R-space supercells.
+- `nonorth::Bool` :  `true` if non-orthogonal. Almost always `true` in this code.
+- `S::Array{Complex{T},3}` : Overlap matrix, organized like `H`
+- `scf::Bool` equal to `true` if requires self-consistency (usually `true` for fit `tb`, `false` for direct from DFT)
+- `h1::Array{T,2}` Has the term determined by scf calculations, if calculated already.
+"""
 mutable struct tb{T}
 
     #    H::Array{Complex{Float64},3}
@@ -102,6 +118,23 @@ Base.show(io::IO, h::tb) = begin
     
 end   
 
+"""
+    mutable struct tb_crys{T}
+
+Main tight-binding object, holds the tight-biding model `tb` and information about the `crystal`
+
+# Holds
+- `tb::tb` Has the key tb info (see above)
+- `crys::crystal` Has the crystal structure
+- `nelec::Float64` Number of electrons
+- `dftenergy::Float64` DFT energy for reference, only for fit to DFT cases.
+- `scf::Bool`  `true` if requires self-consistency.
+- `gamma::Array{T, 2}` has the ewald calculation results, needed for self-consistency.
+- `eden::Array{Float64,1}` electron density, by orbital, if calculated by self-consistency.
+- `within_fit::Bool` is `true` if model is passes tests of being within the fitting parameter space, `false` for extrapolation
+- `energy::Float64` energy in Ryd, if calculated.
+- `efermi::Float64` Fermi energy in Ryd, if calculated.
+"""
 mutable struct tb_crys{T}
 
     tb::tb
@@ -121,15 +154,44 @@ end
 
 Base.show(io::IO, x::tb_crys) = begin
     println(io)
+    println(io, "tb_crys object ")
+    println(io)    
     println(io, x.crys)
     println(io)
     println(io, "nelec: ", x.nelec)
+    println(io, "within_fit: ", x.within_fit,"  ; scf: ", x.scf)
+    println("calculated energy: ", round(x.energy*1000)/1000)
+    println("efermi: ", round(x.efermi*1000)/1000)
+    dq = get_dq(x)
+    println(io, "charges: ", round.(dq * 100)/100)
     println(io)
     println(io, x.tb)    
     println(io)
     
 end   
 
+
+"""
+    mutable struct tb_k{T}
+
+Tight binding object in k-space. Can be from direct import of DFT band
+structure using atomic proj, or from fft'ed tb object. Similar to real-space version.
+
+# Holds
+- `Hk::Array{Complex{T},3}` Hamiltonian in k-space
+- `K::Array{Float64,2}` K point array. In fractional coordinates of BZ.
+- `kweights::Array{Float64,1}` K point weights.
+- `k_dict::Dict` Dictionary from k-point like [0,0,0] to index.
+- `nwan::Int64` Number of orbitals / generalized wannier functions.
+- `nk::Int64` Number of k-points.
+- `nonorth::Bool` 
+- `Sk::Array{Complex{T},3}` Overlap matrix.
+- `scf::Bool` needs self-consistency?
+- `h1::Array{T,2} #scf term` holds scf term if present
+- `grid::Array{Int64,1}` dimensions of k-point grid, if from regular grid like `[8,8,8]`
+
+
+""" 
 
 mutable struct tb_k{T}
 
@@ -162,7 +224,21 @@ Base.show(io::IO, h::tb_k) = begin
 end   
 
 
+"""
+    mutable struct tb_crys_kspace{T}
 
+Hold k-point tight binding and crystal structure. Similar to `tb_crys`
+
+#Holds
+
+-`tb::tb_k`
+-`crys::crystal`
+-`nelec::Float64`
+-`dftenergy::Float64`
+-`scf::Bool`
+-`gamma::Array{T, 2}`
+-`eden::Array{Float64,1}`
+"""
 mutable struct tb_crys_kspace{T}
 
     tb::tb_k
@@ -189,29 +265,30 @@ Base.show(io::IO, x::tb_crys_kspace) = begin
 end   
 
 
-function get_el(tbc::tb_crys, n1,n2,na,nb,r)
-
-    ind = 1
-    try
-        ind=tbc.tb.r_dict[r]
-        
-    catch
-        try
-            ind=tbc.tb.r_dict[r']
-        catch
-            println("missing")
-            return missing, missing, missing, missing
-        end
-    end
-    
-    R = tbc.tb.ind_arr[ind,:]
-    dR = tbc.crys.A'*(-tbc.crys.coords[na,:] + tbc.crys.coords[nb,:] + R) 
-    dist = sum(dR.^2)^0.5
-
-    
-    return tbc.tb.H[n1,n2,ind], tbc.tb.S[n1,n2,ind], dist, dR
-    
-end
+# old utility function
+#function get_el(tbc::tb_crys, n1,n2,na,nb,r)
+#
+#    ind = 1
+#    try
+#        ind=tbc.tb.r_dict[r]
+#        
+#    catch
+#        try
+#            ind=tbc.tb.r_dict[r']
+#        catch
+#            println("missing")
+#            return missing, missing, missing, missing
+#        end
+#    end
+#    
+#    R = tbc.tb.ind_arr[ind,:]
+#    dR = tbc.crys.A'*(-tbc.crys.coords[na,:] + tbc.crys.coords[nb,:] + R) 
+#    dist = sum(dR.^2)^0.5
+#
+#    
+#    return tbc.tb.H[n1,n2,ind], tbc.tb.S[n1,n2,ind], dist, dR
+#    
+#end
 
 #function get_el(tbc::tb_crys, n1,n2,r)
 #
@@ -397,6 +474,17 @@ end
 
 
 
+"""
+    function read_tb_crys_kspace(filename; directory=missing)
+
+Reads and returns from `filename` a `tb_crys_kspace` object. See `write_tb_crys_kspace`
+
+If cannot find `"filename"`, will look for `"filename.xml"`, `"filename.gz"`, `"filename.xml.gz"`
+
+Can read gzipped files directly.
+
+
+"""
 function read_tb_crys_kspace(filename; directory=missing)
 """
 get tbc object from xml file, written by write_tb_crys (see below)
@@ -676,6 +764,11 @@ function write_tb_crys(filename, tbc::tb_crys)
     
 end
 
+"""
+    function write_tb_crys_kspace(filename, tbc::tb_crys_kspace)
+
+Save a `tb_crys_kspace` object to xml format. See `read_tb_crys_kspace`
+"""
 function write_tb_crys_kspace(filename, tbc::tb_crys_kspace)
     """
     write xml tb_crys kspace object
@@ -769,6 +862,11 @@ function write_tb_crys_kspace(filename, tbc::tb_crys_kspace)
     
 end
     
+"""
+    function make_tb_crys(ham::tb,crys::crystal, nelec::Float64, dftenergy::Float64; scf=false, eden = missing, gamma=missing, within_fit=true, screening=1.0, tb_energy=-999, fermi_energy=0.0 )
+
+Constructor function for `tb_crys` object
+"""
 function make_tb_crys(ham::tb,crys::crystal, nelec::Float64, dftenergy::Float64; scf=false, eden = missing, gamma=missing, within_fit=true, screening=1.0, tb_energy=-999, fermi_energy=0.0 )
 
     T = typeof(crys.coords[1,1])
@@ -794,6 +892,11 @@ function make_tb_crys(ham::tb,crys::crystal, nelec::Float64, dftenergy::Float64;
     return tb_crys{T}(ham,crys,nelec, dftenergy, scf, gamma, eden, within_fit, tb_energy, fermi_energy)
 end
 
+"""
+    function make_tb_crys_kspace(hamk::tb_k,crys::crystal, nelec::Float64, dftenergy::Float64; scf=false, eden = missing, gamma=missing, screening=1.0)
+
+Constructor function for `tb_crys_kspace` object
+"""
 function make_tb_crys_kspace(hamk::tb_k,crys::crystal, nelec::Float64, dftenergy::Float64; scf=false, eden = missing, gamma=missing, screening=1.0)
 
     T = typeof(crys.coords[1,1])
@@ -814,7 +917,11 @@ function make_tb_crys_kspace(hamk::tb_k,crys::crystal, nelec::Float64, dftenergy
 end
 
 
+"""
+    function make_tb(H, ind_arr, r_dict::Dict; h1=missing)
 
+Constructor function for `tb`
+"""
 function make_tb(H, ind_arr, r_dict::Dict; h1=missing)
     nw=size(H,2)
     if nw != size(H)[1]
@@ -842,6 +949,11 @@ function make_tb(H, ind_arr, r_dict::Dict; h1=missing)
     return tb{T}(H, ind_arr, r_dict,nw, nr, false, S, scf, h1)
 end
 
+"""
+    function make_tb(H, ind_arr, r_dict::Dict, S; h1=missing)
+
+Constructor function for `tb` with overlaps
+"""
 function make_tb(H, ind_arr, r_dict::Dict, S; h1=missing)
     nw=size(H,1)
     if nw != size(H,1) 
@@ -873,6 +985,11 @@ end
 
 
 
+"""
+    function make_tb_k(Hk, K, kweights, Sk; h1=missing, grid=[0,0,0], nonorth=true)
+
+Constructor for `tb_kspace`
+"""
 function make_tb_k(Hk, K, kweights, Sk; h1=missing, grid=[0,0,0], nonorth=true)
     nw=size(Hk,1)
     nk=size(Hk,3)
@@ -934,6 +1051,11 @@ end
         
 
 
+"""
+    function make_tb(H, ind_arr, S; h1=missing)
+
+Constructor function for `tb`, better programming.
+"""
 function make_tb(H, ind_arr, S; h1=missing)
 
     r_dict = make_rdict(ind_arr)
@@ -967,6 +1089,11 @@ end
 
 
 
+"""
+    function load_hr_dat(filename, directory="")
+Load a wannier90 hr.dat file
+Not curretnly a major part of program, but you can use if you want.
+"""
 function load_hr_dat(filename, directory="")
 """
 Load hr.dat file from wannier90
@@ -1079,7 +1206,9 @@ end
 """
     Hk(h::tb_crys_kspace, kpoint)
 
-Calculate band structure at a k-point from a `tb_crys_kspace`
+Calculate band structure at a k-point from a `tb_crys_kspace` object.
+Note, can only return precalculated k-points.
+Need real-space version to get arbitrary k-points.
         
 #Returns
 - `vect` - Eigenvectors num_wan × num_wan complex matrix at kpoint
@@ -1102,7 +1231,7 @@ end
 """
     Hk(h::tb_k, kpoint)
 
-Calculate band structure at a k-point from `tb_k`.
+Calculate band structure at a k-point from `tb_k`. Must be pre-calculated k-point.
 """
 function Hk(h::tb_k, kpoint; scf=missing) 
 
@@ -1185,6 +1314,11 @@ function Hk(h::tb_k, kpoint; scf=missing)
 end
 
 
+"""
+    function Hk(hk,sk, h::tb, kpoint)
+
+Hk function with pre-allocated memory hk, sk
+"""
 function Hk(hk,sk, h::tb, kpoint)
 
     kpoint = vec(kpoint)
@@ -1288,55 +1422,6 @@ function Hk(hk,sk, h::tb, kpoint)
     
 end
 
-function compare_bands(h::tb, bs::bandstructure; energy_lim=missing, doplot=true)
-
-    if ismissing(energy_lim)
-        println("comparing below Ef ", bs.efermi)
-        energy_lim = bs.efermi
-    end
-    
-    tb_vals = calc_bands(h, bs.kpts)
-
-    max_diff = 0.0
-    badk = -1
-    badval = -999.0
-
-    vals1 = zeros(bs.nks, h.nwan)
-    vals2 = zeros(bs.nks, h.nwan)
-
-    m1 = minimum(bs.eigs)
-    m2 = minimum(tb_vals)
-    
-    for k = 1:bs.nks
-        for w = 1:h.nwan
-            
-            val = tb_vals[k,w]
-
-            vals1[k,w] = bs.eigs[k,w] - m1
-            vals2[k,w] = val - m2
-            
-            if val < energy_lim
-                m = minimum(abs.( (bs.eigs[k,:] .- m1) .- (val .- m2)))
-                if m > max_diff
-                    max_diff = m
-                    badk = k
-                    badval = w
-                end
-            end
-        end
-    end
-    if doplot
-        plot(vals1, color="green", seriestype=:scatter, marker=(:circle), MarkerSize=8)
-        plot!(vals2, color="yellow", seriestype=:scatter, MarkerSize=4)
-    end
-    println("max abs diff $max_diff at kpoint $badk and value $badval")
-    if max_diff > 1e-3
-        println("comparison")
-        println("tb  ", tb_vals[badk,:])
-        println("dft ", bs.eigs[badk,:])    
-    end
-    return max_diff
-end
 
 
 """
@@ -1424,6 +1509,11 @@ function plot_compare_tb(h1::tb, h2::tb; h3=missing, kpath=[0.5 0 0 ; 0 0 0; 0.5
 
 end
 
+"""
+    function summarize_orb(orb::Symbol)
+
+Convert exact orbital (:px) to type of orbital :p .
+"""
 function summarize_orb(orb::Symbol)
     if orb == :s
         return :s
@@ -1523,6 +1613,15 @@ function plot_bandstr(h::tb_crys; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5
 end
 
 
+"""
+    function get_kpath(kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5], names = missing, npts=30)
+
+Construct a k_path for a band structure calculations. Very simple.
+
+-`kpath` high symmetry k-points in fractional BZ coordinates.
+-`names` names of kpoints like ["Γ", "X"]
+-`npts` number of points between high-symmetry kpoints
+"""
 function get_kpath(kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5], names = missing, npts=30)
 
     NK = size(kpath)[1]
@@ -1806,6 +1905,13 @@ function Hk(tbc::tb_crys, kpoint )
 end
 
 
+"""
+    function calc_energy_fft(tbc::tb_crys; grid=missing, smearing=0.01, returnef=false)
+
+Get energy using fft.
+
+returns energy
+"""
 function calc_energy_fft(tbc::tb_crys; grid=missing, smearing=0.01, returnef=false)
 
     etypes = types_energy(tbc.crys)
@@ -1824,6 +1930,12 @@ function calc_energy_fft(tbc::tb_crys; grid=missing, smearing=0.01, returnef=fal
 
 end
 
+"""
+    function calc_energy_fft_band(hk3, sk3, nelec; smearing=0.01, returnef=false, h1 = missing)
+    
+Return energy from hamiltonian `hk3`, overlap `sk3`, `nelec`, etc.
+Primarly for internal calling after fft.
+"""
 function calc_energy_fft_band(hk3, sk3, nelec; smearing=0.01, returnef=false, h1 = missing)
 #h1 is the scf contribution
 
@@ -1874,6 +1986,13 @@ function calc_energy_fft_band(hk3, sk3, nelec; smearing=0.01, returnef=false, h1
 end 
 
 
+"""
+    function calc_energy_charge_fft_band(hk3, sk3, nelec; smearing=0.01, h1 = missing)
+
+Calculate energy and charge density. For internal use.
+
+return energy0, efermi, chargeden[:], VECTS, VALS, error_flag
+"""
 function calc_energy_charge_fft_band(hk3, sk3, nelec; smearing=0.01, h1 = missing)
 
 #    println("memory")
@@ -2083,6 +2202,11 @@ function calc_energy_charge_fft_band(hk3, sk3, nelec; smearing=0.01, h1 = missin
 
 end 
 
+"""
+    function calc_energy_charge_fft(tbc::tb_crys; grid=missing, smearing=0.01)
+
+Do fft, then calculate energy and charge.
+"""
 function calc_energy_charge_fft(tbc::tb_crys; grid=missing, smearing=0.01)
 
     etypes = types_energy(tbc.crys)
@@ -2110,7 +2234,11 @@ function calc_energy_charge_fft(tbc::tb_crys; grid=missing, smearing=0.01)
 
 end
 
+"""
+    function calc_energy(tbc::tb_crys; smearing=0.01, returnk=false)
 
+Calculate energy without fft.
+"""
 function calc_energy(tbc::tb_crys; smearing=0.01, returnk=false)
     """
     calculate the energy from a kgrid
@@ -2121,23 +2249,38 @@ function calc_energy(tbc::tb_crys; smearing=0.01, returnk=false)
 
 end 
 
+"""
+    function types_energy(tbc::tb_crys)
+
+Calculate the reference energy of each atom in crystal. This results in the 
+total energy being indexed to seperated non-spin-polarized atoms. This is arbirary.
+"""
 function types_energy(tbc::tb_crys)
 
     return types_energy(tbc.crys)
     
 end
 
+"""
+    function types_energy(tbc::tb_crys)
+"""
 function types_energy(tbc::tb_crys_kspace)
 
     return types_energy(tbc.crys)
     
 end
 
+"""
+    function types_energy(c::crystal)
+"""
 function types_energy(c::crystal)
     
     return types_energy(c.types)
 end
 
+"""
+    function types_energy(types)
+"""
 function types_energy(types)
 
     et = 0.0
@@ -2148,6 +2291,11 @@ function types_energy(types)
 
 end
 
+"""
+    function calc_energy(h::tb_crys, kgrid; smearing=0.01, returnk=false)
+
+Calculate energy no fft
+"""
 function calc_energy(h::tb_crys, kgrid; smearing=0.01, returnk=false)
     """
     calculate the energy from a kgrid
@@ -2174,6 +2322,11 @@ function calc_energy(h::tb_crys, kgrid; smearing=0.01, returnk=false)
 
 end 
 
+"""
+    function calc_energy_band(h::tb, nelec, kgrid; smearing=0.01, returnk=false)
+
+calculate energy no fft
+"""
 function calc_energy_band(h::tb, nelec, kgrid; smearing=0.01, returnk=false)
 
     kpts, kweights = make_kgrid(kgrid)
@@ -2187,6 +2340,13 @@ function calc_energy_band(h::tb, nelec, kgrid; smearing=0.01, returnk=false)
     
 end 
 
+"""
+    function make_kgrid(kgrid)
+
+-`kgrid` is an array of 3 integers like `[8,8,8]` 
+
+returns regular zero-centered k-point grid and (equal) k-weights.
+"""
 function make_kgrid(kgrid)
     kpts = zeros(Float64, prod(kgrid),3)
     kweights = ones(Float64, prod(kgrid))/prod(kgrid) * 2.0
@@ -2223,6 +2383,13 @@ end
 =#
     
 
+"""
+    function trim(h::tb, tol=0.0002)
+
+Remove terms in `tb` with abs value smaller than `tol`. (Ryd)
+Will speed calculations at cost of accuracy. USE WITH CARE.
+Usually not necessary except for very large or very detailed calculations.
+"""
 function trim(h::tb, tol=0.0002)
 
 
@@ -2253,6 +2420,12 @@ function trim(h::tb, tol=0.0002)
     
 end    
 
+"""
+   function renormalize_tb(d::dftout, h::tb) 
+
+Shift eigenvalues from DFT calculation so that the band energy matches
+the DFT total energy.
+"""
 function renormalize_tb(d::dftout, h::tb)
 """
 Changes the tight binding matrix elements so that the total band energy 
@@ -2294,12 +2467,42 @@ equals the total atomization energy
     
 end
 
+
+"""
+   function organizedata(tbc::tb_crys)
+
+Rearrange the data in the tbc as a function of distances for plotting purposes.
+
+`    return data_onsite, data_arr`
+
+Returns two arrays. The first has data on the onsite elements.
+
+-column 1 and 3 have atom indexes
+-column 2 and 4 have orbital numbers
+-columns 5 and 6 have real and imaginary parts of H
+-columns 11 and 12 have real and imaginary parts of S
+-column 7 has the closest inter-atomic distance
+-column 8 has the index of the closest atom.
+
+The second has intersite data
+
+-column 1 and 3 have atom indexes for the atom pairs
+-column 2 and 4 have orbital numbers
+-columns 5 and 6 have real and imaginary parts of H
+-columns 11 and 12 have real and imaginary parts of S
+-column 7 has the inter-atomic distance
+-column 8,9,10 have the the direction cosines lmn for the atom pair.
+
+"""
 function organizedata(tbc::tb_crys)
     
     return organizedata(tbc.crys, tbc.tb)
 
 end
 
+"""
+    function organizedata(crys::crystal, h::tb)
+"""
 function organizedata(crys::crystal, h::tb)
 
     ind2orb, orb2ind, etotal, nval = orbital_index(crys)
@@ -2415,11 +2618,12 @@ function organizedata(crys::crystal, h::tb)
 end
 
                 
-            
+"""
+    function myfft_R_to_K(tbc, grid=missing) 
+
+Does Fourier Transform R->k (fft) using FFTW for tb_crys
+"""
 function myfft_R_to_K(tbc, grid=missing)
-"""
-Does Fourier Transform R->k. 
-"""
 
     
 #    wan, semicore, nwan, nsemi, wan_atom, atom_wan = tb_indexes(tbc.crys)
@@ -2466,6 +2670,20 @@ Does Fourier Transform R->k.
 
 end    
             
+"""
+    function myfft(crys, nonorth, grid, kpts,ham_kS, Sk=missing)
+
+Does Fourier Transform K->R (ifft) using FFTW.
+
+Arguments
+- `crys` crystal
+- `nonorth` nonorogonal bool
+- `grid` k-point grid size
+- `kpts` the k-points `nkpts`×3 in the original order, to be rearranged into grid
+- `ham_kS` hamiltonian in k space (`nw`×`nw`×`nkpts`)
+- `Sk` overlaps in k space
+
+"""
 function myfft(crys, nonorth, grid, kpts,ham_kS, Sk=missing)
 
     wan, semicore, nwan, nsemi, wan_atom, atom_wan = tb_indexes(crys)
@@ -2571,6 +2789,18 @@ function myfft(crys, nonorth, grid, kpts,ham_kS, Sk=missing)
              
 end
 
+"""
+   function get_sym_R(crys, grid, sss = 1.0)
+
+Figures out the r-space grid using Wigner-Seitz like construction to figure out the
+best arrangement of r-grid points to keep periodic copies closest to the original atom 
+and take into account symmetry.
+
+`return R_grid, R_int_grid, sym_R`
+
+returns the R_grid, the integer version, and the symmetry factor of each point.
+
+"""
 function get_sym_R(crys, grid, sss = 1.0)
 
 
@@ -2710,6 +2940,20 @@ function get_sym_R(crys, grid, sss = 1.0)
 
 end    
 
+"""
+    function tb_indexes(d::dftout)
+
+Figures out mapping between DFT projected hamiltonian orbitals and crystal and the wannier orbitals we want.
+
+`return wan, semicore, nwan, nsemi, wan_atom, atom_wan`
+
+- `wan` has the indexes of the wannier orbitals
+- `semicore` has the indexes of semicore states.
+- `nwan` number of wannier orbs
+- `nsemi` number of semicore states
+- `wan_atom` dictionary wannier to atom numbers
+- `atom_wan` dictionary atom numbers to wannier orbitals
+"""
 function tb_indexes(d::dftout)
     crys = d.crys
     return tb_indexes(crys)
@@ -2757,6 +3001,11 @@ function tb_indexes(crys::crystal)
     return wan, semicore, nwan, nsemi, wan_atom, atom_wan
 end
 
+"""
+   function symm_by_orbitals(crys::crystal, mat)
+
+Helper function to re-symmeterize the overlap matrix properly, starting from incomplete k-points.
+"""
 function symm_by_orbitals(crys::crystal, mat)
     c=0
     for (at_num, t) in enumerate(crys.types)
@@ -2903,6 +3152,11 @@ function plot_compare_dft(tbc::tb_crys, bs; tbc2=missing)
 
 end
 
+"""
+    function find_vbm_cbm(eigs, fermi)
+
+Find the valence band max and conduction band minimum from eigs, relative to Fermi level.
+"""
 function find_vbm_cbm(eigs, fermi)
 
     vbm = -100000.0
@@ -2920,6 +3174,12 @@ function find_vbm_cbm(eigs, fermi)
 end
 
 
+"""
+    function ewald_energy(tbc::tb_crys, delta_q=missing)
+
+Return ewald energy term from tbc. If `delta_q`, the atomic charge density, is missing,
+loads from `tbc`.
+"""
 function ewald_energy(tbc::tb_crys, delta_q=missing)
     
     gamma = tbc.gamma 
@@ -2933,6 +3193,9 @@ function ewald_energy(tbc::tb_crys, delta_q=missing)
 
 end
 
+"""
+    function ewald_energy(tbc::tb_crys_kspace, delta_q=missing)
+"""
 function ewald_energy(tbc::tb_crys_kspace, delta_q=missing)
     
     gamma = tbc.gamma 
@@ -2946,6 +3209,11 @@ function ewald_energy(tbc::tb_crys_kspace, delta_q=missing)
 
 end
 
+"""
+    function ewald_energy(crys::crystal, gamma, delta_q::Array{Float64,1})
+
+Does the actual calculation.
+"""
 function ewald_energy(crys::crystal, gamma, delta_q::Array{Float64,1})
     
     T = typeof(crys.coords[1,1])
@@ -2966,12 +3234,20 @@ function ewald_energy(crys::crystal, gamma, delta_q::Array{Float64,1})
 
 end
 
+"""
+   function get_neutral_eden(tbc::tb_crys)
+
+Gets a neutral charge density (no charge transfer) to start SCF calculation.
+"""
 function get_neutral_eden(tbc::tb_crys)
 
     return get_neutral_eden(tbc.crys, tbc.tb.nwan)
 
 end
 
+"""
+    function get_neutral_eden(crys::crystal, nwan=missing)
+"""
 function get_neutral_eden(crys::crystal, nwan=missing)
 
     if ismissing(nwan)
@@ -3043,15 +3319,25 @@ function get_neutral_eden(crys::crystal, nwan=missing)
 
 end
 
+"""
+   function get_dq(tbc::tb_crys_kspace)
+
+Get atomic charge density from `tb_crys` or `tb_crys_kspace` or `crys + eden`
+"""
 function get_dq(tbc::tb_crys_kspace)
     return get_dq(tbc.crys, tbc.eden)
 end
 
+"""
+    function get_dq(tbc::tb_crys)
+"""
 function get_dq(tbc::tb_crys)
     return get_dq(tbc.crys, tbc.eden)
 end
 
-
+"""
+    function get_dq(crys::crystal, chargeden::Array{Float64,1})
+"""
 function get_dq(crys::crystal, chargeden::Array{Float64,1})
 
 
@@ -3080,11 +3366,19 @@ function get_dq(crys::crystal, chargeden::Array{Float64,1})
 
 end
 
+"""
+    function get_h1(tbc::tb_crys)
+
+Get H1, the potential term added to tight binding in SCF calculation.
+"""
 function get_h1(tbc::tb_crys)
     return get_h1(tbc, tbc.eden)
 end
 
 
+"""
+    function get_h1(tbc::tb_crys, chargeden::Array{Float64,1})
+"""
 function get_h1(tbc::tb_crys, chargeden::Array{Float64,1})
 
     dq = get_dq(tbc.crys, chargeden)
@@ -3118,11 +3412,16 @@ function get_h1(tbc::tb_crys, chargeden::Array{Float64,1})
 end
 
 
+"""
+    function get_h1(tbc::tb_crys_kspace)
+"""
 function get_h1(tbc::tb_crys_kspace)
     return get_h1(tbc, tbc.eden)
 end
 
-
+"""
+    function get_h1(tbc::tb_crys_kspace, chargeden::Array{Float64,1})
+"""
 function get_h1(tbc::tb_crys_kspace, chargeden::Array{Float64,1})
 
     dq = get_dq(tbc.crys, chargeden)
@@ -3155,6 +3454,14 @@ function get_h1(tbc::tb_crys_kspace, chargeden::Array{Float64,1})
 
 end
 
+"""
+    function get_energy_electron_density_kspace(tbcK::tb_crys_kspace; smearing = 0.01)
+
+Get energy / charge density from k-space tight binding object.
+
+`return bandenergy + etypes + echarge + energy_smear, eden, VECTS, VALS, error_flag`
+
+"""
 function get_energy_electron_density_kspace(tbcK::tb_crys_kspace; smearing = 0.01)
 
     bandenergy, eden, VECTS, VALS, efermi, error_flag = get_energy_electron_density_kspace(tbcK.tb, tbcK.nelec, smearing=smearing)
@@ -3177,6 +3484,11 @@ function get_energy_electron_density_kspace(tbcK::tb_crys_kspace; smearing = 0.0
 
 end
 
+"""
+    function get_energy_electron_density_kspace(tb_k::tb_k, nelec; smearing = 0.01)
+
+K-space get energy and electron density from `tb_k`
+"""
 function get_energy_electron_density_kspace(tb_k::tb_k, nelec; smearing = 0.01)
 
     temp = zeros(Complex{Float64}, tb_k.nwan, tb_k.nwan)
