@@ -13,22 +13,23 @@ using Documenter, TightlyBound
 
 @info "Making documentation..."
 makedocs(
-  sitename="TightlyBound.jl Documentation",
-  authors = "Kevin F. Garrity",
-  format = Documenter.HTML(
-      assets = ["assets/favicon.ico"],
-  ),
-  pages = [
-    "Home" => "index.md",
-    "User Guide" => Any[
-        "Running Calculations" =>  "ug_run.md",
-        "Fit Coefficients" => "ug_fit.md",
-    ],
-    "Core User Interface" => Any[
-        "Structs" => "structs.md",
-        "Functions" => "core.md",
-    ],
-  ]
+    sitename="TightlyBound.jl Documentation",
+    authors = "Kevin F. Garrity",
+    format = Documenter.HTML(
+        assets = ["assets/favicon.ico"],
+    ),
+    pages = [
+        "Home" => "index.md",
+        "User Guide" => Any[
+            "Running Calculations" =>  "ug_run.md",
+            "Fit Coefficients" => "ug_fit.md",
+        ],
+        "Core User Interface" => Any[
+            "Structs" => "structs.md",
+            "Functions" => "core.md",
+        ],
+        "Every Docstring" => "every.md"
+    ]
 )
 
 

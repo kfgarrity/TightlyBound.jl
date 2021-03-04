@@ -188,11 +188,10 @@ structure using atomic proj, or from fft'ed tb object. Similar to real-space ver
 - `Sk::Array{Complex{T},3}` Overlap matrix.
 - `scf::Bool` needs self-consistency?
 - `h1::Array{T,2} #scf term` holds scf term if present
-- `grid::Array{Int64,1}` dimensions of k-point grid, if from regular grid like `[8,8,8]`
+- `grid::Array{Int64,1}` dimensions of k-point grid, from regular grid like `[8,8,8]`
 
 
 """ 
-
 mutable struct tb_k{T}
 
 
@@ -229,15 +228,14 @@ end
 
 Hold k-point tight binding and crystal structure. Similar to `tb_crys`
 
-#Holds
-
--`tb::tb_k`
--`crys::crystal`
--`nelec::Float64`
--`dftenergy::Float64`
--`scf::Bool`
--`gamma::Array{T, 2}`
--`eden::Array{Float64,1}`
+# Holds
+- `tb::tb_k`
+- `crys::crystal`
+- `nelec::Float64`
+- `dftenergy::Float64`
+- `scf::Bool`
+- `gamma::Array{T, 2}`
+- `eden::Array{Float64,1}`
 """
 mutable struct tb_crys_kspace{T}
 
@@ -297,7 +295,7 @@ end
 #end
 
 """
-    read_tb_crys(filename, tbc::tb_crys)
+    function read_tb_crys(filename, tbc::tb_crys)
 
 Reads and returns from `filename` a `tb_crys` object. See `write_tb_crys`
 
@@ -665,7 +663,7 @@ end
 
 
 """
-    write_tb_crys(filename, tbc::tb_crys)
+    function write_tb_crys(filename, tbc::tb_crys)
 
 Writes to `filename` a `tb_crys` object, using xml formatting. See `read_tb_crys`
 
@@ -1204,7 +1202,7 @@ end
 
 
 """
-    Hk(h::tb_crys_kspace, kpoint)
+    function Hk(h::tb_crys_kspace, kpoint)
 
 Calculate band structure at a k-point from a `tb_crys_kspace` object.
 Note, can only return precalculated k-points.
@@ -1219,7 +1217,7 @@ Need real-space version to get arbitrary k-points.
 
 #Arguments
 - `h::tb_crys_kspace` - tb_crys_kspace object
-- `kpoint` - e.g. [0.0,0.0,0.0]
+- `kpoint` - e.g. `[0.0,0.0,0.0]`
 - `scf=missing` - default is to take SCF from h.
 """
 function Hk(h::tb_crys_kspace, kpoint; scf=missing)
@@ -1229,7 +1227,7 @@ function Hk(h::tb_crys_kspace, kpoint; scf=missing)
 end
 
 """
-    Hk(h::tb_k, kpoint)
+    function Hk(h::tb_k, kpoint)
 
 Calculate band structure at a k-point from `tb_k`. Must be pre-calculated k-point.
 """
@@ -1425,13 +1423,13 @@ end
 
 
 """
-   calc_bands(tbc::tb_crys, kpoints::Array{Float64,2})
+    function calc_bands(tbc::tb_crys, kpoints::Array{Float64,2})
 
 Calculate bandstructure for k-points from k-point array. Returns eigenvalues.
 
 # Arguments
 - `tbc::tb_crys` - The tight binding object
-- `kpoints::Array{Float64,2}` - k-point array. e.g. [0.0 0.0 0.0; 0.0 0.0 0.1]
+- `kpoints::Array{Float64,2}` - k-point array. e.g. `[0.0 0.0 0.0; 0.0 0.0 0.1]`
 """
 function calc_bands(tbc::tb_crys, kpoints::Array{Float64,2})
 #    if tbc.scf == true
@@ -1443,7 +1441,7 @@ function calc_bands(tbc::tb_crys, kpoints::Array{Float64,2})
 end
 
 """
-   calc_bands(h, kpoints::Array{Float64,2})
+    function calc_bands(h, kpoints::Array{Float64,2})
 
 Calculate bandstructure for k-points from k-point array. h is a `tb` or `tb_k` object.
 """
@@ -1482,7 +1480,7 @@ calculate band structure at group of points
 end    
 
 """
-    plot_compare_tb(h1::tb_crys, h2::tb_crys; h3=missing)
+    function plot_compare_tb(h1::tb_crys, h2::tb_crys; h3=missing)
 
 Plot a comparison between different tight binding objects `h1`, `h2`, and optionally `h3`. Options similar to `plot_bandstr` but more limited.
 
@@ -1497,7 +1495,7 @@ end
 
 
 """
-    plot_compare_tb(h1::tb, h2::tb; h3=missing)
+    function plot_compare_tb(h1::tb, h2::tb; h3=missing)
 """
 function plot_compare_tb(h1::tb, h2::tb; h3=missing, kpath=[0.5 0 0 ; 0 0 0; 0.5 0.0 0.5], names = missing, npts=30, efermi = missing, yrange=missing, plot_hk=false, align="vbm")
     println("plot_compare_tb ")
@@ -1540,7 +1538,7 @@ end
 
     
 """
-    plot_bandstr(h::tb_crys; kpath, names = missing, proj_types=missing, proj_orbs = missing, proj_nums=missing)
+    function plot_bandstr(h::tb_crys; kpath, names = missing, proj_types=missing, proj_orbs = missing, proj_nums=missing)
 
 Plot the band structure of a `tb_crys` object. Can also perform a projected band structure if you specify at least one of `proj_types`, `proj_orbs`, `proj_nums`.
 
@@ -1557,7 +1555,7 @@ k-path specified by a kpath array and names.
 - `efermi=missing` - allows you to specify fermi energy. Default is to take from `h`
 - `color="blue"` - specify line color
 - `MarkerSize=missing"` - specify markersize
-- `yrange=missing"` - specify y-range. e.g. yrange=[-0.7, 0.3]
+- `yrange=missing"` - specify y-range. e.g. `yrange=[-0.7, 0.3]`
 - `plot_hk=false` - plot things besides the normal band structure. Can be one of `:Seig, :Heig, :Hreal, :Himag, :Sreal, :Simag` to plot H or S eigvals or components. Primarily for debugging.
 - `align="vbm"` - default or `"valence"` is to align valence band max to zero energy. Can also be `"min"`, which aligns on the minimum eigenvalue, or `"fermi"` or `"ef"`, which align on the Fermi level, 
 - `clear_pervious=true` - clears the plot before adding new stuff.
@@ -1618,9 +1616,9 @@ end
 
 Construct a k_path for a band structure calculations. Very simple.
 
--`kpath` high symmetry k-points in fractional BZ coordinates.
--`names` names of kpoints like ["Γ", "X"]
--`npts` number of points between high-symmetry kpoints
+- `kpath` high symmetry k-points in fractional BZ coordinates.
+- `names` names of kpoints like `["Γ", "X"]`
+- `npts` number of points between high-symmetry kpoints
 """
 function get_kpath(kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5], names = missing, npts=30)
 
@@ -1663,7 +1661,7 @@ end
 
 
 """
-    plot_bandstr(h::tb)
+    function plot_bandstr(h::tb)
 
 Plots using `tb`
 """
@@ -1879,7 +1877,7 @@ end
 
 
 """
-    Hk(h::tb, kpoint)
+    function Hk(h::tb, kpoint)
 
 Calculate band structure at a k-point from `tb`
 """
@@ -1893,7 +1891,7 @@ function Hk(h::tb, kpoint)
 end
 
 """
-    Hk(h::tb_crys, kpoint)
+    function Hk(h::tb_crys, kpoint)
 
 Calculate band structure at a k-point from `tb_crys`
 """
@@ -1991,7 +1989,7 @@ end
 
 Calculate energy and charge density. For internal use.
 
-return energy0, efermi, chargeden[:], VECTS, VALS, error_flag
+`return energy0, efermi, chargeden[:], VECTS, VALS, error_flag`
 """
 function calc_energy_charge_fft_band(hk3, sk3, nelec; smearing=0.01, h1 = missing)
 
@@ -2421,7 +2419,7 @@ function trim(h::tb, tol=0.0002)
 end    
 
 """
-   function renormalize_tb(d::dftout, h::tb) 
+    function renormalize_tb(d::dftout, h::tb) 
 
 Shift eigenvalues from DFT calculation so that the band energy matches
 the DFT total energy.
@@ -2477,21 +2475,21 @@ Rearrange the data in the tbc as a function of distances for plotting purposes.
 
 Returns two arrays. The first has data on the onsite elements.
 
--column 1 and 3 have atom indexes
--column 2 and 4 have orbital numbers
--columns 5 and 6 have real and imaginary parts of H
--columns 11 and 12 have real and imaginary parts of S
--column 7 has the closest inter-atomic distance
--column 8 has the index of the closest atom.
+- column 1 and 3 have atom indexes
+- column 2 and 4 have orbital numbers
+- columns 5 and 6 have real and imaginary parts of H
+- columns 11 and 12 have real and imaginary parts of S
+- column 7 has the closest inter-atomic distance
+- column 8 has the index of the closest atom.
 
 The second has intersite data
 
--column 1 and 3 have atom indexes for the atom pairs
--column 2 and 4 have orbital numbers
--columns 5 and 6 have real and imaginary parts of H
--columns 11 and 12 have real and imaginary parts of S
--column 7 has the inter-atomic distance
--column 8,9,10 have the the direction cosines lmn for the atom pair.
+- column 1 and 3 have atom indexes for the atom pairs
+- column 2 and 4 have orbital numbers
+- columns 5 and 6 have real and imaginary parts of H
+- columns 11 and 12 have real and imaginary parts of S
+- column 7 has the inter-atomic distance
+- column 8,9,10 have the the direction cosines lmn for the atom pair.
 
 """
 function organizedata(tbc::tb_crys)
@@ -2679,7 +2677,7 @@ Arguments
 - `crys` crystal
 - `nonorth` nonorogonal bool
 - `grid` k-point grid size
-- `kpts` the k-points `nkpts`×3 in the original order, to be rearranged into grid
+- `kpts` the k-points `nkpts`×`3` in the original order, to be rearranged into grid
 - `ham_kS` hamiltonian in k space (`nw`×`nw`×`nkpts`)
 - `Sk` overlaps in k space
 
@@ -2790,7 +2788,7 @@ function myfft(crys, nonorth, grid, kpts,ham_kS, Sk=missing)
 end
 
 """
-   function get_sym_R(crys, grid, sss = 1.0)
+    function get_sym_R(crys, grid, sss = 1.0)
 
 Figures out the r-space grid using Wigner-Seitz like construction to figure out the
 best arrangement of r-grid points to keep periodic copies closest to the original atom 
@@ -3002,7 +3000,7 @@ function tb_indexes(crys::crystal)
 end
 
 """
-   function symm_by_orbitals(crys::crystal, mat)
+    function symm_by_orbitals(crys::crystal, mat)
 
 Helper function to re-symmeterize the overlap matrix properly, starting from incomplete k-points.
 """
@@ -3035,7 +3033,7 @@ end
 
 
 """
-    plot_compare_dft(tbc::tb_crys, bs; tbc2=missing)
+    function plot_compare_dft(tbc::tb_crys, bs; tbc2=missing)
     
 Plots a band structure comparison between a tight-binding crystal object (`tb_crys`) and a
 band structure directly from dft (either a `dftout` or `bs` object). 
@@ -3235,7 +3233,7 @@ function ewald_energy(crys::crystal, gamma, delta_q::Array{Float64,1})
 end
 
 """
-   function get_neutral_eden(tbc::tb_crys)
+    function get_neutral_eden(tbc::tb_crys)
 
 Gets a neutral charge density (no charge transfer) to start SCF calculation.
 """
@@ -3320,7 +3318,7 @@ function get_neutral_eden(crys::crystal, nwan=missing)
 end
 
 """
-   function get_dq(tbc::tb_crys_kspace)
+    function get_dq(tbc::tb_crys_kspace)
 
 Get atomic charge density from `tb_crys` or `tb_crys_kspace` or `crys + eden`
 """
