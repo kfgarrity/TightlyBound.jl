@@ -1904,43 +1904,55 @@ end
 
 
 """
-    function calc_energy_fft(tbc::tb_crys; grid=missing, smearing=0.01, returnef=false)
+    function calc_energy_fft(tbc::tb_crys; grid=missing, smearing=0.01, return_more_info=false)
 
 Get energy using fft.
 
 returns energy
+
+if `return_more_info==true` then returns
+`etot, efermi, vals, vects`
+
 """
-function calc_energy_fft(tbc::tb_crys; grid=missing, smearing=0.01, returnef=false)
+function calc_energy_fft(tbc::tb_crys; grid=missing, smearing=0.01, return_more_info=false)
 
     etypes = types_energy(tbc.crys)
 
 
     hk3, sk3 = myfft_R_to_K(tbc, grid)
 
-    ret =  calc_energy_fft_band(hk3, sk3, tbc.nelec, smearing=smearing, returnef=returnef)
-    if returnef
-        etot = etypes + ret[1]
-        ef = ret[2]
+    ret =  calc_energy_fft_band(hk3, sk3, tbc.nelec, smearing=smearing, return_more_info=return_more_info)
 
-        return etot, ef
+    
+    if return_more_info
+        energy, efermi, vals, vects  = ret
+
+        etot = etypes + energy
+        return etot, efermi, vals, vects, sk3
+        
     end
     return ret + etypes
 
 end
 
 """
-    function calc_energy_fft_band(hk3, sk3, nelec; smearing=0.01, returnef=false, h1 = missing)
+    function calc_energy_fft_band(hk3, sk3, nelec; smearing=0.01, return_more_info=false, h1 = missing)
     
 Return energy from hamiltonian `hk3`, overlap `sk3`, `nelec`, etc.
 Primarly for internal calling after fft.
 """
-function calc_energy_fft_band(hk3, sk3, nelec; smearing=0.01, returnef=false, h1 = missing)
+function calc_energy_fft_band(hk3, sk3, nelec; smearing=0.01, return_more_info=false, h1 = missing)
 #h1 is the scf contribution
 
     grid = size(hk3)[3:5]
     nk = prod(grid)
     nwan = size(hk3)[1]
     VALS = zeros(Float64, nk, nwan)
+
+    if return_more_info == true
+        VECTS = zeros(Complex{Float64}, nk, nwan, nwan)
+    end
+    
     c=0
 
     thetype=typeof(real(sk3[1,1,1,1,1]))
@@ -1962,6 +1974,10 @@ function calc_energy_fft_band(hk3, sk3, nelec; smearing=0.01, returnef=false, h1
 
                     vals, vects = eigen(hk, sk)
                     VALS[c,:] = vals
+                    if return_more_info
+                        VECTS[c,:,:] = vects
+                    end
+                    
                 catch
                     println("error calc_energy_fft $k1 $k2 $k3")
                     sk[:,:] = 0.5*(sk3[:,:,k1,k2,k3] + sk3[:,:,k1,k2,k3]')
@@ -1975,8 +1991,8 @@ function calc_energy_fft_band(hk3, sk3, nelec; smearing=0.01, returnef=false, h1
     band_en, efermi = band_energy(VALS, ones(nk), nelec, smearing, returnef=true)
     energy_smear = smearing_energy(VALS, ones(nk), efermi, smearing)
 
-    if returnef
-        return  band_en + energy_smear, efermi
+    if return_more_info
+        return  band_en + energy_smear, efermi, VALS, VECTS
     else
         return  band_en + energy_smear
     end

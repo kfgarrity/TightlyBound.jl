@@ -59,6 +59,8 @@ include("SCF.jl")
 include("FitTB_laguerre.jl")
 include("Force_Stress.jl")
 
+include("DOS.jl")
+
 
 include("ManageDatabase.jl")
 
