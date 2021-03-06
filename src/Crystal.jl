@@ -287,7 +287,7 @@ function makecrys(filename::String)
     lines = readlines(f)
     close(f)
     
-    c = makecrys(lines)
+    c = makecrys(lines, units="Bohr")
     return c
     
 end
@@ -323,7 +323,7 @@ function makecrys(lines::Array{String,1})
 
 
     
-    c = makecrys(A, coords,types)
+    c = makecrys(A, coords,types, units="Bohr")
     return c
     
     end
