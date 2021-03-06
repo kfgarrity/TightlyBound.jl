@@ -10,15 +10,16 @@ supported.
 
 ## **Create a crystal object**
 
-Consists of lattice vectors, atomic positions, and atom types. Current units are Bohr only, this will change.
+Consists of lattice vectors, atomic positions, and atom types. 
 
 ```@example 1
 using TightlyBound
-A = [4.0 4.0 0.0;4.0 0.0 4.0;0.0 4.0 4.0];
+A = [2.1 2.1 0.0;2.1 0.0 2.1;0.0 2.1 2.1];
 pos = [0.0 0.0 0.0];
 types =        ["Al"];
 fcc_al = makecrys(A, pos, types)
 ```
+Current default units are Angstrom and eV. You can change the global units to atomic units with `set_units(both="atomic")` if you prefer.
 
 Alternatively, you can read the positions from a simple POSCAR or Quantum Espresso input file.
 
@@ -26,20 +27,20 @@ Alternatively, you can read the positions from a simple POSCAR or Quantum Espres
 rbcl = makecrys("../src/POSCAR_rbcl")
 ```
 
-## **Do an self-consistent calculation.**
+## **Do a self-consistent calculation.**
 
 Gets the energy and charge density.
 
 ```@example 1
 alp = makecrys("../src/POSCAR_alp")
 energy, tbc_alp = scf_energy(alp); 
-println("The energy is $energy Ryd")
+println("The energy is $energy eV")
 ```
-This returns the non-magnetic atomization energy, and a tight-binding object with the SCF electron density calculated.
+This returns the (non-magnetic) atomization energy, and a tight-binding object with the TB matrix elements and SCF electron density calculated for post-processing.
 
 ## **Plot the band structure.**
 
-Using the tight-binding object from above. Note: SCF must be done first to get meaningful results.
+Using the tight-binding object `tbc_alp` from above. Note: SCF must be done first.
 
 ```@example 1
 using Plots #hide
@@ -51,9 +52,9 @@ savefig("alp.png"); #hide
 
 ![AlP plot](alp.png)
 
-Use *do_display=true* to produce an interactive plot.
+Use *do_display=true* to produce an interactive plot. Here is is `false` because we are saving a static figure with `savefig` for the docs.
 
-The default just picks some random kpoints, but you can add your own kpath. We also project onto the *s* orbital of Al.
+The default `plot_bandstr` just picks some random kpoints, but you can add your own kpath. We also project onto the *s* orbital of Al.
 
 ```@example 1
 kpath=[0.0 0.0 0.0; 0.5 0.5 0.5; 0.0 0.5 0.5];
@@ -73,7 +74,7 @@ savefig("alp_dos.png"); #hide
 
 ![AlP plot](alp_dos.png)
 
-
+Project onto orbitals instead with `proj_type=:orbs`
 
 ## **Calculate force / stress**
 
@@ -106,5 +107,7 @@ show(stdout, "text/plain", stress)
 nothing #hide
 ```
 Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.
+
+Force/Stress defaults are eV/Ang and eV/Ang^3.
 
 

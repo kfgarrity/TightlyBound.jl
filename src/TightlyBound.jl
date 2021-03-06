@@ -56,6 +56,7 @@ export write_tb_crys
 
 include("RunDFT.jl")
 
+export set_units
 
 #include("RunWannier90.jl")
 include("AtomicProj.jl")
