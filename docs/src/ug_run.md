@@ -63,7 +63,7 @@ plot_bandstr(tbc_alp, kpath=kpath, names=knames, npts=100, proj_orbs=[:s], proj_
 savefig("alp2.png"); #hide
 ```
 
-![AlP plot](alp2.png)
+![AlP plot 2](alp2.png)
 
 You can also plot the DOS.
 
@@ -72,7 +72,7 @@ dos(tbc_alp, do_display=false);
 savefig("alp_dos.png"); #hide
 ```
 
-![AlP plot](alp_dos.png)
+![AlP DOS](alp_dos.png)
 
 Project onto orbitals instead with `proj_type=:orbs`
 
