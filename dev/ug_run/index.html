@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Running Calculations · TightlyBound.jl Documentation</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img src="../assets/logo.svg" alt="TightlyBound.jl Documentation logo"/></a><div class="docs-package-name"><span class="docs-autofit">TightlyBound.jl Documentation</span></div><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><span class="tocitem">User Guide</span><ul><li class="is-active"><a class="tocitem" href>Running Calculations</a><ul class="internal"><li><a class="tocitem" href="#**Create-a-crystal-object**"><span><strong>Create a crystal object</strong></span></a></li><li><a class="tocitem" href="#**Do-a-self-consistent-calculation.**"><span><strong>Do a self-consistent calculation.</strong></span></a></li><li><a class="tocitem" href="#**Plot-the-band-structure.**"><span><strong>Plot the band structure.</strong></span></a></li><li><a class="tocitem" href="#**Calculate-force-/-stress**"><span><strong>Calculate force / stress</strong></span></a></li><li><a class="tocitem" href="#**Relax-structure**"><span><strong>Relax structure</strong></span></a></li></ul></li><li><a class="tocitem" href="../ug_fit/">Fit Coefficients</a></li></ul></li><li><span class="tocitem">Core User Interface</span><ul><li><a class="tocitem" href="../structs/">Structs</a></li><li><a class="tocitem" href="../core/">Functions</a></li></ul></li><li><a class="tocitem" href="../every/">Every Docstring</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">User Guide</a></li><li class="is-active"><a href>Running Calculations</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Running Calculations</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/kfgarrity/TightlyBound.jl/blob/master/docs/src/ug_run.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Running-tight-binding-calculations"><a class="docs-heading-anchor" href="#Running-tight-binding-calculations">Running tight-binding calculations</a><a id="Running-tight-binding-calculations-1"></a><a class="docs-heading-anchor-permalink" href="#Running-tight-binding-calculations" title="Permalink"></a></h1><p>How to run tight-binding calculations using the pre-fit tight-binding coefficients. Note, only elemental and binary systems are currently supported.</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>Running a julia function for the first time will compile the function. Future runs will be <em>much</em> faster.</p></div></div><h2 id="**Create-a-crystal-object**"><a class="docs-heading-anchor" href="#**Create-a-crystal-object**"><strong>Create a crystal object</strong></a><a id="**Create-a-crystal-object**-1"></a><a class="docs-heading-anchor-permalink" href="#**Create-a-crystal-object**" title="Permalink"></a></h2><p>Consists of lattice vectors, atomic positions, and atom types. </p><pre><code class="language-julia">using TightlyBound
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Running Calculations · TightlyBound.jl Documentation</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img src="../assets/logo.svg" alt="TightlyBound.jl Documentation logo"/></a><div class="docs-package-name"><span class="docs-autofit">TightlyBound.jl Documentation</span></div><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><span class="tocitem">User Guide</span><ul><li class="is-active"><a class="tocitem" href>Running Calculations</a><ul class="internal"><li><a class="tocitem" href="#**Create-a-crystal-object**"><span><strong>Create a crystal object</strong></span></a></li><li><a class="tocitem" href="#**Do-a-self-consistent-calculation.**"><span><strong>Do a self-consistent calculation.</strong></span></a></li><li><a class="tocitem" href="#**Plot-the-band-structure.**"><span><strong>Plot the band structure.</strong></span></a></li><li><a class="tocitem" href="#**Calculate-force-/-stress**"><span><strong>Calculate force / stress</strong></span></a></li><li><a class="tocitem" href="#**Relax-structure**"><span><strong>Relax structure</strong></span></a></li></ul></li><li><a class="tocitem" href="../ug_fit/">Fit Coefficients</a></li></ul></li><li><span class="tocitem">Core User Interface</span><ul><li><a class="tocitem" href="../structs/">Structs</a></li><li><a class="tocitem" href="../core/">Functions</a></li></ul></li><li><a class="tocitem" href="../every/">Additional Docstrings</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">User Guide</a></li><li class="is-active"><a href>Running Calculations</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Running Calculations</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/kfgarrity/TightlyBound.jl/blob/master/docs/src/ug_run.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Running-tight-binding-calculations"><a class="docs-heading-anchor" href="#Running-tight-binding-calculations">Running tight-binding calculations</a><a id="Running-tight-binding-calculations-1"></a><a class="docs-heading-anchor-permalink" href="#Running-tight-binding-calculations" title="Permalink"></a></h1><p>How to run tight-binding calculations using the pre-fit tight-binding coefficients. Note, only elemental and binary systems are currently supported.</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>Running a julia function for the first time will compile the function. Future runs will be <em>much</em> faster.</p></div></div><h2 id="**Create-a-crystal-object**"><a class="docs-heading-anchor" href="#**Create-a-crystal-object**"><strong>Create a crystal object</strong></a><a id="**Create-a-crystal-object**-1"></a><a class="docs-heading-anchor-permalink" href="#**Create-a-crystal-object**" title="Permalink"></a></h2><p>Consists of lattice vectors, atomic positions, and atom types. </p><pre><code class="language-julia">using TightlyBound
 A = [2.1 2.1 0.0;2.1 0.0 2.1;0.0 2.1 2.1];
 pos = [0.0 0.0 0.0];
 types =        [&quot;Al&quot;];
@@ -53,7 +53,7 @@ CHECK FRONTIER - everything fine
 onsite
 -----
 
- 10.685921 seconds (23.31 M allocations: 1.113 GiB, 4.50% gc time)
+ 10.604124 seconds (23.31 M allocations: 1.113 GiB, 3.82% gc time)
 ------
 Do SCF
 Mixing mode: pulay
@@ -96,7 +96,7 @@ println(&quot;Stress&quot;)
 show(stdout, &quot;text/plain&quot;, stress)</code></pre><pre class="documenter-example-output">prepare atoms [&quot;Al&quot;, &quot;P&quot;]
 
 Calculate Force, Stress (no scf)
- 22.506012 seconds (53.68 M allocations: 2.754 GiB, 5.14% gc time)
+ 22.622002 seconds (53.68 M allocations: 2.755 GiB, 4.31% gc time)
 done
 ----
 energy -0.7495858096762172
@@ -154,7 +154,7 @@ END SCF ------------------
 starting vec
 [0.0, 0.0, 0.0, 0.25, 0.25, 0.25, 4.9132898822133235, 4.9132898822133235, 0.0, 4.9132898822133235, 0.0, 4.9132898822133235, 0.0, 4.9132898822133235, 4.9132898822133235]
 
-  1.419832 seconds (8.60 M allocations: 776.378 MiB, 11.11% gc time)
+  1.555721 seconds (8.60 M allocations: 776.378 MiB, 13.00% gc time)
 FCALL 1 en:  -0.7495883007919372 (Ryd)  fsum:  1.4643538648175532e-12  ssum:  0.004311079238824329    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -169,7 +169,7 @@ SCF CALC 0007 energy  -10.53757196  en_diff:   8.150631E-05  dq_diff:   7.092859
 YES convergence in 7 iters, energy -10.537571959364561 eV   dq = [-1.024, 1.024]
 END SCF ------------------
 
-  1.156060 seconds (6.68 M allocations: 631.233 MiB, 13.04% gc time)
+  1.194273 seconds (6.68 M allocations: 631.233 MiB, 12.01% gc time)
 FCALL 2 en:  -0.774496972395331 (Ryd)  fsum:  1.1045424271297239e-13  ssum:  0.0016069425615332358    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -198,7 +198,7 @@ SCF CALC 0008 energy  -9.99786006  en_diff:   9.769995E-05  dq_diff:   7.122810E
 YES convergence in 8 iters, energy -9.997860057414442 eV   dq = [-0.633, 0.633]
 END SCF ------------------
 
-  0.709258 seconds (4.23 M allocations: 406.808 MiB, 12.37% gc time)
+  0.742818 seconds (4.23 M allocations: 406.808 MiB, 11.46% gc time)
 FCALL 3 en:  -0.7348288936730197 (Ryd)  fsum:  2.4823845854301347e-9  ssum:  0.00221346528463675    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -228,7 +228,7 @@ SCF CALC 0008 energy  -10.61933953  en_diff:   5.403899E-05  dq_diff:   4.502469
 YES convergence in 8 iters, energy -10.619339528049151 eV   dq = [-0.878, 0.878]
 END SCF ------------------
 
-  1.114893 seconds (6.43 M allocations: 589.000 MiB, 11.98% gc time)
+  1.128131 seconds (6.43 M allocations: 589.000 MiB, 11.07% gc time)
 FCALL 4 en:  -0.7805067756622082 (Ryd)  fsum:  1.4439689951641499e-8  ssum:  0.0005652347032448668    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -256,7 +256,7 @@ SCF CALC 0006 energy  -10.63641503  en_diff:   1.749933E-04  dq_diff:   1.440243
 YES convergence in 6 iters, energy -10.636415033320112 eV   dq = [-0.911, 0.911]
 END SCF ------------------
 
-  1.150290 seconds (6.63 M allocations: 625.907 MiB, 9.96% gc time)
+  1.209136 seconds (6.63 M allocations: 625.907 MiB, 11.37% gc time)
 FCALL 5 en:  -0.7817618016952904 (Ryd)  fsum:  3.079785626626101e-8  ssum:  0.0001782684385928831    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -283,7 +283,7 @@ SCF CALC 0007 energy  -10.49328574  en_diff:   1.176425E-04  dq_diff:   1.095868
 YES convergence in 7 iters, energy -10.493285741440468 eV   dq = [-1.044, 1.044]
 END SCF ------------------
 
-  1.265860 seconds (7.62 M allocations: 709.552 MiB, 11.64% gc time)
+  1.442584 seconds (7.62 M allocations: 709.552 MiB, 12.30% gc time)
 FCALL 6 en:  -0.7712419965969861 (Ryd)  fsum:  1.2116383615418e-7  ssum:  0.0020050337998513703    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -311,7 +311,7 @@ SCF CALC 0007 energy  -10.63769204  en_diff:   1.276386E-04  dq_diff:   1.003778
 YES convergence in 7 iters, energy -10.637692035088921 eV   dq = [-0.923, 0.923]
 END SCF ------------------
 
-  1.102291 seconds (6.62 M allocations: 625.230 MiB, 9.98% gc time)
+  1.173961 seconds (6.62 M allocations: 625.230 MiB, 10.29% gc time)
 FCALL 7 en:  -0.7818556595600339 (Ryd)  fsum:  3.886489226541089e-8  ssum:  7.19098435907104e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -344,7 +344,7 @@ res
     |g(x)|                 = 6.64e-05 ≤ 7.0e-04
 
  * Work counters
-    Seconds run:   15  (vs limit Inf)
+    Seconds run:   16  (vs limit Inf)
     Iterations:    2
     f(x) calls:    7
     ∇f(x) calls:   7
@@ -371,4 +371,4 @@ Stress
 3×3 Array{Float64,2}:
   0.000220003  -3.97061e-8   -3.97061e-8
  -3.97061e-8    0.000220003  -3.97061e-8
- -3.97061e-8   -3.97061e-8    0.000220003</pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p><p>Force/Stress defaults are eV/Ang and eV/Ang^3.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Saturday 6 March 2021 01:43">Saturday 6 March 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ -3.97061e-8   -3.97061e-8    0.000220003</pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p><p>Force/Stress defaults are eV/Ang and eV/Ang^3.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Saturday 6 March 2021 02:21">Saturday 6 March 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
