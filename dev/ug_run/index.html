@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Running Calculations · TightlyBound.jl Documentation</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img src="../assets/logo.svg" alt="TightlyBound.jl Documentation logo"/></a><div class="docs-package-name"><span class="docs-autofit">TightlyBound.jl Documentation</span></div><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><span class="tocitem">User Guide</span><ul><li class="is-active"><a class="tocitem" href>Running Calculations</a><ul class="internal"><li><a class="tocitem" href="#**Create-a-crystal-object**"><span><strong>Create a crystal object</strong></span></a></li><li><a class="tocitem" href="#**Do-an-self-consistent-calculation.**"><span><strong>Do an self-consistent calculation.</strong></span></a></li><li><a class="tocitem" href="#**Plot-the-band-structure.**"><span><strong>Plot the band structure.</strong></span></a></li><li><a class="tocitem" href="#**Calculate-force-/-stress**"><span><strong>Calculate force / stress</strong></span></a></li><li><a class="tocitem" href="#**Relax-structure**"><span><strong>Relax structure</strong></span></a></li></ul></li><li><a class="tocitem" href="../ug_fit/">Fit Coefficients</a></li></ul></li><li><span class="tocitem">Core User Interface</span><ul><li><a class="tocitem" href="../structs/">Structs</a></li><li><a class="tocitem" href="../core/">Functions</a></li></ul></li><li><a class="tocitem" href="../every/">Every Docstring</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">User Guide</a></li><li class="is-active"><a href>Running Calculations</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Running Calculations</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/kfgarrity/TightlyBound.jl/blob/master/docs/src/ug_run.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Running-tight-binding-calculations"><a class="docs-heading-anchor" href="#Running-tight-binding-calculations">Running tight-binding calculations</a><a id="Running-tight-binding-calculations-1"></a><a class="docs-heading-anchor-permalink" href="#Running-tight-binding-calculations" title="Permalink"></a></h1><p>How to run tight-binding calculations using the pre-fit tight-binding coefficients. Note, only elemental and binary systems are currently supported.</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>Running a julia function for the first time will compile the function. Future runs will be <em>much</em> faster.</p></div></div><h2 id="**Create-a-crystal-object**"><a class="docs-heading-anchor" href="#**Create-a-crystal-object**"><strong>Create a crystal object</strong></a><a id="**Create-a-crystal-object**-1"></a><a class="docs-heading-anchor-permalink" href="#**Create-a-crystal-object**" title="Permalink"></a></h2><p>Consists of lattice vectors, atomic positions, and atom types. Current units are Bohr only, this will change.</p><pre><code class="language-julia">using TightlyBound
-A = [4.0 4.0 0.0;4.0 0.0 4.0;0.0 4.0 4.0];
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Running Calculations · TightlyBound.jl Documentation</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script><link href="../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../"><img src="../assets/logo.svg" alt="TightlyBound.jl Documentation logo"/></a><div class="docs-package-name"><span class="docs-autofit">TightlyBound.jl Documentation</span></div><form class="docs-search" action="../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li><span class="tocitem">User Guide</span><ul><li class="is-active"><a class="tocitem" href>Running Calculations</a><ul class="internal"><li><a class="tocitem" href="#**Create-a-crystal-object**"><span><strong>Create a crystal object</strong></span></a></li><li><a class="tocitem" href="#**Do-a-self-consistent-calculation.**"><span><strong>Do a self-consistent calculation.</strong></span></a></li><li><a class="tocitem" href="#**Plot-the-band-structure.**"><span><strong>Plot the band structure.</strong></span></a></li><li><a class="tocitem" href="#**Calculate-force-/-stress**"><span><strong>Calculate force / stress</strong></span></a></li><li><a class="tocitem" href="#**Relax-structure**"><span><strong>Relax structure</strong></span></a></li></ul></li><li><a class="tocitem" href="../ug_fit/">Fit Coefficients</a></li></ul></li><li><span class="tocitem">Core User Interface</span><ul><li><a class="tocitem" href="../structs/">Structs</a></li><li><a class="tocitem" href="../core/">Functions</a></li></ul></li><li><a class="tocitem" href="../every/">Every Docstring</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">User Guide</a></li><li class="is-active"><a href>Running Calculations</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Running Calculations</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/kfgarrity/TightlyBound.jl/blob/master/docs/src/ug_run.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Running-tight-binding-calculations"><a class="docs-heading-anchor" href="#Running-tight-binding-calculations">Running tight-binding calculations</a><a id="Running-tight-binding-calculations-1"></a><a class="docs-heading-anchor-permalink" href="#Running-tight-binding-calculations" title="Permalink"></a></h1><p>How to run tight-binding calculations using the pre-fit tight-binding coefficients. Note, only elemental and binary systems are currently supported.</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>Running a julia function for the first time will compile the function. Future runs will be <em>much</em> faster.</p></div></div><h2 id="**Create-a-crystal-object**"><a class="docs-heading-anchor" href="#**Create-a-crystal-object**"><strong>Create a crystal object</strong></a><a id="**Create-a-crystal-object**-1"></a><a class="docs-heading-anchor-permalink" href="#**Create-a-crystal-object**" title="Permalink"></a></h2><p>Consists of lattice vectors, atomic positions, and atom types. </p><pre><code class="language-julia">using TightlyBound
+A = [2.1 2.1 0.0;2.1 0.0 2.1;0.0 2.1 2.1];
 pos = [0.0 0.0 0.0];
 types =        [&quot;Al&quot;];
 fcc_al = makecrys(A, pos, types)</code></pre><pre class="documenter-example-output">Units: Å
 
-A1=     4.00000  4.00000  0.00000
-A2=     4.00000  0.00000  4.00000
-A3=     0.00000  4.00000  4.00000
+A1=     2.10000  2.10000  0.00000
+A2=     2.10000  0.00000  2.10000
+A3=     0.00000  2.10000  2.10000
 
 Al   0.00000  0.00000  0.00000
-</pre><p>Alternatively, you can read the positions from a simple POSCAR or Quantum Espresso input file.</p><pre><code class="language-julia">rbcl = makecrys(&quot;../src/POSCAR_rbcl&quot;)</code></pre><pre class="documenter-example-output">Units: Å
+</pre><p>Current default units are Angstrom and eV. You can change the global units to atomic units with <code>set_units(both=&quot;atomic&quot;)</code> if you prefer.</p><p>Alternatively, you can read the positions from a simple POSCAR or Quantum Espresso input file.</p><pre><code class="language-julia">rbcl = makecrys(&quot;../src/POSCAR_rbcl&quot;)</code></pre><pre class="documenter-example-output">Units: Å
 
 A1=     7.38812  -0.00000  0.00000
 A2=     -0.00000  7.38812  0.00000
@@ -18,9 +18,9 @@ A3=     0.00000  -0.00000  7.38812
 
 Rb   0.00000  0.00000  0.00000
 Cl   0.50000  0.50000  0.50000
-</pre><h2 id="**Do-an-self-consistent-calculation.**"><a class="docs-heading-anchor" href="#**Do-an-self-consistent-calculation.**"><strong>Do an self-consistent calculation.</strong></a><a id="**Do-an-self-consistent-calculation.**-1"></a><a class="docs-heading-anchor-permalink" href="#**Do-an-self-consistent-calculation.**" title="Permalink"></a></h2><p>Gets the energy and charge density.</p><pre><code class="language-julia">alp = makecrys(&quot;../src/POSCAR_alp&quot;)
+</pre><h2 id="**Do-a-self-consistent-calculation.**"><a class="docs-heading-anchor" href="#**Do-a-self-consistent-calculation.**"><strong>Do a self-consistent calculation.</strong></a><a id="**Do-a-self-consistent-calculation.**-1"></a><a class="docs-heading-anchor-permalink" href="#**Do-a-self-consistent-calculation.**" title="Permalink"></a></h2><p>Gets the energy and charge density.</p><pre><code class="language-julia">alp = makecrys(&quot;../src/POSCAR_alp&quot;)
 energy, tbc_alp = scf_energy(alp);
-println(&quot;The energy is $energy Ryd&quot;)</code></pre><pre class="documenter-example-output">
+println(&quot;The energy is $energy eV&quot;)</code></pre><pre class="documenter-example-output">
 Begin scf_energy-------------
 
 Load TB parameters from file
@@ -53,7 +53,7 @@ CHECK FRONTIER - everything fine
 onsite
 -----
 
- 10.995215 seconds (20.35 M allocations: 1013.241 MiB, 3.89% gc time)
+ 13.114609 seconds (20.35 M allocations: 1013.282 MiB, 2.89% gc time)
 ------
 Do SCF
 Mixing mode: pulay
@@ -78,22 +78,22 @@ END SCF ------------------
 
 scf_energy success, done
 
-The energy is -2.4944486570174345 Ryd</pre><p>This returns the non-magnetic atomization energy, and a tight-binding object with the SCF electron density calculated.</p><h2 id="**Plot-the-band-structure.**"><a class="docs-heading-anchor" href="#**Plot-the-band-structure.**"><strong>Plot the band structure.</strong></a><a id="**Plot-the-band-structure.**-1"></a><a class="docs-heading-anchor-permalink" href="#**Plot-the-band-structure.**" title="Permalink"></a></h2><p>Using the tight-binding object from above. Note: SCF must be done first to get meaningful results.</p><pre><code class="language-julia">plot_bandstr(tbc_alp, do_display=false);</code></pre><pre class="documenter-example-output">plot_bandstr
+The energy is -2.4944486570174345 eV</pre><p>This returns the (non-magnetic) atomization energy, and a tight-binding object with the TB matrix elements and SCF electron density calculated for post-processing.</p><h2 id="**Plot-the-band-structure.**"><a class="docs-heading-anchor" href="#**Plot-the-band-structure.**"><strong>Plot the band structure.</strong></a><a id="**Plot-the-band-structure.**-1"></a><a class="docs-heading-anchor-permalink" href="#**Plot-the-band-structure.**" title="Permalink"></a></h2><p>Using the tight-binding object <code>tbc_alp</code> from above. Note: SCF must be done first.</p><pre><code class="language-julia">plot_bandstr(tbc_alp, do_display=false);</code></pre><pre class="documenter-example-output">plot_bandstr
 align vbm
-color = blue markersize = 0</pre><p><img src="../alp.png" alt="AlP plot"/></p><p>Use <em>do_display=true</em> to produce an interactive plot.</p><p>The default just picks some random kpoints, but you can add your own kpath. We also project onto the <em>s</em> orbital of Al.</p><pre><code class="language-julia">kpath=[0.0 0.0 0.0; 0.5 0.5 0.5; 0.0 0.5 0.5];
+color = blue markersize = 0</pre><p><img src="../alp.png" alt="AlP plot"/></p><p>Use <em>do_display=true</em> to produce an interactive plot. Here is is <code>false</code> because we are saving a static figure with <code>savefig</code> for the docs.</p><p>The default <code>plot_bandstr</code> just picks some random kpoints, but you can add your own kpath. We also project onto the <em>s</em> orbital of Al.</p><pre><code class="language-julia">kpath=[0.0 0.0 0.0; 0.5 0.5 0.5; 0.0 0.5 0.5];
 knames=[&quot;Γ&quot;, &quot;X&quot;, &quot;V&quot;];
 plot_bandstr(tbc_alp, kpath=kpath, names=knames, npts=100, proj_orbs=[:s], proj_types=[&quot;Al&quot;], do_display=false);</code></pre><pre class="documenter-example-output">proj_inds [1]
 plot_bandstr
 align vbm</pre><p><img src="../alp2.png" alt="AlP plot"/></p><p>You can also plot the DOS.</p><pre><code class="language-julia">dos(tbc_alp, do_display=false);</code></pre><pre class="documenter-example-output">grid [7, 7, 7]
 calc eigenvals/vects
-  0.401950 seconds (306.20 k allocations: 23.159 MiB, 7.74% gc time)
+  0.485522 seconds (306.18 k allocations: 23.158 MiB, 8.56% gc time)
 Projection
 Projection type: atomic
-  0.356743 seconds (1.41 M allocations: 59.084 MiB, 7.91% gc time)
+  0.422062 seconds (1.41 M allocations: 59.084 MiB)
 setup tetra
-  0.200323 seconds (134.67 k allocations: 6.727 MiB)
+  0.236816 seconds (134.67 k allocations: 6.727 MiB)
 calc dos tetra
-  1.587781 seconds (3.47 M allocations: 219.093 MiB, 3.82% gc time)</pre><p><img src="../alp_dos.png" alt="AlP plot"/></p><h2 id="**Calculate-force-/-stress**"><a class="docs-heading-anchor" href="#**Calculate-force-/-stress**"><strong>Calculate force / stress</strong></a><a id="**Calculate-force-/-stress**-1"></a><a class="docs-heading-anchor-permalink" href="#**Calculate-force-/-stress**" title="Permalink"></a></h2><pre><code class="language-julia">energy, force, stress, tbc = scf_energy_force_stress(tbc_alp);
+  1.963001 seconds (3.47 M allocations: 219.142 MiB, 5.30% gc time)</pre><p><img src="../alp_dos.png" alt="AlP plot"/></p><p>Project onto orbitals instead with <code>proj_type=:orbs</code></p><h2 id="**Calculate-force-/-stress**"><a class="docs-heading-anchor" href="#**Calculate-force-/-stress**"><strong>Calculate force / stress</strong></a><a id="**Calculate-force-/-stress**-1"></a><a class="docs-heading-anchor-permalink" href="#**Calculate-force-/-stress**" title="Permalink"></a></h2><pre><code class="language-julia">energy, force, stress, tbc = scf_energy_force_stress(tbc_alp);
 
 println(&quot;energy $energy&quot;)
 println()
@@ -104,7 +104,7 @@ println(&quot;Stress&quot;)
 show(stdout, &quot;text/plain&quot;, stress)</code></pre><pre class="documenter-example-output">prepare atoms [&quot;Al&quot;, &quot;P&quot;]
 
 Calculate Force, Stress (no scf)
- 22.639632 seconds (45.67 M allocations: 2.088 GiB, 5.43% gc time)
+ 27.004524 seconds (45.66 M allocations: 2.088 GiB, 3.75% gc time)
 done
 ----
 energy -0.183335680935898
@@ -162,7 +162,7 @@ END SCF ------------------
 starting vec
 [0.0, 0.0, 0.0, 0.25, 0.25, 0.25, 9.28477224827799, 9.28477224827799, 0.0, 9.28477224827799, 0.0, 9.28477224827799, 0.0, 9.28477224827799, 9.28477224827799]
 
-  0.119029 seconds (577.10 k allocations: 93.356 MiB, 17.41% gc time)
+  0.145250 seconds (577.10 k allocations: 93.356 MiB, 19.25% gc time)
 FCALL 1 en:  -0.1833385280884101 (Ryd)  fsum:  2.708162604691827e-13  ssum:  0.0004793921392210568    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -176,7 +176,7 @@ SCF CALC 0006 energy  -2.53648024  en_diff:   1.042213E-04  dq_diff:   1.250694E
 YES convergence in 6 iters, energy -2.5364802437306553 eV   dq = [-0.445, 0.445]
 END SCF ------------------
 
-  0.111737 seconds (577.10 k allocations: 93.356 MiB, 14.34% gc time)
+  0.130806 seconds (577.10 k allocations: 93.356 MiB, 13.72% gc time)
 FCALL 2 en:  -0.18642779160944656 (Ryd)  fsum:  3.3185449235130757e-13  ssum:  0.0004912841389579591    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -204,7 +204,7 @@ SCF CALC 0008 energy  -2.71179410  en_diff:   9.952707E-05  dq_diff:   1.596293E
 YES convergence in 8 iters, energy -2.711794102023423 eV   dq = [-0.431, 0.431]
 END SCF ------------------
 
-  0.110635 seconds (580.09 k allocations: 95.369 MiB, 12.42% gc time)
+  0.131879 seconds (580.09 k allocations: 95.369 MiB, 11.84% gc time)
 FCALL 3 en:  -0.19931311784876368 (Ryd)  fsum:  6.984494158626909e-13  ssum:  0.0005421629343165602    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -233,7 +233,7 @@ SCF CALC 0007 energy  -3.84257986  en_diff:   1.897169E-04  dq_diff:   5.874330E
 YES convergence in 7 iters, energy -3.8425798622618172 eV   dq = [-0.376, 0.376]
 END SCF ------------------
 
-  0.111957 seconds (603.38 k allocations: 96.502 MiB, 11.16% gc time)
+  0.130222 seconds (603.38 k allocations: 96.502 MiB, 11.28% gc time)
 FCALL 4 en:  -0.28242430808401414 (Ryd)  fsum:  8.652246416849034e-10  ssum:  0.0009204584927743383    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -262,7 +262,7 @@ SCF CALC 0008 energy  -9.20033102  en_diff:   9.223280E-05  dq_diff:   2.511269E
 YES convergence in 8 iters, energy -9.200331019082054 eV   dq = [-1.235, 1.235]
 END SCF ------------------
 
-  1.926219 seconds (10.82 M allocations: 992.799 MiB, 13.59% gc time)
+  2.364934 seconds (10.82 M allocations: 992.799 MiB, 14.20% gc time)
 FCALL 5 en:  -0.6762116118202615 (Ryd)  fsum:  6.91210373546151e-11  ssum:  0.011026683066377736    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -291,7 +291,7 @@ SCF CALC 0007 energy  -5.47274280  en_diff:   1.535453E-04  dq_diff:   1.378075E
 YES convergence in 7 iters, energy -5.472742804714564 eV   dq = [-0.354, 0.354]
 END SCF ------------------
 
-  0.160262 seconds (814.52 k allocations: 119.668 MiB, 15.49% gc time)
+  0.180949 seconds (814.52 k allocations: 119.668 MiB, 13.66% gc time)
 FCALL 6 en:  -0.40223903089771734 (Ryd)  fsum:  3.098481252097597e-14  ssum:  0.0015259224513475213    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -320,7 +320,7 @@ SCF CALC 0008 energy  -9.32515637  en_diff:   2.262513E-04  dq_diff:   1.216859E
 YES convergence in 8 iters, energy -9.325156372861592 eV   dq = [-0.532, 0.532]
 END SCF ------------------
 
-  0.432341 seconds (2.40 M allocations: 275.751 MiB, 15.06% gc time)
+  0.512666 seconds (2.40 M allocations: 275.751 MiB, 12.14% gc time)
 FCALL 7 en:  -0.6853861027706661 (Ryd)  fsum:  7.39088328221508e-9  ssum:  0.002338856399650112    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -349,7 +349,7 @@ SCF CALC 0007 energy  -10.14179765  en_diff:   2.064988E-04  dq_diff:   1.754951
 YES convergence in 7 iters, energy -10.141797652025355 eV   dq = [-0.663, 0.663]
 END SCF ------------------
 
-  0.746022 seconds (4.29 M allocations: 433.240 MiB, 14.01% gc time)
+  0.876947 seconds (4.29 M allocations: 433.240 MiB, 11.27% gc time)
 FCALL 8 en:  -0.7454081079047147 (Ryd)  fsum:  4.396596550775655e-9  ssum:  0.0018365353761457285    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -378,7 +378,7 @@ SCF CALC 0008 energy  -10.03947147  en_diff:   6.734925E-05  dq_diff:   8.049438
 YES convergence in 8 iters, energy -10.039471474543747 eV   dq = [-1.14, 1.14]
 END SCF ------------------
 
-  1.473874 seconds (8.66 M allocations: 782.152 MiB, 12.55% gc time)
+  1.691283 seconds (8.66 M allocations: 782.152 MiB, 11.70% gc time)
 FCALL 9 en:  -0.7378872753104601 (Ryd)  fsum:  1.3978120480065725e-11  ssum:  0.003423757517084271    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -411,7 +411,7 @@ SCF CALC 0011 energy  -4.97818206  en_diff:   2.831233E-05  dq_diff:   8.863653E
 YES convergence in 11 iters, energy -4.978182056172887 eV   dq = [-0.354, 0.354]
 END SCF ------------------
 
-  0.131400 seconds (611.51 k allocations: 97.232 MiB, 20.81% gc time)
+  0.138236 seconds (611.51 k allocations: 97.232 MiB, 10.95% gc time)
 FCALL 10 en:  -0.36588949953620675 (Ryd)  fsum:  7.890477705463202e-9  ssum:  0.0013435833071194512    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -445,7 +445,7 @@ SCF CALC 0009 energy  -8.81727122  en_diff:   3.735306E-05  dq_diff:   1.805994E
 YES convergence in 9 iters, energy -8.817271216263459 eV   dq = [-0.485, 0.485]
 END SCF ------------------
 
-  0.388411 seconds (2.18 M allocations: 258.193 MiB, 9.87% gc time)
+  0.460096 seconds (2.18 M allocations: 258.193 MiB, 8.98% gc time)
 FCALL 11 en:  -0.6480572458360082 (Ryd)  fsum:  1.979775122080869e-9  ssum:  0.0023848834096316337    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -476,7 +476,7 @@ SCF CALC 0008 energy  -10.41152528  en_diff:   5.997351E-05  dq_diff:   7.170500
 YES convergence in 8 iters, energy -10.411525277294066 eV   dq = [-0.752, 0.752]
 END SCF ------------------
 
-  0.857419 seconds (4.83 M allocations: 477.401 MiB, 12.31% gc time)
+  0.972602 seconds (4.83 M allocations: 477.401 MiB, 10.75% gc time)
 FCALL 12 en:  -0.7652327155038448 (Ryd)  fsum:  1.784246884773137e-8  ssum:  0.0018758681339096106    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -505,7 +505,7 @@ SCF CALC 0007 energy  -10.63639242  en_diff:   1.884757E-04  dq_diff:   1.553807
 YES convergence in 7 iters, energy -10.636392419961918 eV   dq = [-0.934, 0.934]
 END SCF ------------------
 
-  1.161715 seconds (6.63 M allocations: 626.929 MiB, 14.61% gc time)
+  1.322791 seconds (6.63 M allocations: 626.929 MiB, 12.97% gc time)
 FCALL 13 en:  -0.7817601396447228 (Ryd)  fsum:  4.17959604865315e-9  ssum:  0.00018864643860971685    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -532,7 +532,7 @@ SCF CALC 0006 energy  -10.63766367  en_diff:   7.007917E-05  dq_diff:   5.730554
 YES convergence in 6 iters, energy -10.63766367143373 eV   dq = [-0.921, 0.921]
 END SCF ------------------
 
-  1.133158 seconds (6.62 M allocations: 625.222 MiB, 11.52% gc time)
+  1.322169 seconds (6.62 M allocations: 625.222 MiB, 11.20% gc time)
 FCALL 14 en:  -0.7818535748705858 (Ryd)  fsum:  2.8890311202947287e-8  ssum:  3.325871713273689e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -564,7 +564,7 @@ res
     |g(x)|                 = 3.08e-04 ≤ 7.0e-04
 
  * Work counters
-    Seconds run:   21  (vs limit Inf)
+    Seconds run:   25  (vs limit Inf)
     Iterations:    3
     f(x) calls:    14
     ∇f(x) calls:   14
@@ -591,4 +591,4 @@ Stress
 3×3 Array{Float64,2}:
  -0.0010178   -4.77276e-8  -4.77276e-8
  -4.77276e-8  -0.0010178   -4.77276e-8
- -4.77276e-8  -4.77276e-8  -0.0010178</pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Saturday 6 March 2021 00:53">Saturday 6 March 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ -4.77276e-8  -4.77276e-8  -0.0010178</pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p><p>Force/Stress defaults are eV/Ang and eV/Ang^3.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Saturday 6 March 2021 01:07">Saturday 6 March 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
