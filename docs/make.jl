@@ -28,7 +28,7 @@ makedocs(
             "Structs" => "structs.md",
             "Functions" => "core.md",
         ],
-        "Every Docstring" => "every.md"
+        "Additional Docstrings" => "every.md"
     ]
 )
 
