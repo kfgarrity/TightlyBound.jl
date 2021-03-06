@@ -7,6 +7,10 @@ using Printf
 using ..Atomdata:atoms
 using GZip
 
+using ..TightlyBound:global_length_units
+using ..TightlyBound:Ang
+
+
 export crystal
 export makecrys
 export generate_supercell
@@ -69,8 +73,16 @@ end
 #printing
 Base.show(io::IO, c::crystal) = begin
 
+    println(io, "Units: "* global_length_units)
+    println(io)
+    if global_length_units == "Å"
+        At = c.A * Ang
+    else
+        At = c.A
+    end
+        
     for i in 1:3
-        @printf(io, "A%.1i=     %.5f  %.5f  %.5f\n", i, c.A[i,1], c.A[i,2], c.A[i,3])
+            @printf(io, "A%.1i=     %.5f  %.5f  %.5f\n", i, At[i,1], At[i,2], At[i,3])
     end
     @printf(io, "\n")
     for i in 1:c.nat
@@ -91,7 +103,7 @@ Base.:+(c1::crystal, c2::crystal) = begin
 
     types = deepcopy(c1.types)
     
-    return makecrys(A, coords, types)
+    return makecrys(A, coords, types, units="Bohr")
 end   
 
 Base.:(==)(c1::crystal, c2::crystal) = begin
@@ -124,7 +136,7 @@ Base.:*(a::Real, c::crystal) = begin
 
     types = deepcopy(c.types)
     
-    return makecrys(A, coords, types)
+    return makecrys(A, coords, types, units="Bohr")
 end   
 
 Base.:*(c::crystal,a::Real) = begin
@@ -155,7 +167,7 @@ Base.:*(a::Array{Int}, c::crystal) = begin
         end
     end
 
-    return makecrys(A_new, coords_new, types_new)
+    return makecrys(A_new, coords_new, types_new, units="Bohr")
 end   
 
 Base.:*(c::crystal,  a::Array{Int} ) = begin
@@ -165,9 +177,11 @@ end
 
 #setup crystal
 """
-    makecrys(A,coords,types)
+    makecrys(A,coords,types; units=missing)
 
-Return a crystal object from 3×3 lattice A (Bohr), nat × 3 coords in crystal units, and nat element strings
+Return a crystal object from 3×3 lattice, nat × 3 coords in crystal units, and nat element strings.
+
+Will use units set by `set_units`, with default to Ang. Can override with `units`.
 
 Note: also export-ed directly from TightlyBound for convenience
 
@@ -181,18 +195,34 @@ A3=     0.00000  0.00000  10.00000
 H    0.00000  0.00000  0.00000
 ```
 """
-function makecrys(A,coords,types)
+function makecrys(A,coords,types; units=missing)
     T = typeof(A[1,1])
 
+    if !ismissing(units)
+        if units == "A" || units == "Ang" || units == "Ang." || units == "Angstrom" || units == "a" || units == "ang" || units == "ang." || units == "angstrom" || units == "Å"
+            factor = 1.0 / Ang
+        else
+            factor = 1.0
+        end
+    else
+        if global_length_units == "Å"
+            factor = 1.0 / Ang
+        else
+            factor = 1.0
+        end
+    end
+    
     #entering integer coords or A messes everything up later
     if T == Int64
         coords = Float64.(coords)
         T = typeof(coords[1,1])
     end
     if typeof(A[1,1]) == Int64
-        A = Float64.(A)
+        A = Float64.(A) 
     end
 
+    A = A * factor
+    
     if length(size(types)) == 2  # if are accidently given a 1 x nat types array 
         types = types[:]
     end
@@ -471,7 +501,7 @@ function generate_supercell(crys, cell)
         end
     end
 
-    csuper = makecrys(A, coords, types)
+    csuper = makecrys(A, coords, types, units="Bohr")
     return csuper
 end
 
@@ -485,7 +515,7 @@ function generate_random(crys, amag, strain_mag)
     coords_real = (crys.coords * A) + (rand(crys.nat, 3) .- 0.5)*amag
     coords = coords_real * inv(A)
 
-    return makecrys(A, coords, copy(crys.types))
+    return makecrys(A, coords, copy(crys.types), units="Bohr")
     
 end
 
@@ -495,7 +525,7 @@ function write_poscar(crys, filename)
     write(fil, "title kfg\n")
     write(fil, "1.0000000\n")
 
-    Aang = crys.A * 0.529177
+    Aang = crys.A * Ang
     
     write(fil, "$(Aang[1,1])  $(Aang[1,2])  $(Aang[1,3]) \n")
     write(fil, "$(Aang[2,1])  $(Aang[2,2])  $(Aang[2,3]) \n")

@@ -38,6 +38,8 @@ using ..TB:smearing_energy
 using ..CalcTB:calc_tb_fast
 
 using SpecialFunctions
+using ..TightlyBound:global_energy_units
+using ..TightlyBound:eV
 
 export scf_energy
 
@@ -65,7 +67,14 @@ Solve for scf energy, also stores the updated electron density and h1 inside the
         end
     end
 
-        
+
+    if global_energy_units == "eV"  #for display only, keep units Rydberg internally
+        energy_units = eV
+    else
+        energy_units = 1.0
+    end
+
+    
     error_flag = false
     if tbc.scf == false 
         println("doesn't require scf")
@@ -296,10 +305,10 @@ Solve for scf energy, also stores the updated electron density and h1 inside the
 
             if iter == 1
 #                println("SCF CALC $iter energy   $energy_tot                                  $dq ")
-                @printf("SCF CALC %04i energy  % 10.8f    \n", iter, energy_tot )
+                @printf("SCF CALC %04i energy  % 10.8f    \n", iter, energy_tot*energy_units )
             else
 #                println("SCF CALC $iter energy   $energy_tot   en_diff ", abs(energy_tot - energy_old), "   dq_diff:   $delta_eden    ")
-                @printf("SCF CALC %04i energy  % 10.8f  en_diff:   %08E  dq_diff:   %08E \n", iter, energy_tot, abs(energy_tot - energy_old), delta_eden )
+                @printf("SCF CALC %04i energy  % 10.8f  en_diff:   %08E  dq_diff:   %08E \n", iter, energy_tot*energy_units, abs(energy_tot - energy_old)*energy_units, delta_eden )
 #                println(e_denA)
             end
             
@@ -307,7 +316,13 @@ Solve for scf energy, also stores the updated electron density and h1 inside the
                 if delta_eden < 0.05 * tbc.crys.nat
                     convA = true
                     println()
-                    println("YES convergence in $iter iters, energy $energy_tot   dq = ",  (round.(dq; digits=3)))
+                    eu = energy_tot*energy_units
+                    if abs( energy_units - 1)< 1e-5
+                        println("YES convergence in $iter iters, energy $eu Ryd.   dq = ",  (round.(dq; digits=3)))
+                    else
+                        println("YES convergence in $iter iters, energy $eu eV   dq = ",  (round.(dq; digits=3)))
+                    end
+                    
                     println("END SCF ------------------")
                     println()
                     return convA, e_denA

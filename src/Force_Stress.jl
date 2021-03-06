@@ -154,7 +154,7 @@ function get_energy_force_stress(tbc::tb_crys, database; do_scf=false, smearing 
         A = ct.A * (I(3) + x_r_strain)
         #A = deepcopy(ct.A)
 
-        crys_dual = makecrys( A , ct.coords + x_r, ct.types)
+        crys_dual = makecrys( A , ct.coords + x_r, ct.types, units="Bohr")
 
 
         #this deals with cases where the distances between atoms become very short, which can happen during relaxations
@@ -483,7 +483,7 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
         fsum = sum(abs.(f_cart))
         ssum= sum(abs.(stress))
         
-        println("FCALL $fcall en:  $energy_tot  fsum:  $fsum  ssum:  $ssum    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+        println("FCALL $fcall en:  $energy_tot (Ryd)  fsum:  $fsum  ssum:  $ssum    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 
 #        println("grad stress: ", stress)
         
@@ -665,7 +665,7 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 #    println(minvec)
 
     coords, A = reshape_vec(minvec, nat)
-    cfinal = makecrys(A, coords, crys.types)
+    cfinal = makecrys(A, coords, crys.types, units="Bohr")
     return cfinal, tbc, energy, f_cart_global, stress_global
 
 #    return res
@@ -840,7 +840,7 @@ function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smear
             T=typeof(x[1])
             x_r, x_r_strain = reshape_vec(x, ct.nat, strain_mode=true)
             A = ct.A * (I(3) + x_r_strain)
-            crys_dual = makecrys( A , ct.coords + x_r, ct.types)
+            crys_dual = makecrys( A , ct.coords + x_r, ct.types, units="Bohr")
             
             tooshort, energy_short = safe_mode_energy(crys_dual, database, var_type=T)
             return energy_short
@@ -891,7 +891,7 @@ function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smear
             #x_r, x_r_strain = reshape_vec(x, 0, strain_mode=true)
 
             A = ct.A * (I(3) + x_r_strain)
-            crys_dual = makecrys( A , ct.coords + x_r, ct.types)
+            crys_dual = makecrys( A , ct.coords + x_r, ct.types, units="Bohr")
 
             #crys_dual = makecrys( A , ct.coords , ct.types)
 
@@ -938,7 +938,7 @@ function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smear
 #            g = ForwardDiff.jacobian(ham, zeros( 6) , cfg ) ::  Array{Float64,2}
 
         end
-        println("end jac")
+#        println("end jac")
         #    function f_es(x::Vector)
         #        x_r, x_r_strain = reshape_vec(x, ct.nat, strain_mode=true)
         #        A = ct.A * (I(3) + x_r_strain)
