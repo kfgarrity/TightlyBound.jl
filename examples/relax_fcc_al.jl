@@ -13,8 +13,8 @@ types=["Al"];
 #positions, crystal units
 pos=zeros((1,3));
 
-#lattice vectors, in Bohr units currently
-A=[ [4.0 4.0 0]; [4.0 0 4.0 ]; [ 0 4.0 4.0]];
+#lattice vectors, in Angstrom by default
+A=[ [4.0 4.0 0]; [4.0 0 4.0 ]; [ 0 4.0 4.0]] * 0.529177;
 
 #makes the crystal
 c=makecrys(A, pos, types)

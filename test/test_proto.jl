@@ -18,6 +18,7 @@ SRCDIR=TightlyBound.SRCDIR
 
         @test t == tref
 
+        TightlyBound.set_units(both="eVAng")
 
     end
 end

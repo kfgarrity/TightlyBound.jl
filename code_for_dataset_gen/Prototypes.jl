@@ -10,6 +10,8 @@ using ..TightlyBound.CalcTB:distances_etc_3bdy_parallel
 using ..TightlyBound.CalcTB:calc_frontier
 using ..TightlyBound.ManageDatabase:prepare_database
 
+TightlyBound.set_units(both="atomic")
+
 struct proto_data
 
     CalcD::Dict

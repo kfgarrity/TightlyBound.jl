@@ -64,6 +64,17 @@ savefig("alp2.png"); #hide
 
 ![AlP plot](alp2.png)
 
+You can also plot the DOS.
+
+```@example 1
+dos(tbc_alp, do_display=false);
+savefig("alp_dos.png"); #hide
+```
+
+![AlP plot](alp_dos.png)
+
+
+
 ## **Calculate force / stress**
 
 ```@example 1

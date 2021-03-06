@@ -7,12 +7,12 @@ function test1()
     @testset "testing ewald" begin
         
         @suppress begin 
-            cscl = makecrys([1.0 0 0; 0 1.0 0; 0 0 1.0]*2/sqrt(3), [0 0 0; 0.5 0.5 0.5], ["Na", "Cl"]);
+            cscl = makecrys([1.0 0 0; 0 1.0 0; 0 0 1.0]*2/sqrt(3), [0 0 0; 0.5 0.5 0.5], ["Na", "Cl"], units="Bohr");
             
             gamma_ij_tot_k1 = TightlyBound.Ewald.electrostatics_getgamma(cscl, kappa = 1.0, noU=true)
             gamma_ij_tot_k2 = TightlyBound.Ewald.electrostatics_getgamma(cscl, kappa = 2.0, noU=true)
             
-            rs = makecrys([1.0 1.0 0; 1.0 0.0 1.0; 0 1.0 1.0], [0 0 0; 0.5 0.5 0.5], ["Na", "Cl"]);
+            rs = makecrys([1.0 1.0 0; 1.0 0.0 1.0; 0 1.0 1.0], [0 0 0; 0.5 0.5 0.5], ["Na", "Cl"], units="Bohr");
             
             kappa = 3.0
             gamma_ij_tot_rs = TightlyBound.Ewald.electrostatics_getgamma(rs, kappa = kappa, noU=true)
@@ -25,9 +25,9 @@ function test1()
         end
         
 
-#        rs_real = CrystalMod.makecrys([10.0 10.0 0; 10.0 0.0 10.0; 0 10.0 10.0], [0 0 0; 0.5 0.5 0.5], ["Na", "Cl"]);
+#        rs_real = CrystalMod.makecrys([10.0 10.0 0; 10.0 0.0 10.0; 0 10.0 10.0], [0 0 0; 0.5 0.5 0.5], ["Na", "Cl"], units="Bohr");
 #        gamma_ij_tot_rs = Ewald.electrostatics_getgamma(rs_real)
-#        rs_real = CrystalMod.makecrys([3.0 3.0 0; 3.0 0.0 3.0; 0 3.0 3.0], [0 0 0; 0.5 0.5 0.5], ["Na", "Cl"]);
+#        rs_real = CrystalMod.makecrys([3.0 3.0 0; 3.0 0.0 3.0; 0 3.0 3.0], [0 0 0; 0.5 0.5 0.5], ["Na", "Cl"], units="Bohr");
 #        gamma_ij_tot_rs = Ewald.electrostatics_getgamma(rs_real)
 
 #        for kappa = exp10.(range(log10(0.05), stop=log10(10), length=30))
@@ -44,7 +44,7 @@ function test2()
 
         @suppress begin 
         
-            c = makecrys([1.0 0 0; 0 1.0 0; 0 0 1.0]*100, [0 0 0; 0.0 0.0 0.01], ["Na", "Cl"]);
+            c = makecrys([1.0 0 0; 0 1.0 0; 0 0 1.0]*100, [0 0 0; 0.0 0.0 0.01], ["Na", "Cl"], units="Bohr");
             
             gamma = TightlyBound.Ewald.electrostatics_getgamma(c, noU=true)
             

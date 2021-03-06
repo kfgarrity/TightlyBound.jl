@@ -12,7 +12,7 @@ TESTDIR=TightlyBound.TESTDIR
     pos=zeros((1,3))
     A=[ [10.0 0 0]; [0 10.0 0]; [ 0 0 10.0]]
 
-    c=makecrys(A, pos, types)
+    c=makecrys(A, pos, types, units="Bohr")
 
     @test c.A == A
     @test c.coords == pos
@@ -57,7 +57,7 @@ end
         pos=zeros((1,3))
         A=[ [10.0 0 0]; [0 10.0 0]; [ 0 0 10.0]]
         
-        c=makecrys(A, pos, types)
+        c=makecrys(A, pos, types, units="Bohr")
         
 #        println(c)
         c2 = c * [2,2,2]
@@ -87,7 +87,7 @@ if false
         pos=zeros((1,3))
         A=[ [6.0 0 0]; [0 6.0 0]; [ 0 0 6.0]]
         
-        c=makecrys(A, pos, types)
+        c=makecrys(A, pos, types, units="Bohr")
         
         d = TightlyBound.DFT.runSCF(c, nprocs=4)
         

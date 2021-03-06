@@ -8,7 +8,7 @@ using Suppressor
         types=["Li"]
         pos=zeros((1,3))
         A=[ [10.0 0 0]; [0 10.0 0]; [ 0 0 10.0]]
-        c=makecrys(A, pos, types)
+        c=makecrys(A, pos, types, units="Bohr")
 
         tmpdir, prefix, inputfile_str = TightlyBound.QE.makeSCF(c)
 

@@ -14,6 +14,10 @@ function test_basics()
         @suppress begin
 #        if true
 
+            units_old = TightlyBound.set_units()
+            TightlyBound.set_units(both="atomic")
+
+            
             types=["Al"];
             
             #positions, crystal units
@@ -23,7 +27,7 @@ function test_basics()
             A=[ [3.7962751610 3.7962751610 0]; [3.7962751610 0 3.7962751610 ]; [ 0 3.7962751610 3.7962751610]];
             
             #makes the crystal
-            c=makecrys(A, pos, types)
+            c=makecrys(A, pos, types, units="Bohr")
 
             energy, tbc, flag = scf_energy(c)
             energyS, tbcS, flagS = scf_energy(c, mixing_mode=:simple)
@@ -96,9 +100,12 @@ function test_basics()
 
             @test H.Z == 1 
 
-            
-            
+            energies, dos, pdos, names  =  TightlyBound.DOS.gaussian_dos(tbc, do_display=false)
 
+            @test length(energies) == length(dos)
+
+            TightlyBound.set_units(energy = units_old[1], length=units_old[2])
+            
         end
     end
 end

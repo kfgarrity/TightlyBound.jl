@@ -18,6 +18,7 @@ write_tb_crys
 
 ```@docs
 plot_bandstr
+dos
 plot_compare_dft
 plot_compare_tb
 ```

@@ -25,5 +25,7 @@ end
     rm("mgs_proj.pdf")
     rm("ScP_rocksalt.pdf")
     rm("al_fcc.pdf")
+    rm("ScP_rocksalt_DOS.pdf")
+##    rm("ScP_rocksalt_DOS_orbital.pdf")
     @test 1 == 1
 end

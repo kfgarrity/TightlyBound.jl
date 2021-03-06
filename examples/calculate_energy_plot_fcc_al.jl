@@ -14,7 +14,7 @@ types=["Al"];
 pos=zeros((1,3));
 
 #lattice vectors, in Bohr units currently
-A=[ [3.8 3.8 0]; [3.8 0 3.8 ]; [ 0 3.8 3.8]];
+A=[ [3.8 3.8 0]; [3.8 0 3.8 ]; [ 0 3.8 3.8]] * 0.529177;
 
 #makes the crystal
 c=makecrys(A, pos, types)
