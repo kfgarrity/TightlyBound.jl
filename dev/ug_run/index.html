@@ -10,17 +10,82 @@ A2=     2.10000  0.00000  2.10000
 A3=     0.00000  2.10000  2.10000
 
 Al   0.00000  0.00000  0.00000
-</pre><p>Current default units are Angstrom and eV. You can change the global units to atomic units with <code>set_units(both=&quot;atomic&quot;)</code> if you prefer.</p><p>Alternatively, you can read the positions from a simple POSCAR or Quantum Espresso input file.</p><pre><code class="language-">rbcl = makecrys(&quot;../src/POSCAR_rbcl&quot;)</code></pre><h2 id="**Do-a-self-consistent-calculation.**"><a class="docs-heading-anchor" href="#**Do-a-self-consistent-calculation.**"><strong>Do a self-consistent calculation.</strong></a><a id="**Do-a-self-consistent-calculation.**-1"></a><a class="docs-heading-anchor-permalink" href="#**Do-a-self-consistent-calculation.**" title="Permalink"></a></h2><p>Gets the energy and charge density.</p><pre><code class="language-">alp = makecrys(&quot;../src/POSCAR_alp&quot;)
-energy, tbc_alp = scf_energy(alp); 
-println(&quot;The energy is $energy eV&quot;)</code></pre><p>This returns the (non-magnetic) atomization energy, and a tight-binding object with the TB matrix elements and SCF electron density calculated for post-processing.</p><h2 id="**Plot-the-band-structure.**"><a class="docs-heading-anchor" href="#**Plot-the-band-structure.**"><strong>Plot the band structure.</strong></a><a id="**Plot-the-band-structure.**-1"></a><a class="docs-heading-anchor-permalink" href="#**Plot-the-band-structure.**" title="Permalink"></a></h2><p>Using the tight-binding object <code>tbc_alp</code> from above. Note: SCF must be done first.</p><pre><code class="language-">using Plots #hide
-gr() #hide
-ENV[&quot;GKSwstype&quot;] = &quot;100&quot; #hide
-plot_bandstr(tbc_alp, do_display=false); 
-savefig(&quot;alp.png&quot;); #hide</code></pre><p><img src="alp.png" alt="AlP plot"/></p><p>Use <em>do_display=true</em> to produce an interactive plot. Here is is <code>false</code> because we are saving a static figure with <code>savefig</code> for the docs.</p><p>The default <code>plot_bandstr</code> just picks some random kpoints, but you can add your own kpath. We also project onto the <em>s</em> orbital of Al.</p><pre><code class="language-">kpath=[0.0 0.0 0.0; 0.5 0.5 0.5; 0.0 0.5 0.5];
+</pre><p>Current default units are Angstrom and eV. You can change the global units to atomic units with <code>set_units(both=&quot;atomic&quot;)</code> if you prefer.</p><p>Alternatively, you can read the positions from a simple POSCAR or Quantum Espresso input file.</p><pre><code class="language-julia">rbcl = makecrys(&quot;../src/POSCAR_rbcl&quot;)</code></pre><pre class="documenter-example-output">Units: Å
+
+A1=     3.90963  -0.00000  0.00000
+A2=     -0.00000  3.90963  0.00000
+A3=     0.00000  -0.00000  3.90963
+
+Rb   0.00000  0.00000  0.00000
+Cl   0.50000  0.50000  0.50000
+</pre><h2 id="**Do-a-self-consistent-calculation.**"><a class="docs-heading-anchor" href="#**Do-a-self-consistent-calculation.**"><strong>Do a self-consistent calculation.</strong></a><a id="**Do-a-self-consistent-calculation.**-1"></a><a class="docs-heading-anchor-permalink" href="#**Do-a-self-consistent-calculation.**" title="Permalink"></a></h2><p>Gets the energy and charge density.</p><pre><code class="language-julia">alp = makecrys(&quot;../src/POSCAR_alp&quot;)
+energy, tbc_alp = scf_energy(alp);
+println(&quot;The energy is $energy eV&quot;)</code></pre><pre class="documenter-example-output">
+Begin scf_energy-------------
+
+Load TB parameters from file
+prepare atoms [&quot;Al&quot;, &quot;P&quot;]
+add_to_database Set([:P])
+found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.2bdy.P.xml.gz
+added to cache (:P, :P)
+found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.3bdy.P.xml.gz
+added to cache (:P, :P, :P)
+add_to_database Set([:P, :Al])
+found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.2bdy.Al.P.xml.gz
+added to cache (:P, :Al) twobody
+found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.3bdy.Al.P.xml.gz
+added to cache (:P, :Al) threebody
+add_to_database Set([:Al])
+found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.2bdy.Al.xml.gz
+added to cache (:Al, :Al)
+found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.3bdy.Al.xml.gz
+added to cache (:Al, :Al, :Al)
+
+construct
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+CHECK FRONTIER - everything fine
+2body
+3body
+onsite
+-----
+
+ 12.245956 seconds (23.31 M allocations: 1.113 GiB, 3.72% gc time)
+------
+Do SCF
+Mixing mode: pulay
+Get initial guess from tbc
+DQ: [0.0, -0.0]
+
+Parameters:
+smearing = 0.01 conv_thr = 1.0e-5, iters = 75, mix = 0.8, grid = missing
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.34720676
+SCF CALC 0002 energy  -10.31848081  en_diff:   2.872595E-02  dq_diff:   9.782338E-01
+SCF CALC 0003 energy  -10.30011532  en_diff:   1.836549E-02  dq_diff:   7.800602E-01
+SCF CALC 0004 energy  -10.22416018  en_diff:   7.595514E-02  dq_diff:   1.566167E-01
+SCF CALC 0005 energy  -10.20386412  en_diff:   2.029606E-02  dq_diff:   3.127848E-02
+SCF CALC 0006 energy  -10.19968802  en_diff:   4.176101E-03  dq_diff:   6.258844E-03
+SCF CALC 0007 energy  -10.19884140  en_diff:   8.466124E-04  dq_diff:   1.251561E-03
+SCF CALC 0008 energy  -10.19867209  en_diff:   1.693094E-04  dq_diff:   2.503266E-04
+
+YES convergence in 8 iters, energy -10.198672094306128 eV   dq = [-1.113, 1.113]
+END SCF ------------------
+
+scf_energy success, done
+
+The energy is -10.198672094306128 eV</pre><p>This returns the (non-magnetic) atomization energy, and a tight-binding object with the TB matrix elements and SCF electron density calculated for post-processing.</p><h2 id="**Plot-the-band-structure.**"><a class="docs-heading-anchor" href="#**Plot-the-band-structure.**"><strong>Plot the band structure.</strong></a><a id="**Plot-the-band-structure.**-1"></a><a class="docs-heading-anchor-permalink" href="#**Plot-the-band-structure.**" title="Permalink"></a></h2><p>Using the tight-binding object <code>tbc_alp</code> from above. Note: SCF must be done first.</p><pre><code class="language-julia">plot_bandstr(tbc_alp, do_display=false);</code></pre><pre class="documenter-example-output">plot_bandstr
+align vbm
+color = blue markersize = 0</pre><p><img src="../alp.png" alt="AlP plot"/></p><p>Use <em>do_display=true</em> to produce an interactive plot. Here is is <code>false</code> because we are saving a static figure with <code>savefig</code> for the docs.</p><p>The default <code>plot_bandstr</code> just picks some random kpoints, but you can add your own kpath. We also project onto the <em>s</em> orbital of Al.</p><pre><code class="language-julia">kpath=[0.0 0.0 0.0; 0.5 0.5 0.5; 0.0 0.5 0.5];
 knames=[&quot;Γ&quot;, &quot;X&quot;, &quot;V&quot;];
-plot_bandstr(tbc_alp, kpath=kpath, names=knames, npts=100, proj_orbs=[:s], proj_types=[&quot;Al&quot;], do_display=false);
-savefig(&quot;alp2.png&quot;); #hide</code></pre><p><img src="alp2.png" alt="AlP plot 2"/></p><p>You can also plot the DOS.</p><pre><code class="language-">dos(tbc_alp, do_display=false);
-savefig(&quot;alp_dos.png&quot;); #hide</code></pre><p><img src="alp_dos.png" alt="AlP DOS"/></p><p>Project onto orbitals instead with <code>proj_type=:orbs</code></p><h2 id="**Calculate-force-/-stress**"><a class="docs-heading-anchor" href="#**Calculate-force-/-stress**"><strong>Calculate force / stress</strong></a><a id="**Calculate-force-/-stress**-1"></a><a class="docs-heading-anchor-permalink" href="#**Calculate-force-/-stress**" title="Permalink"></a></h2><pre><code class="language-">energy, force, stress, tbc = scf_energy_force_stress(tbc_alp);
+plot_bandstr(tbc_alp, kpath=kpath, names=knames, npts=100, proj_orbs=[:s], proj_types=[&quot;Al&quot;], do_display=false);</code></pre><pre class="documenter-example-output">proj_inds [1]
+plot_bandstr
+align vbm</pre><p><img src="../alp2.png" alt="AlP plot 2"/></p><p>You can also plot the DOS.</p><pre><code class="language-julia">dos(tbc_alp, do_display=false);</code></pre><pre class="documenter-example-output">grid [14, 14, 14]
+Projection type: atomic</pre><p><img src="../alp_dos.png" alt="AlP DOS"/></p><p>Project onto orbitals instead with <code>proj_type=:orbs</code></p><h2 id="**Calculate-force-/-stress**"><a class="docs-heading-anchor" href="#**Calculate-force-/-stress**"><strong>Calculate force / stress</strong></a><a id="**Calculate-force-/-stress**-1"></a><a class="docs-heading-anchor-permalink" href="#**Calculate-force-/-stress**" title="Permalink"></a></h2><pre><code class="language-julia">energy, force, stress, tbc = scf_energy_force_stress(tbc_alp);
 
 println(&quot;energy $energy&quot;)
 println()
@@ -28,8 +93,23 @@ println(&quot;Forces&quot;)
 show(stdout, &quot;text/plain&quot;, force)
 println()
 println(&quot;Stress&quot;)
-show(stdout, &quot;text/plain&quot;, stress)
-nothing #hide</code></pre><p>Can also be called directly on a new crystal structure instead of a tb_crys object.</p><h2 id="**Relax-structure**"><a class="docs-heading-anchor" href="#**Relax-structure**"><strong>Relax structure</strong></a><a id="**Relax-structure**-1"></a><a class="docs-heading-anchor-permalink" href="#**Relax-structure**" title="Permalink"></a></h2><pre><code class="language-">crys_new, tbc_updated, energy, force, stress = relax_structure(alp);
+show(stdout, &quot;text/plain&quot;, stress)</code></pre><pre class="documenter-example-output">prepare atoms [&quot;Al&quot;, &quot;P&quot;]
+
+Calculate Force, Stress (no scf)
+ 26.119326 seconds (53.69 M allocations: 2.755 GiB, 5.26% gc time)
+done
+----
+energy -0.7495858096762172
+
+Forces
+2×3 Array{Float64,2}:
+ -4.88112e-13  -4.88119e-13  -4.88124e-13
+  0.0           0.0           0.0
+Stress
+3×3 Array{Float64,2}:
+ 0.00143705  0.0         0.0
+ 0.0         0.00143705  0.0
+ 0.0         0.0         0.00143705</pre><p>Can also be called directly on a new crystal structure instead of a tb_crys object.</p><h2 id="**Relax-structure**"><a class="docs-heading-anchor" href="#**Relax-structure**"><strong>Relax structure</strong></a><a id="**Relax-structure**-1"></a><a class="docs-heading-anchor-permalink" href="#**Relax-structure**" title="Permalink"></a></h2><pre><code class="language-julia">crys_new, tbc_updated, energy, force, stress = relax_structure(alp);
 
 println(&quot;Energy new $energy&quot;)
 println()
@@ -37,5 +117,258 @@ println(&quot;Force&quot;)
 show(stdout, &quot;text/plain&quot;, force)
 println()
 println(&quot;Stress&quot;)
-show(stdout, &quot;text/plain&quot;, stress)
-nothing #hide</code></pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p><p>Force/Stress defaults are eV/Ang and eV/Ang^3.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Saturday 6 March 2021 01:13">Saturday 6 March 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+show(stdout, &quot;text/plain&quot;, stress)</code></pre><pre class="documenter-example-output">prepare atoms [&quot;Al&quot;, &quot;P&quot;]
+
+-----
+Construct tight-binding model from crystal structure
+
+distances
+CHECK FRONTIER - everything fine
+2body
+3body
+onsite
+-----
+
+------
+Do SCF
+Mixing mode: pulay
+Get initial guess from tbc
+DQ: [0.0, -0.0]
+
+Parameters:
+smearing = 0.01 conv_thr = 1.0e-5, iters = 75, mix = 0.8, grid = missing
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.34720676
+SCF CALC 0002 energy  -10.31848081  en_diff:   2.872595E-02  dq_diff:   9.782338E-01
+SCF CALC 0003 energy  -10.30011532  en_diff:   1.836549E-02  dq_diff:   7.800602E-01
+SCF CALC 0004 energy  -10.22416018  en_diff:   7.595514E-02  dq_diff:   1.566167E-01
+SCF CALC 0005 energy  -10.20386412  en_diff:   2.029606E-02  dq_diff:   3.127848E-02
+SCF CALC 0006 energy  -10.19968802  en_diff:   4.176101E-03  dq_diff:   6.258844E-03
+SCF CALC 0007 energy  -10.19884140  en_diff:   8.466124E-04  dq_diff:   1.251561E-03
+SCF CALC 0008 energy  -10.19867209  en_diff:   1.693094E-04  dq_diff:   2.503266E-04
+
+YES convergence in 8 iters, energy -10.198672094306128 eV   dq = [-1.113, 1.113]
+END SCF ------------------
+
+starting vec
+[0.0, 0.0, 0.0, 0.25, 0.25, 0.25, 4.9132898822133235, 4.9132898822133235, 0.0, 4.9132898822133235, 0.0, 4.9132898822133235, 0.0, 4.9132898822133235, 4.9132898822133235]
+
+  1.645329 seconds (8.60 M allocations: 776.378 MiB, 10.92% gc time)
+FCALL 1 en:  -0.7495883007919372 (Ryd)  fsum:  1.4643538648175532e-12  ssum:  0.004311079238824329    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.50709963
+SCF CALC 0002 energy  -10.52124849  en_diff:   1.414887E-02  dq_diff:   5.563325E-02
+SCF CALC 0003 energy  -10.52502204  en_diff:   3.773546E-03  dq_diff:   4.323663E-02
+SCF CALC 0004 energy  -10.53501491  en_diff:   9.992872E-03  dq_diff:   8.940491E-03
+SCF CALC 0005 energy  -10.53708483  en_diff:   2.069916E-03  dq_diff:   1.769047E-03
+SCF CALC 0006 energy  -10.53749045  en_diff:   4.056257E-04  dq_diff:   3.550355E-04
+SCF CALC 0007 energy  -10.53757196  en_diff:   8.150631E-05  dq_diff:   7.092859E-05
+
+YES convergence in 7 iters, energy -10.537571959364561 eV   dq = [-1.024, 1.024]
+END SCF ------------------
+
+  1.276737 seconds (6.68 M allocations: 631.233 MiB, 9.61% gc time)
+FCALL 2 en:  -0.774496972395331 (Ryd)  fsum:  1.1045424271297239e-13  ssum:  0.0016069425615332358    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.50709963
+SCF CALC 0002 energy  -10.52124849  en_diff:   1.414887E-02  dq_diff:   5.563325E-02
+SCF CALC 0003 energy  -10.52502204  en_diff:   3.773546E-03  dq_diff:   4.323663E-02
+SCF CALC 0004 energy  -10.53501491  en_diff:   9.992872E-03  dq_diff:   8.940491E-03
+SCF CALC 0005 energy  -10.53708483  en_diff:   2.069916E-03  dq_diff:   1.769047E-03
+SCF CALC 0006 energy  -10.53749045  en_diff:   4.056257E-04  dq_diff:   3.550355E-04
+SCF CALC 0007 energy  -10.53757196  en_diff:   8.150631E-05  dq_diff:   7.092859E-05
+
+YES convergence in 7 iters, energy -10.537571959364561 eV   dq = [-1.024, 1.024]
+END SCF ------------------
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -9.71895350
+SCF CALC 0002 energy  -9.88374992  en_diff:   1.647964E-01  dq_diff:   2.715953E-01
+SCF CALC 0003 energy  -9.91686600  en_diff:   3.311608E-02  dq_diff:   2.027603E-01
+SCF CALC 0004 energy  -9.97965478  en_diff:   6.278878E-02  dq_diff:   4.749219E-02
+SCF CALC 0005 energy  -9.99484200  en_diff:   1.518723E-02  dq_diff:   8.334104E-03
+SCF CALC 0006 energy  -9.99721171  en_diff:   2.369703E-03  dq_diff:   1.817437E-03
+SCF CALC 0007 energy  -9.99776236  en_diff:   5.506495E-04  dq_diff:   3.394380E-04
+SCF CALC 0008 energy  -9.99786006  en_diff:   9.769995E-05  dq_diff:   7.122810E-05
+
+YES convergence in 8 iters, energy -9.997860057414442 eV   dq = [-0.633, 0.633]
+END SCF ------------------
+
+  0.829821 seconds (4.23 M allocations: 406.808 MiB, 11.12% gc time)
+FCALL 3 en:  -0.7348288936730197 (Ryd)  fsum:  2.4823845854301347e-9  ssum:  0.00221346528463675    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+START SCF ----------------
+SCF CALC 0001 energy  -9.71895350
+SCF CALC 0002 energy  -9.88374992  en_diff:   1.647964E-01  dq_diff:   2.715953E-01
+SCF CALC 0003 energy  -9.91686600  en_diff:   3.311608E-02  dq_diff:   2.027603E-01
+SCF CALC 0004 energy  -9.97965478  en_diff:   6.278878E-02  dq_diff:   4.749219E-02
+SCF CALC 0005 energy  -9.99484200  en_diff:   1.518723E-02  dq_diff:   8.334104E-03
+SCF CALC 0006 energy  -9.99721171  en_diff:   2.369703E-03  dq_diff:   1.817437E-03
+SCF CALC 0007 energy  -9.99776236  en_diff:   5.506495E-04  dq_diff:   3.394380E-04
+SCF CALC 0008 energy  -9.99786006  en_diff:   9.769995E-05  dq_diff:   7.122810E-05
+
+YES convergence in 8 iters, energy -9.997860057414442 eV   dq = [-0.633, 0.633]
+END SCF ------------------
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.70621051
+SCF CALC 0002 energy  -10.66839359  en_diff:   3.781692E-02  dq_diff:   1.756260E-01
+SCF CALC 0003 energy  -10.65741843  en_diff:   1.097516E-02  dq_diff:   1.353970E-01
+SCF CALC 0004 energy  -10.62792219  en_diff:   2.949624E-02  dq_diff:   2.868668E-02
+SCF CALC 0005 energy  -10.62099725  en_diff:   6.924944E-03  dq_diff:   5.572237E-03
+SCF CALC 0006 energy  -10.61966673  en_diff:   1.330520E-03  dq_diff:   1.129434E-03
+SCF CALC 0007 energy  -10.61939357  en_diff:   2.731597E-04  dq_diff:   2.244521E-04
+SCF CALC 0008 energy  -10.61933953  en_diff:   5.403899E-05  dq_diff:   4.502469E-05
+
+YES convergence in 8 iters, energy -10.619339528049151 eV   dq = [-0.878, 0.878]
+END SCF ------------------
+
+  1.270611 seconds (6.43 M allocations: 589.000 MiB, 10.44% gc time)
+FCALL 4 en:  -0.7805067756622082 (Ryd)  fsum:  1.4439689951641499e-8  ssum:  0.0005652347032448668    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.70621051
+SCF CALC 0002 energy  -10.66839359  en_diff:   3.781692E-02  dq_diff:   1.756260E-01
+SCF CALC 0003 energy  -10.65741843  en_diff:   1.097516E-02  dq_diff:   1.353970E-01
+SCF CALC 0004 energy  -10.62792219  en_diff:   2.949624E-02  dq_diff:   2.868668E-02
+SCF CALC 0005 energy  -10.62099725  en_diff:   6.924944E-03  dq_diff:   5.572237E-03
+SCF CALC 0006 energy  -10.61966673  en_diff:   1.330520E-03  dq_diff:   1.129434E-03
+SCF CALC 0007 energy  -10.61939357  en_diff:   2.731597E-04  dq_diff:   2.244521E-04
+SCF CALC 0008 energy  -10.61933953  en_diff:   5.403899E-05  dq_diff:   4.502469E-05
+
+YES convergence in 8 iters, energy -10.619339528049151 eV   dq = [-0.878, 0.878]
+END SCF ------------------
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.64920368
+SCF CALC 0002 energy  -10.64322325  en_diff:   5.980437E-03  dq_diff:   2.246693E-02
+SCF CALC 0003 energy  -10.64162258  en_diff:   1.600662E-03  dq_diff:   1.733396E-02
+SCF CALC 0004 energy  -10.63749629  en_diff:   4.126290E-03  dq_diff:   3.647850E-03
+SCF CALC 0005 energy  -10.63659003  en_diff:   9.062669E-04  dq_diff:   7.137449E-04
+SCF CALC 0006 energy  -10.63641503  en_diff:   1.749933E-04  dq_diff:   1.440243E-04
+
+YES convergence in 6 iters, energy -10.636415033320112 eV   dq = [-0.911, 0.911]
+END SCF ------------------
+
+  1.377530 seconds (6.63 M allocations: 625.907 MiB, 11.13% gc time)
+FCALL 5 en:  -0.7817618016952904 (Ryd)  fsum:  3.079785626626101e-8  ssum:  0.0001782684385928831    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.64920368
+SCF CALC 0002 energy  -10.64322325  en_diff:   5.980437E-03  dq_diff:   2.246693E-02
+SCF CALC 0003 energy  -10.64162258  en_diff:   1.600662E-03  dq_diff:   1.733396E-02
+SCF CALC 0004 energy  -10.63749629  en_diff:   4.126290E-03  dq_diff:   3.647850E-03
+SCF CALC 0005 energy  -10.63659003  en_diff:   9.062669E-04  dq_diff:   7.137449E-04
+SCF CALC 0006 energy  -10.63641503  en_diff:   1.749933E-04  dq_diff:   1.440243E-04
+
+YES convergence in 6 iters, energy -10.636415033320112 eV   dq = [-0.911, 0.911]
+END SCF ------------------
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.53265741
+SCF CALC 0002 energy  -10.51556736  en_diff:   1.709005E-02  dq_diff:   8.611194E-02
+SCF CALC 0003 energy  -10.51068134  en_diff:   4.886024E-03  dq_diff:   6.710651E-02
+SCF CALC 0004 energy  -10.49693977  en_diff:   1.374157E-02  dq_diff:   1.379330E-02
+SCF CALC 0005 energy  -10.49398858  en_diff:   2.951190E-03  dq_diff:   2.734893E-03
+SCF CALC 0006 energy  -10.49340338  en_diff:   5.852000E-04  dq_diff:   5.483502E-04
+SCF CALC 0007 energy  -10.49328574  en_diff:   1.176425E-04  dq_diff:   1.095868E-04
+
+YES convergence in 7 iters, energy -10.493285741440468 eV   dq = [-1.044, 1.044]
+END SCF ------------------
+
+  1.568547 seconds (7.62 M allocations: 709.552 MiB, 9.38% gc time)
+FCALL 6 en:  -0.7712419965969861 (Ryd)  fsum:  1.2116383615418e-7  ssum:  0.0020050337998513703    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.53265741
+SCF CALC 0002 energy  -10.51556736  en_diff:   1.709005E-02  dq_diff:   8.611194E-02
+SCF CALC 0003 energy  -10.51068134  en_diff:   4.886024E-03  dq_diff:   6.710651E-02
+SCF CALC 0004 energy  -10.49693977  en_diff:   1.374157E-02  dq_diff:   1.379330E-02
+SCF CALC 0005 energy  -10.49398858  en_diff:   2.951190E-03  dq_diff:   2.734893E-03
+SCF CALC 0006 energy  -10.49340338  en_diff:   5.852000E-04  dq_diff:   5.483502E-04
+SCF CALC 0007 energy  -10.49328574  en_diff:   1.176425E-04  dq_diff:   1.095868E-04
+
+YES convergence in 7 iters, energy -10.493285741440468 eV   dq = [-1.044, 1.044]
+END SCF ------------------
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.58778960
+SCF CALC 0002 energy  -10.61197763  en_diff:   2.418803E-02  dq_diff:   7.859186E-02
+SCF CALC 0003 energy  -10.61817010  en_diff:   6.192471E-03  dq_diff:   6.060368E-02
+SCF CALC 0004 energy  -10.63365956  en_diff:   1.548947E-02  dq_diff:   1.273495E-02
+SCF CALC 0005 energy  -10.63693318  en_diff:   3.273618E-03  dq_diff:   2.497987E-03
+SCF CALC 0006 energy  -10.63756440  en_diff:   6.312142E-04  dq_diff:   5.033511E-04
+SCF CALC 0007 energy  -10.63769204  en_diff:   1.276386E-04  dq_diff:   1.003778E-04
+
+YES convergence in 7 iters, energy -10.637692035088921 eV   dq = [-0.923, 0.923]
+END SCF ------------------
+
+  1.317940 seconds (6.62 M allocations: 625.230 MiB, 12.67% gc time)
+FCALL 7 en:  -0.7818556595600339 (Ryd)  fsum:  3.886489226541089e-8  ssum:  7.19098435907104e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.58778960
+SCF CALC 0002 energy  -10.61197763  en_diff:   2.418803E-02  dq_diff:   7.859186E-02
+SCF CALC 0003 energy  -10.61817010  en_diff:   6.192471E-03  dq_diff:   6.060368E-02
+SCF CALC 0004 energy  -10.63365956  en_diff:   1.548947E-02  dq_diff:   1.273495E-02
+SCF CALC 0005 energy  -10.63693318  en_diff:   3.273618E-03  dq_diff:   2.497987E-03
+SCF CALC 0006 energy  -10.63756440  en_diff:   6.312142E-04  dq_diff:   5.033511E-04
+SCF CALC 0007 energy  -10.63769204  en_diff:   1.276386E-04  dq_diff:   1.003778E-04
+
+YES convergence in 7 iters, energy -10.637692035088921 eV   dq = [-0.923, 0.923]
+END SCF ------------------
+
+
+res
+ * Status: success
+
+ * Candidate solution
+    Final objective value:     -7.818557e-01
+
+ * Found with
+    Algorithm:     BFGS
+
+ * Convergence measures
+    |x - x&#39;|               = 7.82e-02 ≰ 7.0e-04
+    |x - x&#39;|/|x&#39;|          = 1.48e-02 ≰ 0.0e+00
+    |f(x) - f(x&#39;)|         = 1.35e-03 ≰ 0.0e+00
+    |f(x) - f(x&#39;)|/|f(x&#39;)| = 1.73e-03 ≰ 7.0e-04
+    |g(x)|                 = 6.64e-05 ≤ 7.0e-04
+
+ * Work counters
+    Seconds run:   18  (vs limit Inf)
+    Iterations:    2
+    f(x) calls:    7
+    ∇f(x) calls:   7
+
+Final crystal
+Units: Å
+
+A1=     2.78615  2.78615  -0.00000
+A2=     2.78615  -0.00000  2.78615
+A3=     -0.00000  2.78615  2.78615
+
+Al   -0.00000  -0.00000  -0.00000
+P    0.25000  0.25000  0.25000
+
+
+Relax done
+Energy new -10.637692035088921
+
+Force
+2×3 Array{Float64,2}:
+ -1.66543e-7  -1.66543e-7  -1.66543e-7
+  1.66543e-7   1.66543e-7   1.66543e-7
+Stress
+3×3 Array{Float64,2}:
+  0.000220003  -3.97061e-8   -3.97061e-8
+ -3.97061e-8    0.000220003  -3.97061e-8
+ -3.97061e-8   -3.97061e-8    0.000220003</pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p><p>Force/Stress defaults are eV/Ang and eV/Ang^3.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Saturday 6 March 2021 01:28">Saturday 6 March 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
