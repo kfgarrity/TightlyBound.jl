@@ -81,7 +81,7 @@ end
 
 if false
 
-    #run QE
+    #run QE . You actually need quantum espresso working to run this test, not appropriate for CI.
     @testset "run QE" begin
         types=["Li"]
         pos=zeros((1,3))

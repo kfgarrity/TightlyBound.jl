@@ -52,7 +52,7 @@ savefig("alp.png"); #hide
 
 ![AlP plot](alp.png)
 
-Use *do_display=true* to produce an interactive plot. Here is is `false` because we are saving a static figure with `savefig` for the docs.
+Use `do_display=true` to produce an interactive plot. Here is is `false` because we are saving a static figure with `savefig` for the docs.
 
 The default `plot_bandstr` just picks some random kpoints, but you can add your own kpath. We also project onto the *s* orbital of Al.
 
@@ -90,7 +90,7 @@ println("Stress")
 show(stdout, "text/plain", stress)
 nothing #hide
 ```
-Can also be called directly on a new crystal structure instead of a tb_crys object.
+Can also be called directly on a new crystal structure instead of a `tb_crys` object.
 
 ## **Relax structure**
 
