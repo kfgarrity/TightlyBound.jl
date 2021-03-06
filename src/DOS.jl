@@ -137,7 +137,7 @@ function gaussian_dos(tbc::tb_crys; grid=missing, smearing=0.02, npts=300, proj_
 
     if ismissing(grid)
         grid = get_grid(tbc.crys)
-        grid = Int64.(round.(grid * 1.6))
+        grid = Int64.(round.(grid * 1.4))
         println("grid $grid")
     end
 
@@ -195,9 +195,8 @@ function gaussian_dos(tbc::tb_crys; grid=missing, smearing=0.02, npts=300, proj_
     dos = convert_dos(dos)
     pdos = convert_dos(pdos)
     
-    if do_display==true
-        plot_dos(energies, dos, pdos, names, do_display=do_display)
-    end
+    plot_dos(energies, dos, pdos, names, do_display=do_display)
+
 
     
     return energies, dos, pdos, names
@@ -315,13 +314,12 @@ function dos(tbc::tb_crys; grid=missing, npts=300, proj_type=missing, do_display
 
     if ismissing(grid)
         grid = get_grid(tbc.crys)
-        grid = Int64.(round.(grid * 1.2))
+        grid = Int64.(round.(grid * 1.4))
         println("grid $grid")
     end
 
 
-    println("calc eigenvals/vects")
-    @time etot, efermi, vals, vects,sk3 = calc_energy_fft(tbc, grid=grid, return_more_info=true)
+    etot, efermi, vals, vects,sk3 = calc_energy_fft(tbc, grid=grid, return_more_info=true)
 
     vals = vals .- efermi
     
@@ -338,8 +336,8 @@ function dos(tbc::tb_crys; grid=missing, npts=300, proj_type=missing, do_display
 
     if ismissing(proj_type) ||  (proj_type != "none"   && proj_type != :none)
         do_proj=true
-        println("Projection")
-        @time proj, names, pwan =  projection(tbc, vects, sk3, grid, ptype=proj_type)
+        #println("Projection")
+        proj, names, pwan =  projection(tbc, vects, sk3, grid, ptype=proj_type)
         nproj = size(proj)[3]
 
         pdos = zeros(length(energies),nproj)
@@ -352,8 +350,8 @@ function dos(tbc::tb_crys; grid=missing, npts=300, proj_type=missing, do_display
         names=missing
     end
 
-    println("setup tetra")
-    @time kpts, kpts_dict, tetra_map = setup_tetra(grid)
+    #println("setup tetra")
+    kpts, kpts_dict, tetra_map = setup_tetra(grid)
 
     #    e=zeros(4)
 
@@ -368,11 +366,11 @@ function dos(tbc::tb_crys; grid=missing, npts=300, proj_type=missing, do_display
     
     eps = 1e-7
 
-    println("calc dos tetra")
+    #println("calc dos tetra")
 
     range = 1:length(energies)
     
-    @time @threads for nt = 1: ntetra
+    @threads for nt = 1: ntetra
         id = threadid()
         ex=zeros(4)
         px=zeros(4)    
@@ -573,9 +571,8 @@ function dos(tbc::tb_crys; grid=missing, npts=300, proj_type=missing, do_display
     energies = convert_energy(energies)
     dos2 = convert_dos(dos2)
 
-    if  do_display==true
-        plot_dos(energies, dos2, pdos2, names, do_display=do_display)
-    end
+    plot_dos(energies, dos2, pdos2, names, do_display=do_display)
+
     
     return energies, dos2, pdos2, names
     
