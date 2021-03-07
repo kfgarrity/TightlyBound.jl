@@ -75,6 +75,8 @@ Plot the band structure of a `tb_crys` object. Can also perform a projected band
 
 k-path specified by a kpath array and names.
 
+Must do scf calculation before plotting.
+
 # Arguments
 - `h::tb_crys` - The tight-biding object we want to plot bands from. Only required argument.
 - `kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0 0 ;0 0 0.5]` - `nk` × 3 array k-point path (high symmetry points).

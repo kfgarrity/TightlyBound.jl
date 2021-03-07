@@ -3,6 +3,8 @@
 ## TB
 
 ```@docs
+TightlyBound.TB.tb_k
+TightlyBound.TB.tb_crys_kspace
 TightlyBound.TB.read_tb_crys_kspace
 TightlyBound.TB.write_tb_crys_kspace
 TightlyBound.TB.make_tb_crys

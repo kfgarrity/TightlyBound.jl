@@ -75,7 +75,7 @@ end
 """
     mutable struct tb{T}
 
-Holds key tight-binding information in real-space. Like hr_dat file from Wannier90. Also part of the `tb_crys` object.
+Holds key tight-binding information in real-space. Like `_hr.dat` file from Wannier90. Also part of the `tb_crys` object.
 
 # Holds
 - `H::Array{Complex{T},3}` Hamiltonian. `nw`×`nw`×`nr`
@@ -118,7 +118,7 @@ end
 """
     mutable struct tb_crys{T}
 
-Main tight-binding object, holds the tight-biding model `tb` and information about the `crystal`
+Main tight-binding object, holds the tight-binding model `tb` and information about the `crystal`
 
 # Holds
 - `tb::tb` Has the key tb info (see above)
@@ -126,7 +126,7 @@ Main tight-binding object, holds the tight-biding model `tb` and information abo
 - `nelec::Float64` Number of electrons
 - `dftenergy::Float64` DFT energy for reference, only for fit to DFT cases.
 - `scf::Bool`  `true` if requires self-consistency.
-- `gamma::Array{T, 2}` has the ewald calculation results, needed for self-consistency.
+- `gamma::Array{T, 2}` has the Ewald calculation results, needed for self-consistency.
 - `eden::Array{Float64,1}` electron density, by orbital, if calculated by self-consistency.
 - `within_fit::Bool` is `true` if model is passes tests of being within the fitting parameter space, `false` for extrapolation
 - `energy::Float64` energy in Ryd, if calculated.

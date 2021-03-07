@@ -145,7 +145,7 @@ end
 """
     relax_structure(c::crystal; mode="vc-relax")
 
-Find the lowest energy atomic configuration of crystal c.
+Find the lowest energy atomic configuration of crystal `c`.
 
 # Arguments
 - `c::crystal`: the structure to relax, only required argument
@@ -197,7 +197,7 @@ end
 
 Calculate energy, force, and stress for a crystal.
 
-returns energy, force, stress, tight_binding_crystal_object
+`return energy, force, stress, tight_binding_crystal_object`
 
 
 # Arguments
