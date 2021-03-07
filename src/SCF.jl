@@ -5,6 +5,11 @@
 
 
 ####################### Wannier90 specific 
+"""
+    module SCF
+
+Module for self-consistent field calculations for TB objects.
+"""
 module SCF
 """
 self-consistent field
@@ -43,7 +48,20 @@ using ..TightlyBound:eV
 
 export scf_energy
 
+"""
+    function scf_energy(c::crystal, database::Dict; smearing=0.01, grid = missing, conv_thr = 1e-5, iters = 75, mix = -1.0, mixing_mode=:pulay, verbose=true)
 
+Run scf calculation of `c::crystal`, using `database` of `coefs`. The main user version is `scf_energy` in TightlyBound, which calls this one.
+
+- `smearing` is smearing energy in Ryd.
+- `grid` is k-point grid (gamma centered MP), will use default.
+- `conv_thr` convergence threshold in Ryd.
+- `iters` maximum iterations for first attempt
+- `mix=-1.0` default is choose mixing for you. Otherwise, set between `0.0` and `1.0`
+- `mixing_mode=:pulay` default using Pulay mixing (DIIS). Any other input uses simple mixing.
+- `verbose=true` verbosity level.
+
+"""
 function scf_energy(c::crystal, database::Dict; smearing=0.01, grid = missing, conv_thr = 1e-5, iters = 75, mix = -1.0, mixing_mode=:pulay, verbose=true)
 
     println("construct")
@@ -51,7 +69,9 @@ function scf_energy(c::crystal, database::Dict; smearing=0.01, grid = missing, c
     return scf_energy(tbc, smearing = smearing, grid=grid, conv_thr = conv_thr, iters=iters, mix=mix,mixing_mode=mixing_mode, verbose=verbose)
 end
 
-
+"""
+    function scf_energy(tbc::tb_crys; smearing=0.01, grid = missing, e_den0 = missing, conv_thr = 1e-5, iters = 75, mix = -1.0, mixing_mode=:pulay, verbose=true)
+"""
 function scf_energy(tbc::tb_crys; smearing=0.01, grid = missing, e_den0 = missing, conv_thr = 1e-5, iters = 75, mix = -1.0, mixing_mode=:pulay, verbose=true)
 """
 Solve for scf energy, also stores the updated electron density and h1 inside the tbc object.
@@ -579,7 +599,12 @@ function remove_scf_from_tbc(tbc::tb_crys; smearing=0.01, grid = missing, e_den 
 end
 =#
 
+"""
+    function remove_scf_from_tbc(tbcK::tb_crys_kspace; smearing=0.01, e_den = missing)
 
+This function takes a `tbc_crys_kspace` object that does not require scf and adjusts it 
+so that it does require scf, but gives the same energy and band structure.
+"""
 function remove_scf_from_tbc(tbcK::tb_crys_kspace; smearing=0.01, e_den = missing)
     
     hk3 = deepcopy(tbcK.tb.Hk)
@@ -663,6 +688,12 @@ function remove_scf_from_tbc(tbcK::tb_crys_kspace; smearing=0.01, e_den = missin
 
 end
 
+"""
+    function remove_scf_from_tbc(tbc::tb_crys; smearing=0.01, grid = missing, e_den = missing)
+
+This function takes a `tbc_crys` object that does not require scf and adjusts it 
+so that it does require scf, but gives the same energy and band structure.
+"""
 function remove_scf_from_tbc(tbc::tb_crys; smearing=0.01, grid = missing, e_den = missing)
     if tbc.scf == true
         println("do not need to adjust, already scf")
@@ -696,6 +727,12 @@ function remove_scf_from_tbc(tbc::tb_crys; smearing=0.01, grid = missing, e_den 
 end
 
 
+"""
+    function remove_scf_from_tbc(hk3, sk3, tbc; smearing=0.01, e_den = missing)
+
+This function takes a hk3, sk3 set of hamiltonian / overlap that does not require scf and adjusts it 
+so that it does require scf, but gives the same energy and band structure.
+"""
 function remove_scf_from_tbc(hk3, sk3, tbc; smearing=0.01, e_den = missing)
    """
         this function removes the scf effects from the tight-binding elements

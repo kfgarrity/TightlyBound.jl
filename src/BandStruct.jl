@@ -397,7 +397,7 @@ band structure directly from dft (either a `dftout` or `bs` object).
 
 The k-points are fixed by the `bs` object.
 
-tbc2 is an optional second `tbc_crys`.
+`tbc2` is an optional second `tbc_crys`.
 """
 function plot_compare_dft(tbc::tb_crys, bs; tbc2=missing)
 

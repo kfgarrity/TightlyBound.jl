@@ -1,4 +1,14 @@
+"""
+    function make_commands(nprocs=1)
 
+Returns a dictionary with command lines to call external programs on the command line
+nprocs is the number of processors for parallel execution
+Needs to be changed for you specfic program locations 
+and mpi commands (if any)
+
+This needs to be edited to actually run QE yourself.
+Running wannier90 is optional, not part of current code.
+"""
 function make_commands(nprocs=1)
 """
 Returns a dictionary with command lines to call external programs on the command line

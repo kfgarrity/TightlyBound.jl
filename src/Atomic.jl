@@ -1,14 +1,35 @@
+"""
+    module AtomicMod
 
-
-
+Simple module for atom type.
+"""
 module AtomicMod
 
 using ..Utility:str_w_spaces
 using ..BandTools:band_energy
 using ..BandTools:smearing_energy
 
-struct atom
+"""
+    struct atom
 
+Hold basic atomic information
+
+- `name::String` 
+- `Z::Int64` Atomic number
+- `row::Float64` Periodic table row
+- `col::Float64` Periodic table col
+- `mass::Float64` Mass in amu 
+- `nval::Float64` Number of valence electrons in TB calculation.
+- `nsemicore::Int64` Number of semicore electrons. Depends on pseudopotential choice
+- `nwan::Int64` Number of TB orbitals
+- `orbitals::Array{Symbol,1}` Names of the orbitals, like `[:s, :p]`
+- `total_energy::Float64` DFT total energy, depends on pseudopotentials.
+- `eigs::Dict` orbital eigenvalues of isolated non-spin-polarized nuetral atom.
+- `energy_offset::Float64` energy to add to TB calculation to make isolated atoms have zero energy.
+- `U::Float64` U value for Ewald correction
+
+"""
+struct atom
     name::String
     Z::Int64
     row::Float64
@@ -42,7 +63,11 @@ end
 
 
 
-#makeatom
+"""
+    function makeatom(name, Z, row, col, mass, nval, nsemicore, orbitals, etot, eigs, vac_potential=0.0, U=0.0)
+
+Constructor for atom.
+"""
 function makeatom(name, Z, row, col, mass, nval, nsemicore, orbitals, etot, eigs, vac_potential=0.0, U=0.0)
     #vac potential in ryd
 

@@ -4,7 +4,11 @@
 
 
 
-####################### Wannier90 specific 
+"""
+    module Force_Stress
+
+Module for calculating force and stress
+"""
 module Force_Stress
 """
 Scripts to calculate force and stress
@@ -45,6 +49,18 @@ using ..CrystalMod:get_grid
 export get_energy_force_stress
 export relax_structure
 
+
+"""
+    function get_energy_force_stress(crys::crystal, database; smearing = 0.01, grid = missing)
+
+Get force and stress, non-fft algorithm. Generally use the fft algorithm.
+
+`return energy_tot,  f_cart, stress`
+
+Returns Ryd units. Generally users should use the `scf_energy_force_stress` function
+
+Uses automatic differentation for gradient.
+"""
 function get_energy_force_stress(crys::crystal, database; smearing = 0.01, grid = missing)
 
     println("crys")
@@ -53,6 +69,11 @@ function get_energy_force_stress(crys::crystal, database; smearing = 0.01, grid 
     return get_energy_force_stress_fft(tbc, database, do_scf=tbc.scf, grid = grid, smearing=smearing)
 end
 
+"""
+    function get_energy_force_stress(crys::crystal, database; smearing = 0.01, grid = missing)
+
+Get force and stress, non-fft algorithm
+"""
 function get_energy_force_stress(tbc::tb_crys, database; do_scf=false, smearing = 0.01, grid = missing, e_den0=missing, vv = missing, cs = 4)
 
     if ismissing(grid)
@@ -271,6 +292,20 @@ end
 
 
 #primarily for testing
+"""
+    function finite_diff(crys::crystal, database, ind1, ind2; stress_mode=false, step = 0.0002, smearing = 0.01, grid = missing)
+
+Finite differences force/stress, for testing.
+# Arguments
+- `crys::crystal` Crystal structure
+- `database` Database of fitting coefficents.
+- `ind1`  atom index for first stress index
+- `ind2` cartesian index or second stress index
+- `stress_mode=false` true for stress, otherwise force.
+- `step = 0.0002` step_size for finite steps.
+- `smearing = 0.01` smearing energy
+- `grid = missing` kpoint grid
+"""
 function finite_diff(crys::crystal, database, ind1, ind2; stress_mode=false, step = 0.0002, smearing = 0.01, grid = missing)
     if ismissing(grid)
         grid = get_grid(crys)
@@ -373,7 +408,11 @@ end
 
 ######################################################
 
+"""
+    function relax_structure(crys::crystal, database; smearing = 0.01, grid = missing, mode="vc-relax", nsteps=100, update_grid=true)
 
+Relax structure. Primary user function is relax_structure in TightlyBound.jl, which calls this one.
+"""
 function relax_structure(crys::crystal, database; smearing = 0.01, grid = missing, mode="vc-relax", nsteps=100, update_grid=true)
 
     if update_grid==false
@@ -672,7 +711,12 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 
 end
 
-    
+"""
+    function reshape_vec(x, nat; strain_mode=false)
+
+The force and relax algorithms from outside codes take in vectors, not `crystal` 's. So we have to reshape
+vectors to and from `crystals`
+"""    
 function reshape_vec(x, nat; strain_mode=false)
 #    println("RESHAPEVEC RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRr ", strain_mode)
 
@@ -732,6 +776,12 @@ function reshape_vec(x, nat; strain_mode=false)
     return x_r, x_r_strain
 end
 
+"""
+    function inv_reshape_vec(x, strain, nat; strain_mode=true)
+
+The force and relax algorithms from outside codes take in vectors, not `crystal` 's. So we have to reshape
+vectors to and from `crystals`
+"""
 function inv_reshape_vec(x, strain, nat; strain_mode=true)
     T=typeof(x[1])
     if strain_mode
@@ -767,7 +817,13 @@ function inv_reshape_vec(x, strain, nat; strain_mode=true)
     return x_r
 end
 
+"""
+    function safe_mode_energy(crys::crystal, database; var_type=Float64)
 
+Relaxation can accidently lead to very small atom-atom distances during the relaxation precedure if too large of step is taken. This function is a repulsive energy
+function at short range to make sure the relaxtion doesn't get stuck at very short distances
+where the fitting doesn't apply.
+"""
 function safe_mode_energy(crys::crystal, database; var_type=Float64)
 
     diststuff = distances_etc_3bdy_parallel(crys,10.0, 0.0, var_type=var_type)
@@ -819,7 +875,11 @@ function safe_mode_energy(crys::crystal, database; var_type=Float64)
 end
 
 ##############################################################################################################
+"""
+    function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smearing = 0.01, grid = missing, e_den0=missing, vv = missing)
 
+Calculate energy/force/stress using fft algorithm. Users should use `scf_energy_force_stress`, which calls this. Uses automatic differentation for jacobian.
+"""
 function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smearing = 0.01, grid = missing, e_den0=missing, vv = missing)
 
     if ismissing(grid)
@@ -1148,7 +1208,11 @@ end
 #############################################################################################################
 
 
+"""
+    function psi_gradH_psi(VALS0, VECTS, hk_g, sk_g, h1, VALS, scf, nwan, nat, grid, OCCS)
 
+Helper function for <psi | grad_Ham | psi >
+"""
 function psi_gradH_psi(VALS0, VECTS, hk_g, sk_g, h1, VALS, scf, nwan, nat, grid, OCCS)
 
     pVECTS = permutedims(VECTS, [2,3,1])
@@ -1156,7 +1220,7 @@ function psi_gradH_psi(VALS0, VECTS, hk_g, sk_g, h1, VALS, scf, nwan, nat, grid,
     if scf
         @threads for a1 = 1:nwan
             for a2 = 1:nwan
-                hk_g[a2,a1,:,:,:,:] += h1[a2,a1]*sk_g[a2,a1,:,:,:,:]
+                @inbounds hk_g[a2,a1,:,:,:,:] +=  h1[a2,a1]*(@view sk_g[a2,a1,:,:,:,:])
             end
         end
     end
@@ -1181,7 +1245,8 @@ function psi_gradH_psi(VALS0, VECTS, hk_g, sk_g, h1, VALS, scf, nwan, nat, grid,
                         #                        hka[:,:] =  hk_g[:,:,k1,k2,k3,gc] - ( VALS[c,a] )  *   sk_g[:,:,k1,k2,k3, gc]
                         
                         
-                        VALS0[c, a,gc] = real(pVECTS[:,a,c]' * ( hk_g[:,:,k1,k2,k3,gc] - ( VALS[c,a] )  *   sk_g[:,:,k1,k2,k3, gc]   )  * pVECTS[:,a,c])                  #+ h1 .*  sk_g[:,:,k1,k2,k3, gc]
+                        #VALS0[c, a,gc] = real(pVECTS[:,a,c]' * ( hk_g[:,:,k1,k2,k3,gc] - ( VALS[c,a] )  *   sk_g[:,:,k1,k2,k3, gc]   )  * pVECTS[:,a,c])                  #+ h1 .*  sk_g[:,:,k1,k2,k3, gc]
+                        @inbounds VALS0[c, a,gc] = real( (@view pVECTS[:,a,c])' * ( (@view hk_g[:,:,k1,k2,k3,gc]) - ( VALS[c,a] )  *   (@view sk_g[:,:,k1,k2,k3, gc])   )  * (@view pVECTS[:,a,c]))                  #+ h1 .*  sk_g[:,:,k1,k2,k3, gc]
                     end
                 end
             end
@@ -1191,6 +1256,13 @@ function psi_gradH_psi(VALS0, VECTS, hk_g, sk_g, h1, VALS, scf, nwan, nat, grid,
 end
 
 
+"""
+    function psi_gradH_psi(VALS0, VECTS, hk_g, sk_g, h1, VALS, scf, nwan, nat, grid, OCCS)
+
+Helper function for <psi | grad_Ham | psi >
+
+This version isn't used.
+"""
 function psi_gradH_psi2(VALS0, VECTS, hk_g, sk_g, h1, VALS, scf, nwan, nat, grid, OCCS)
 
     pVECTS = permutedims(VECTS, [2,3,1])

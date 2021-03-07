@@ -1,3 +1,8 @@
+"""
+    module ManageDatabase
+
+Module for reading `coefs` from files and making database as needed for calculations
+"""
 module ManageDatabase
 
 #using FileIO
@@ -19,12 +24,19 @@ database_cached = Dict()
 database_cached["SCF"] = true
 database_cached["scf"] = true
 
+"""
+    function prepare_database(c::crystal)
 
+Get ready database of precalculated `coefs` for `crystal`
+"""
 function prepare_database(c::crystal)
 #    println("prepare c ", c.types)
     prepare_database(c.types)
 end
 
+"""
+    function prepare_database(at_list)
+"""
 function prepare_database(at_list)
     
     println("prepare atoms ", at_list)
@@ -40,7 +52,11 @@ function prepare_database(at_list)
     end
 end
 
+"""
+    function add_to_database(s::Set)
 
+Load elements or twobody terms from precalcuated `coefs` from files.
+"""
 function add_to_database(s::Set)#
 
     println("add_to_database $s")

@@ -1,3 +1,5 @@
+#directory info
+
 SRCDIR = dirname(pathof(TightlyBound))
 EXAMPLESDIR = joinpath(dirname(pathof(TightlyBound)), "..", "examples")
 TESTDIR = joinpath(dirname(pathof(TightlyBound)), "..", "test")

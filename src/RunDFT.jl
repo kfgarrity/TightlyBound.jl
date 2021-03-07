@@ -5,6 +5,11 @@
 
 
 ####################### QE specific 
+"""
+    module QE
+
+Module for running Quantum Espresso. Generic DFT version below.
+"""
 module QE
 """
 Scripts to run Quantum Espresso
@@ -30,7 +35,11 @@ using ..TightlyBound:TEMPLATEDIR
 
 
 
+"""
+    function run_pwscf(inputstr, outputstr, nprocs=1, directory="./", use_backup=false)
 
+Run the pw.x code from QE on `inputstr`
+"""
 function run_pwscf(inputstr, outputstr, nprocs=1, directory="./", use_backup=false)
 """
 run command
@@ -72,7 +81,13 @@ run command
 end
 
 
+"""
+    function runSCF(crys::crystal, inputstr=missing, prefix=missing, tmpdir="./", directory="./", functional="PBESOL", wannier=0, nprocs=1, skip=false, calculation="scf", dofree="all", tot_charge = 0.0, smearing = 0.01, magnetic=false, cleanup=false, use_backup=false)
 
+Workflow for doing SCF DFT calculation on `crys`
+
+Return `dftout`
+"""
 function runSCF(crys::crystal, inputstr=missing, prefix=missing, tmpdir="./", directory="./", functional="PBESOL", wannier=0, nprocs=1, skip=false, calculation="scf", dofree="all", tot_charge = 0.0, smearing = 0.01, magnetic=false, cleanup=false, use_backup=false)
 """
 Run SCF calculation using QE
@@ -179,6 +194,11 @@ Run SCF calculation using QE
     
 end
 
+"""
+    function doclean(d)
+
+Clean up wavefunctions in directory `d`
+"""
 function doclean(d)
     tot = 0
 
@@ -200,7 +220,11 @@ function doclean(d)
     println("clean-up done: $tot wfc files deleted")
 end
 
-                             
+"""
+    function makeSCF(crys::crystal, directory="./", prefix=missing, tmpdir=missing, functional="PBESOL", wannier=0, calculation="scf", dofree="all", tot_charge = 0.0, smearing = 0.01, magnetic=false; mixing="local-TF")
+
+Make QE inputfile for SCF DFT calculation.
+"""
 function makeSCF(crys::crystal, directory="./", prefix=missing, tmpdir=missing, functional="PBESOL", wannier=0, calculation="scf", dofree="all", tot_charge = 0.0, smearing = 0.01, magnetic=false; mixing="local-TF")
 """
 Make inputfile for SCF calculation
@@ -393,7 +417,11 @@ Make inputfile for SCF calculation
     
 end
 
-  
+"""
+   function makedict(savedir)
+
+Load a data-file-schema.xml as julia dictionary.
+"""  
 function makedict(savedir)
     
     if isfile(savedir*"/data-file-schema.xml")
@@ -416,7 +444,11 @@ function makedict(savedir)
 end
 
 
+"""
+    function loadXML(savedir)
 
+Load a QE SCF DFT calculation into a `dftout` object.
+"""
 function loadXML(savedir)
 
 #    println("start loadXML")
@@ -518,7 +550,11 @@ function loadXML(savedir)
     
 end
 
-    
+"""
+    function loadXML_bs(savedir::String)
+
+Load `bandstructure` from QE xml file.
+"""
 function loadXML_bs(savedir::String)
 
     d=makedict(savedir)
@@ -528,6 +564,11 @@ function loadXML_bs(savedir::String)
 end
     
 
+"""
+    function loadXML_bs(savedir::String)
+
+Load `bandstructure` from QE xml file that was converted to a dict already
+"""
 function loadXML_bs(d)
 
     convert_ha_ryd = 2.0
@@ -578,7 +619,11 @@ end #module
 
 
 ############################## General DFT functions
+"""
+    module DFT
 
+This is the generic DFT interface. Only QE is currently implemented however.
+"""
 module DFT
 """
 Scripts to run DFT codes 
@@ -591,6 +636,11 @@ using ..CrystalMod:crystal
 #using ..Atomdata:atoms
 
 
+"""
+    function runSCF(crys::crystal; inputstr=missing, prefix=missing, tmpdir="./", directory="./", functional="PBESOL", wannier=0, nprocs=1, code="QE", skip=false, calculation="scf", dofree="all", tot_charge = 0.0, smearing = missing, magnetic=false, cleanup=false, use_backup=false)
+
+Workflow for generic DFT SCF calculation. `code` can only by "QE"
+"""
 function runSCF(crys::crystal; inputstr=missing, prefix=missing, tmpdir="./", directory="./", functional="PBESOL", wannier=0, nprocs=1, code="QE", skip=false, calculation="scf", dofree="all", tot_charge = 0.0, smearing = missing, magnetic=false, cleanup=false, use_backup=false)
     
     if ismissing(smearing)

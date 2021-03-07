@@ -4,11 +4,13 @@
 
 
 
-####################### Wannier90 specific 
+"""
+    module CalcTB
+
+Create TB matrix sets from coefficients, or prepare to fit the coefficients.
+"""
 module CalcTB
-"""
-Scripts to run tight-binding from wannier90
-"""
+
 
 using LinearAlgebra
 using SpecialFunctions
@@ -63,85 +65,49 @@ using ..Atomdata:get_cutoff
 
 #constants
 
-sqrt3 = sqrt(3)
-sqrt3d2 = sqrt(3)/2.0
+const sqrt3 = sqrt(3)
+const sqrt3d2 = sqrt(3)/2.0
 
-n_2body = 5
+#this set up the number of terms in parts of the model
 
-n_2body_onsite = 4
+const n_2body = 5
+const n_2body_onsite = 4
 
-#n_2body = 6
-#n_2body_onsite = 5
+const n_2body_S = 7
 
-n_2body_S = 7
+const n_3body = 7
+const n_3body_same = 5
 
-#n_3body = 4
-#n_3body = 9
-#n_3body = 18
-
-#n_3body = 27
-#n_3body_same = 18
-
-#thisone n_3body = 18
-#thisone n_3body_same = 12
-
-#n_3body = 12
-#n_3body_same = 8
-
-#n_3body = 9
-#n_3body_same = 7
-
-#n_3body = 4+2+1 + 2
-#n_3body_same = 3+1+1 + 1
-
-#n_3body = 5
-
-#n_3body = 7
-n_3body = 7
-
-n_3body_same = 5
+const n_3body_onsite = 4
+const n_3body_onsite_same = 4
 
 
-#n_3body = 12
-#n_3body_1 = 9
+const cutoff2X = 18.51 
+const cutoff3bX = 13.01 
+const cutoff_onX = 18.01 
 
-#n_3body_onsite = 8
-#n_3body_onsite_same = 6
-
-#n_3body_onsite = 3 
-#n_3body_onsite_same = 3
-
-n_3body_onsite = 4
-#n_3body_onsite_same = 2
-
-#n_3body_onsite_same = 3
-n_3body_onsite_same = 4
-
-#cutoff2X = 18.51 
-#cutoff3bX = 11.01 
-#cutoff_onX = 11.01 
+const cutoff_length = 0.5
 
 
+"""
+    struct coefs
 
-cutoff2X = 18.51 
-cutoff3bX = 13.01 
-cutoff_onX = 18.01 
+Hold the TB coefficients for 2body or 3body interactions
 
-#cutoff2X = 15.51 
-#cutoff3bX = 10.01 
-#cutoff_onX = 15.01 
+- `dim::Int64` - dimension (2 or 3)
+- `datH::Array{Float64,1}` Hamiltonian parameters
+- `datS::Array{Float64,1}`  Overlap parameters, if any
+- `sizeH::Int64` 
+- `sizeS::Int64`
+- `inds::Dict{Array{Symbol}, Array{Int64,1}}` Holds inds that tell which coeffiecients correspond to which atoms/orbitals
+- `names::Set` Names of atoms
+- `orbs::Array{Any,1}` Orbitals 
+- `cutoff::Float64` cutoff distance
+- `min_dist::Float64` minimum atom-atom distance in fitting data
+- `maxmin_val_train::Dict` max and min value of matrix elements within fitting data
+- `dist_frontier::Dict` dictionary of pareto frontier of shortest fitting distances
 
-
-#cutoff2X = 6.0
-#cutoff3bX = 6.0
-#cutoff_onX = 6.0
-
-
-cutoff_length = 0.5
-
-#cutoff2X = 0.1
-#cutoff3bX = 0.1
-
+"""
 struct coefs
 
     dim::Int64
@@ -163,6 +129,11 @@ struct coefs
 end
 
 
+"""
+    function write_coefs(filename, co::coefs; compress=true)
+
+Write `coefs` to a file. Compress uses gzip. See `read_coefs`
+"""
 function write_coefs(filename, co::coefs; compress=true)
     """
     write xml coefs object
@@ -209,7 +180,11 @@ function write_coefs(filename, co::coefs; compress=true)
 end
 
 
+"""
+    function read_coefs(filename, directory = missing)
 
+Read `coefs` from filename. Can read gzip directly.
+"""
 function read_coefs(filename, directory = missing)
     """
     read xml coefs object
@@ -280,7 +255,13 @@ end
 
 
 
+"""
+    function make_coefs(at_list, dim; datH=missing, datS=missing, cutoff=18.01, min_dist = 3.0, fillzeros=false, maxmin_val_train=missing, dist_frontier=missing)
 
+Constructor for `coefs`. Can create coefs filled with ones for testing purposes.
+
+See `coefs` to understand arguments.
+"""
 function make_coefs(at_list, dim; datH=missing, datS=missing, cutoff=18.01, min_dist = 3.0, fillzeros=false, maxmin_val_train=missing, dist_frontier=missing)
 
 #    sort!(at_list)
@@ -338,6 +319,11 @@ function make_coefs(at_list, dim; datH=missing, datS=missing, cutoff=18.01, min_
 end
     
 
+"""
+    function plot_database(database, entry, t=missing)
+
+Plot some data from `coefs`. Needs to be updated to work with Plots, probably doesn't work now.
+"""
 function plot_database(database, entry, t=missing)#::coefs)
 #    title("dat.names")
 
@@ -522,6 +508,13 @@ end
 
 
 
+"""
+    function get_data_info(at_set, dim)
+
+Figure out the arrangement of data in a `coefs` file.
+
+Loops over various combinations of orbitals and atoms and assigns them places in `datH` and `datS`, depending on the terms included in the model and the dimensionaly.
+"""
 function get_data_info(at_set, dim)
 
     
@@ -861,7 +854,12 @@ Base.show(io::IO, d::coefs) = begin
 end
 
 
+"""
+    function distances_etc(crys, cutoff, cutoff2=missing)
 
+Old distance function, no threebody only twobody.
+Code primarly uses `distances_etc_3bdy_parallel`
+"""
 function distances_etc(crys, cutoff, cutoff2=missing)
     if ismissing(cutoff2)
         cutoff2=cutoff
@@ -936,6 +934,25 @@ function distances_etc(crys, cutoff, cutoff2=missing)
 end
 ########################################################################################################################################################
 
+"""
+    function distances_etc_3bdy_parallel(crys, cutoff=missing, cutoff2=missing; var_type=Float64)
+
+Finds atoms-atom and atom-atom-atom distances that are less than the cutoffs.
+
+`    return R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3`
+
+Where
+
+- `R_keep` has the supercells that are necessary
+- `R_keep_ab` has the 2body indexes that are less than the `cutoff`
+- `array_ind3` has the 3body indexes
+- `array_floats3` has the 3body actual distances and lmn.
+- `dist_arr` has the actual 2body distances
+- `c_zero` the index of cell `[0,0,0]`, the onsite cell
+- `dmin_types` minimum distance between types of atoms.
+- `dmin_types3` minimum 3body distances between types of atoms.
+
+"""
 function distances_etc_3bdy_parallel(crys, cutoff=missing, cutoff2=missing; var_type=Float64)
 
     if ismissing(cutoff)
@@ -1237,6 +1254,7 @@ function distances_etc_3bdy_parallel(crys, cutoff=missing, cutoff2=missing; var_
 end
 
 #=
+#old version, slower.
 function distances_etc_3bdy(crys, cutoff=missing, cutoff2=missing; var_type=Float64)
 
     if ismissing(cutoff)
@@ -1487,6 +1505,13 @@ end
 
 ########################################################################################################################################################
 
+"""
+    function trim_dist(tbc, cutoff=18.0001)
+
+Reduce the atom-atom hamiltonian terms longer than cutoff.
+
+Not used in typical code, but can make `tbc` run faster / reduce memory.
+"""
 function trim_dist(tbc, cutoff=18.0001)
 
     R_keep,R_keep2, dist_arr, c_zero = distances_etc(tbc.crys, cutoff)
@@ -1572,8 +1597,8 @@ electron density and Fermi level will be wrong.
 - `database=missing` - Source of coefficients. Will load from default source if not specified.
 - `use_threebody=true` - Use three-body off-site interactions. Only turn off for testing purposes.
 - `use_threebody_onsite=true` - Use three-body on-site interactions. Only turn off for testing purposes.
-- 'verbose=true` - set to false for less output.
-- 'var_type=missing` - variable type of `tb_crys`. Default is `Float64`.
+- `verbose=true` - set to false for less output.
+- `var_type=missing` - variable type of `tb_crys`. Default is `Float64`.
 """
 function calc_tb_fast(crys::crystal, database=missing; reference_tbc=missing, verbose=true, var_type=missing, use_threebody=true, use_threebody_onsite=true, gamma=missing, screening=1.0, set_maxmin=false, check_frontier=true)
 
@@ -2018,6 +2043,17 @@ function calc_frontier_list(crys_list, frontier=missing)
     return frontier
 end
 
+"""
+    function calc_frontier(crys::crystal, frontier; var_type=Float64, test_frontier=false, diststuff=missing, verbose=true)
+
+Calculate a pareto frontier of short distances.
+For 2body interactions, this is just a single distance, which is easy.
+For 3body interactions, there are 3 distances, so multiple points are on the frontier.
+Useful for deciding if old fitting data applies to a new structure with atoms that are close together.
+
+`test_frontier=true` is used to check if new structure is in the frontier.
+othersise, see if new structure changes frontier.
+"""
 function calc_frontier(crys::crystal, frontier; var_type=Float64, test_frontier=false, diststuff=missing, verbose=true)
 
     if ismissing(var_type)
@@ -2246,6 +2282,7 @@ end
 
 
 ########################################################################################################################################################
+#old slow version
 #=
 function calc_tb(crys::crystal, database; reference_tbc=missing, verbose=false, var_type=missing, use_threebody=true, use_threebody_onsite=true)
 
@@ -2491,6 +2528,26 @@ end
 =#
 
 ################################################################################################################################ppp
+"""
+    function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_threebody_onsite=false)
+
+Take a `tbc` from DFT and rearrange it for use in fitting code. Basically set it up
+so that it is ready for a least squares linear fit of coefficients.
+
+`    return twobody_arrays, threebody_arrays, hvec, svec, Rvec, INDvec, h_onsite, ind_conversion, dmin_types, dmin_types3`
+
+Where
+- `twobody_arrays` - info for fitting twobody coefficients
+- `threebody_array` - info for fitting twobody coefficients
+- `hvec` - vector of reference TB matrix els, arranged for fitting
+- `svec` - vector of reference overlap matrix els, arranged for fitting
+- `Rvec` - displaments
+- `INDvec` info on which matrix el goes with which row
+- `h_onsite` info for subtracting atomic terms, I think
+- `ind_conversion` - dict to convert between place in hamiltonian and overall counter, which removes duplicates.
+- `dmin_types` - shortest 2body distances
+- `dmin_types` - shortest 3body distances
+"""
 function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_threebody_onsite=false)
 
 #    println("calc_tb_prepare_fast 3bdy $use_threebody    3bdy-onsite $use_threebody_onsite")
@@ -2945,7 +3002,7 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
         end
     end
     end
-########Check for duplicates
+########Check for duplicates. For fitting purposes, we don't need symmetrically equivalent entries. Memory saver.
     println("time duplicates")
     @time if true
         already_found = Dict()
@@ -3088,6 +3145,7 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
 #        end
 #    end
 
+    #this saves memory during fitting, as these arrays are rather sparse under normal circumstances.
     println("make sparse")
     for k in keys(twobody_arrays)
         twobody_arrays[k][1] = sparse(twobody_arrays[k][1])
@@ -3117,6 +3175,7 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
 
 end
 ################################################################################################################################ppp
+#old slow version
 #=
 function calc_tb_prepare(reference_tbc::tb_crys; var_type=missing, use_threebody=false, use_threebody_onsite=false)
     
@@ -3439,6 +3498,11 @@ end
 
 
 
+"""
+    function calc_onsite(t1,s1,s2, database=missing)
+
+Handles atomic matrix els. We do not currently fit onsite matrix els
+"""
 function calc_onsite(t1,s1,s2, database=missing)
 
     #S
@@ -3470,6 +3534,11 @@ function calc_onsite(t1,s1,s2, database=missing)
     
 end
 
+"""
+    function laguerre(dist, ind=missing; nmax=6, memory=missing)
+
+Calculate laguerre polynomials up to order `nmax`
+"""
 function laguerre(dist, ind=missing; nmax=6, memory=missing)
 
     a=2.0
@@ -3561,7 +3630,11 @@ end
 
 
 
+"""
+    function two_body_O(dist, ind=missing)
 
+Two body onsite
+"""
 function two_body_O(dist, ind=missing)
     if ismissing(ind)
         return laguerre(dist, ind)[1:n_2body_onsite]
@@ -3570,6 +3643,11 @@ function two_body_O(dist, ind=missing)
     end
 end
 
+"""
+    function two_body_O(dist, ind=missing)
+
+three body onsite.
+"""
 function three_body_O(dist1, dist2, dist3, same_atom, ind=missing; memoryV = missing)
     d1 = laguerre(dist1, missing, nmax=2 )
     d2 = laguerre(dist2, missing, nmax=2)
@@ -3704,7 +3782,11 @@ end
 =#
 #end
 
+"""
+    function two_body_H(dist, ind=missing)
 
+Two body intersite Hamiltonian.
+"""
 function two_body_H(dist, ind=missing)
     if ismissing(ind)
         return laguerre(dist, ind, nmax=n_2body-1)[1:n_2body]
@@ -3712,6 +3794,12 @@ function two_body_H(dist, ind=missing)
         return  laguerre(dist, ind, nmax=n_2body-1)
     end
 end
+
+"""
+    function two_body_H(dist, ind=missing)
+
+Two body intersite overlap.
+"""
 function two_body_S(dist, ind=missing)
     if ismissing(ind)
         return laguerre(dist, ind,nmax=n_2body_S-1)[1:n_2body_S]
@@ -3720,6 +3808,11 @@ function two_body_S(dist, ind=missing)
     end
 end
 
+"""
+    function two_body_H(dist, ind=missing)
+
+get 3body hamiltonian terms together.
+"""
 function three_body_H(dist0, dist1, dist2, same_atom, ind=missing; memory0=missing, memory1=missing, memory2=missing, memoryV=missing)
 
 #    return 0.0
@@ -3816,6 +3909,11 @@ end
 #    return    exp(-d1 * dist) * (d2  + dist * d3 )    
 #end
 
+"""
+    function symmetry_factor(s1,s2,lmn, dat)
+
+All of the spd Slater-Koster matrix elements. `dat` is preallocated memory.
+"""
 function symmetry_factor(s1,s2,lmn, dat)
 """
 Slater-Koster factors
@@ -4029,6 +4127,11 @@ Slater-Koster factors
     end
 end
 
+"""
+    function symmetry_factor_fit(s1,s2,lmn)
+
+All the Slater-Koster factors, for fitting.
+"""
 function symmetry_factor_fit(s1,s2,lmn)
 """
 Slater-Koster factors
@@ -4238,7 +4341,11 @@ Slater-Koster factors
     end
 end
 
+"""
+    function calc_twobody(t1,t2,orb1,orb2,dist,lmn, database) 
 
+Two body intersite Hamiltonian and overlap matrix els.
+"""
 function calc_twobody(t1,t2,orb1,orb2,dist,lmn, database)
 
     c = database[(t1,t2)]
@@ -4294,6 +4401,12 @@ function calc_twobody(t1,t2,orb1,orb2,dist,lmn, database)
     
 end
 
+
+"""
+    function fit_twobody(orb1,orb2,dist,lmn)
+
+Fit Two body intersite Hamiltonian and overlap matrix els.
+"""
 function fit_twobody(orb1,orb2,dist,lmn)
 
     
@@ -4354,7 +4467,11 @@ function fit_twobody(orb1,orb2,dist,lmn)
 end
 
 
+"""
+    function calc_twobody_onsite(t1,t2,orb1,orb2, dist,lmn, database) 
 
+Calculate 2body onsite interactions.
+"""
 function calc_twobody_onsite(t1,t2,orb1,orb2, dist,lmn, database)
 
     c = database[(t1,t2)]
@@ -4393,6 +4510,11 @@ function calc_twobody_onsite(t1,t2,orb1,orb2, dist,lmn, database)
         
 end
 
+"""
+    function fit_twobody_onsite(t1,t2,orb1,orb2, dist,lmn)
+
+Fit 2body onsite interactions.
+"""
 function fit_twobody_onsite(t1,t2,orb1,orb2, dist,lmn)
 
     o1 = summarize_orb(orb1)
@@ -4424,18 +4546,14 @@ function fit_twobody_onsite(t1,t2,orb1,orb2, dist,lmn)
 end
 
 ########
+"""
+    function calc_threebody_onsite(t1,t2,t3,orb1,dist12,dist13,dist23, database; set_maxmin=false, memory=missing)
+
+calculate threebody onsite interactions
+"""
 function calc_threebody_onsite(t1,t2,t3,orb1,dist12,dist13,dist23, database; set_maxmin=false, memory=missing)
 
     c = database[(t1,t2,t3)]
-
-#    dist_min = c.min_dist * 0.995
-#    dist_mean = (dist12+dist13+dist23)/3.0
-#    if dist_mean <  dist_min
-#        dist12 = dist12 * dist_min / dist_mean 
-#        dist13 = dist13 * dist_min / dist_mean 
-#        dist23 = dist23 * dist_min / dist_mean 
-#    end
-
 
 
     o1 = summarize_orb(orb1)
@@ -4450,35 +4568,16 @@ function calc_threebody_onsite(t1,t2,t3,orb1,dist12,dist13,dist23, database; set
     Otot = three_body_O(dist12, dist13, dist23, sameat, c.datH[indO], memoryV=memory)
 
     
-    #=
-    (maxv, minv) = c.maxmin_val_train[(t1,o1,t2,t3,:O)]
-    if set_maxmin 
-
-        if Otot > maxv || maxv > 1e6
-            maxv = Otot
-        end
-        if Otot < minv || minv < -1e6
-            minv = Otot
-        end
-        c.maxmin_val_train[(t1,o1,t2,t3,:O)] = (maxv, minv)
-
-    else
-        if Otot > maxv*1.01
-            println("warning - calc_threebody_onsite outside training ( $maxv , $minv ) vs $Otot ", (t1,o1,t2,t3,:O), (dist12, dist13, dist23))
-#            Otot = maxv
-        
-        end
-        if Otot < minv*1.01
-            println("warning - calc_threebody_onsite outside training ( $maxv , $minv ) vs $Otot ", (t1,o1,t2,t3,:O), (dist12, dist13, dist23))
-#            Otot = minv
-        end
-    end
-=#
 
     return Otot
         
 end
 
+"""
+    function fit_threebody_onsite(t1,t2,t3,orb1,dist12,dist13,dist23) 
+
+Fit three body onsite interactions.
+"""
 function fit_threebody_onsite(t1,t2,t3,orb1,dist12,dist13,dist23)
 
 #    o1 = summarize_orb(orb1)
@@ -4497,31 +4596,15 @@ end
 
 
 ########
+"""
+    function calc_threebody(c,ind, t1,t2,t3,orb1,orb2,dist,dist31,dist32,lmn12, lmn31,lmn32; database=missing, memory0=missing, memory1=missing, memory2=missing, memoryV=missing, precalc=false, set_maxmin=false)
+
+Calculate 3body intersite hamiltonian interactions.
+
+`memory1`, etc have preallocated memory. This function is important for performance.
+"""
 function calc_threebody(c,ind, t1,t2,t3,orb1,orb2,dist,dist31,dist32,lmn12, lmn31,lmn32; database=missing, memory0=missing, memory1=missing, memory2=missing, memoryV=missing, precalc=false, set_maxmin=false)
 #function calc_threebody(t1,t2,t3,orb1,orb2,dist,dist31,dist32,lmn12, lmn31,lmn32, database; set_maxmin=false)
-
-
-
-    #currently only for offsite Hamiltonian 3body terms, treat third atom with :s symmetry
-    
-#    o1 = summarize_orb(orb1)
-#    o2 = summarize_orb(orb2)    
-    
-#    ind = c.inds[(t1,o1,t2,o2,t3,:H)]
-    
-
-
-
-
-#    dist_min = c.min_dist * 0.995
-#    dist_mean = (dist+dist31+dist32)/3.0
-#    if dist_mean <  dist_min
-#        dist32 = dist32 * dist_min / dist_mean
-#        dist31 = dist31 * dist_min / dist_mean
-#        dist = dist * dist_min / dist_mean
-#    end
-
-
 
 
 
@@ -4536,67 +4619,23 @@ function calc_threebody(c,ind, t1,t2,t3,orb1,orb2,dist,dist31,dist32,lmn12, lmn3
     else
         H =  three_body_H(dist, dist31, dist32,t1==t2, c.datH[ind], memory0=memory0, memory1=memory1, memory2=memory2, memoryV=memoryV)
     end
-#    return 0.0
-
-
-
-#    H =  three_body_H(dist, dist31, dist32,t1==t2, c.datH[ind])
-
-
-#    H=0.0
-
 
     sym31 = symmetry_factor(orb1,:s,lmn31, [1.0])
     sym32 = symmetry_factor(orb2,:s,lmn32, [1.0])    
 
-#    sym31=1.0
-#    sym32=1.0
-
-
-#    sym_x = symmetry_factor(orb1,:px,lmn31, [1.0 0.0]) * symmetry_factor(orb2,:px,lmn32, [1.0 0.0])
-#    sym_y = symmetry_factor(orb1,:py,lmn31, [1.0 0.0]) * symmetry_factor(orb2,:py,lmn32, [1.0 0.0])
-#    sym_z = symmetry_factor(orb1,:pz,lmn31, [1.0 0.0]) * symmetry_factor(orb2,:pz,lmn32, [1.0 0.0])
-
-
     H1 = H * (sym31 * sym32   )
 
-#    (maxv, minv) = c.maxmin_val_train[(t1,o1,t2,o2,t3,:H)]
-#    if set_maxmin 
-#
-#        if H1 > maxv || maxv > 1e6
-#            maxv = H1
-#        end
-#        if H1 < minv || minv < -1e6
-#            minv = H1
-#        end
-#        c.maxmin_val_train[(t1,o1,t2,o2,t3,:H)] = (maxv, minv)
-#
-#    else
-#        if H1 > maxv*1.01
-#            println("warning - calc_threebody outside training ( $maxv , $minv ) vs $H1 ", (t1,orb1,t2,orb2,t3,:H), (dist,dist31,dist32))
-#######            H1 = maxv
-#        
-#        end
-#        if H1 < minv*1.01
-#            println("warning - calc_threebody outside training ( $maxv , $minv ) vs $H1 ", (t1,orb1,t2,orb2,t3,:H), (dist,dist31,dist32))
-#######            H1 = minv
-#        end
-#    end
 
     return  H1
 
-#    H_B =  three_body_H(dist, dist31, dist32, c.datH[ind2])
-#
-#    sym_x = symmetry_factor(orb1,:px,lmn31, [1.0 1.0]) * symmetry_factor(orb2,:px,lmn32, [1.0 1.0])
-#    sym_y = symmetry_factor(orb1,:py,lmn31, [1.0 1.0]) * symmetry_factor(orb2,:py,lmn32, [1.0 1.0])
-#    sym_z = symmetry_factor(orb1,:pz,lmn31, [1.0 1.0]) * symmetry_factor(orb2,:pz,lmn32, [1.0 1.0])
-#
-#    H2 = H_B * (sym_x + sym_y + sym_z)
-#
-#    return H1 + H2
 
 end
 
+"""
+    function fit_threebody(t1,t2,t3,orb1,orb2,dist,dist31,dist32,lmn12, lmn31,lmn32)
+
+Fit threebody intersite interactions
+"""
 function fit_threebody(t1,t2,t3,orb1,orb2,dist,dist31,dist32,lmn12, lmn31,lmn32)
 
     #currently only for offsite Hamiltonian 3body terms, treat third atom with :s symmetry
@@ -4609,25 +4648,20 @@ function fit_threebody(t1,t2,t3,orb1,orb2,dist,dist31,dist32,lmn12, lmn31,lmn32)
     sym31 = symmetry_factor(orb1,:s,lmn31, [1.0])
     sym32 = symmetry_factor(orb2,:s,lmn32, [1.0])    
 
-#    sym_x = symmetry_factor(orb1,:px,lmn31, [1.0 0.0]) * symmetry_factor(orb2,:px,lmn32, [1.0 0.0])
-#    sym_y = symmetry_factor(orb1,:py,lmn31, [1.0 0.0]) * symmetry_factor(orb2,:py,lmn32, [1.0 0.0])
-#    sym_z = symmetry_factor(orb1,:pz,lmn31, [1.0 0.0]) * symmetry_factor(orb2,:pz,lmn32, [1.0 0.0])
-
-    
     H1 = H * (sym31 * sym32  )
 
     return H1
 
 
-#    H2 = H * (sym_x + sym_y + sym_z) 
-
-#    return [H1 H2]
-
 end
 
 
 
+"""
+    function renormalize_S(tbc, database, cutoff=17.99)
 
+Function for changing S but keeping the band structure fixed. Not currently used.
+"""
 function renormalize_S(tbc, database, cutoff=17.99)
     #steps: 1) calculate new S_k
     #       2) change tbc to use new S_k

@@ -1,4 +1,6 @@
 
+#functions / variables for global units option. See set_units in TightlyBound.jl
+
 global global_energy_units="eV"
 global global_length_units="Å"
 
@@ -50,5 +52,17 @@ function convert_stress(stress)
     end
     
     return stress * f1 * f2
+    
+end
+
+function convert_length(length)
+
+    if global_length_units=="Å"
+        f1 = Ang
+    else
+        f1 = 1.0
+    end
+    
+    return length * f1
     
 end

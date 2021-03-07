@@ -1,8 +1,18 @@
+"""
+    module Atomdata
+
+Holds the data for isolated atoms.
+"""
 module Atomdata
 using ..AtomicMod:makeatom
 #using ..Atomic:AtomicMod
 
 
+"""
+    atoms::Dict()
+
+Periodic table information.
+"""
 atoms = Dict()
 
 #      name                     name  Z  row col mass nval nsemi  orbitals total_energy    e_orb1, e_orb2
@@ -133,6 +143,11 @@ nothing
 
 #approximate metallic radius / single covalent radius 
 #for use in prerelaxing structures in pm
+"""
+    atom_radius::Dict()
+
+Atomic radius (metallic), in pm
+"""
 atom_radius = Dict()
 
 atom_radius[ "X" ] =  200
@@ -230,6 +245,11 @@ for key in keys(atom_radius)
 end
 
 
+"""
+    atom_prefered_oxidation::Dict()
+
+Prefered oxidation states of atoms, in descending order of preference (approximate).
+"""
 atom_prefered_oxidation = Dict()
 
 
@@ -324,6 +344,11 @@ for key in keys(atom_prefered_oxidation)
 end
 
 
+"""
+    cutoff_dist::Dict()
+
+Cutoff distance for Hamiltonian calculation
+"""
 cutoff_dist = Dict()
 
 function get_cutoff(at1, at2)
@@ -370,6 +395,11 @@ function get_cutoff(at1, at2, at3)
     end
 end        
 
+"""
+    min_dimer_dist_dict::Dict()
+
+Approximate minimum distance in current fitting data.
+"""
 min_dimer_dist_dict = Dict()
 
 min_dimer_dist_dict["Pd"] =  3.73246
@@ -443,7 +473,11 @@ end
 
 
 ########
+"""
+    sub_list::Dict()
 
+Most likely substitution list, approximate.
+"""
 sub_list = Dict()
 
 sub_list[ "H" ] =  ["F","Li"]
@@ -533,6 +567,11 @@ sub_list[ "Po" ] = []
 sub_list[ "At" ] = []
 
 
+"""
+    electronegativity::Dict()
+
+Pauling scale.
+"""
 electronegativity = Dict()
 
 electronegativity["H"] =  2.20

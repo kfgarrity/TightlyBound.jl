@@ -1,3 +1,8 @@
+"""
+    module BandTools
+
+Utility functions for manipulating band structures. These need to be defined early in the code so other Modules have acccess to them.
+"""
 module BandTools
 
 using LinearAlgebra
@@ -12,10 +17,12 @@ function gaussian_derivative(de, smearing=0.01)
 end    
 
 
-function calc_fermi(eigs, weights, nelec, smearing = 0.01)
 """
+    function calc_fermi(eigs, weights, nelec, smearing = 0.01)
+
 calculate fermi energy using bisection
 """
+function calc_fermi(eigs, weights, nelec, smearing = 0.01)
 
 #    println("calc_fermi eigs ", eigs)
 
@@ -63,6 +70,11 @@ calculate fermi energy using bisection
     
 end
 
+"""
+    function band_energy(eigs, weights, nelec, smearing = 0.01; returnk=false, returnocc=false, returnef=false, returnboth=false)
+
+Calculate band energy. Has options for additional return variables. Calculates fermi energy internally.
+"""
 function band_energy(eigs, weights, nelec, smearing = 0.01; returnk=false, returnocc=false, returnef=false, returnboth=false)
 
     efermi = calc_fermi(eigs, weights, nelec, smearing)
@@ -88,7 +100,13 @@ function band_energy(eigs, weights, nelec, smearing = 0.01; returnk=false, retur
     
 end
 
+"""
+    function smearing_energy(eigs, weights, efermi, smearing = 0.01)
 
+Smearing contribution to total energy. If you don't take this int account in metals or 
+small gap semiconductors, your energy is not variational 
+in the correct way, and things like forces and stresses become wrong.
+"""
 function smearing_energy(eigs, weights, efermi, smearing = 0.01)
 
 #    efermi = calc_fermi(eigs, weights, nelec, smearing)

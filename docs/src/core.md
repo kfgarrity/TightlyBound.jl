@@ -26,6 +26,7 @@ plot_compare_tb
 ## Utility
 
 ```@docs
+set_units
 Hk
 calc_bands
 calc_tb_fast

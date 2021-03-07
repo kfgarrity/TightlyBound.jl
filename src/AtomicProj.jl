@@ -5,6 +5,11 @@
 
 
 ####################### QE specific 
+"""
+    module AtomicProj
+
+Analyze projections from QE projwfc.x
+"""
 module AtomicProj
 """
 Scripts to analyze atomic projections
@@ -29,6 +34,7 @@ using ..DFToutMod
 #using ..Utility:str_w_spaces
 using ..Utility:parse_str_ARR_float
 using ..Utility:parse_str_ARR_complex
+using ..Utility:write_to_file
 using ..DFToutMod:bandstructure
 using ..TB:make_tb
 using ..TB:make_tb_crys
@@ -62,6 +68,18 @@ using ..TightlyBound:TEMPLATEDIR
 
 
 
+"""
+    mutable struct proj_dat
+
+Holds data from projwfc.x
+
+- `bs::bandstructure`
+- `natwfc::Int64` number of atomic wavefunctions, from dft projection
+- `proj::Array{Complex{Float64}, 3}`  atomc projections `nk × natwfc × nbnd` , where `nbnd` is the number of bands in DFT
+- `overlaps::Array{Complex{Float64}, 3} overlap matrix from dft `nk × natwfc × natwfc`
+
+This is created from `loadXML_proj`, which calls `make_proj`
+"""
 mutable struct proj_dat
 
     bs::bandstructure
@@ -76,14 +94,12 @@ Base.show(io::IO, d::proj_dat) = begin
 end   
 
 
-function write_to_file(str, filename, directory="./")
 
-    f=open("$directory/$filename", "w")
-    write(f, str)
-    close(f)
+"""
+    function makedict_proj(savedir)
 
-end
-
+Return xml proj data from QE savedir
+"""
 function makedict_proj(savedir)
 
     if isfile(savedir*"/atomic_proj.xml")
@@ -104,6 +120,11 @@ function makedict_proj(savedir)
     return d
 end
 
+"""
+    function make_projwfcx(prefix, tmpdir)
+
+Create the inputfile for running projwfc.x from QE
+"""
 function make_projwfcx(prefix, tmpdir)
 """
 makes the proj input file
@@ -123,6 +144,11 @@ makes the proj input file
 end
 
 
+"""
+    function run_projwfcx(projfile="proj.in"; directory="./", nprocs=1)
+
+Run projwfc.x from QE code
+"""
 function run_projwfcx(projfile="proj.in"; directory="./", nprocs=1)
 """
 run projwfc.x QE command
@@ -152,6 +178,13 @@ run projwfc.x QE command
 
 end
 
+
+"""
+    function makeOG(prefix, tmpdir )
+
+open_grid.x inputfile. My workflow doesn't currently use this, as open_grid.x was unreliable, and
+I've rewritten the code to avoid it and work directly with independent k-points only.
+"""
 function makeOG(prefix, tmpdir )
 """
 makes the OG file
@@ -167,6 +200,11 @@ makes the OG file
     
 end
 
+"""
+    function run_og(filename="og.in";  directory="./", nprocs=1)
+
+runs open_grid.x
+"""
 function run_og(filename="og.in";  directory="./", nprocs=1)
 """
 run open_grid.x command
@@ -193,13 +231,45 @@ run open_grid.x command
         
 end
 
-function projwfx_workf(dft::dftout; directory="./", nprocs=1, freeze=true, writefile="projham.xml",writefilek="projham_K.xml", skip_og=true, skip_proj=true, shift_energy=true, cleanup=true, skip_nscf=true, localized_factor = 0.05, only_kspace=false, screening = 1.0)
 """
-All steps to run wannier90 from converged QE SCF calculation
+    function projwfx_workf(dft::dftout)
+
+This is the main workflow for the creation of TB matrix elements from QE DFT calculations.
+
+Starting from a converged QE scf calculation...
+
+1) Run NSCF calculation with extra empty bands. If you want a real space TB object, these need to be a full k-point grid not using symmtery. k-space only can use irreducible k-points
+
+2) Run projwfc.x
+
+3) Construct the TB hamiltonian in k-space
+
+4) (Optional) FT to real space
+
+5) (Optional) cleanup wavefunctions.
+
+# Arguments
+
+- `dft::dftout` The starting scf calculation
+- `directory="./"`
+- `nprocs=1` number of processors
+- `freeze=true` Keep occupied eigenvalues fixed to exact DFT values
+- `writefile="projham.xml"` output file for real-space TB
+- `writefilek="projham_K.xml"` output file for k-space TB
+- `skip_og=true`  Not used anymore
+- `skip_proj=true` If projections are already run, don't run them again, load from file.
+- `shift_energy=true` Shift energy of eigenvalues s.t. total energy equal band energy.
+- `cleanup=true` Remove the large wavefunction files from disk, keeping nscf/projection files.
+- `skip_nscf=true` If nscf calculation is already done, load results from file.
+- `localized_factor = 0.15` Adjust extent of overlap matrix. 0.0 uses full atomic wavefunctions, which can be overly delocalized. 1.0 is fully localized.
+- `only_kspace=false` Do not create real-space tb. Usually true in current code, as I can fit directly from k-space tb only.
+- `screening = 1.0` If use a screening factor to reduce value of U in Ewald calculation. Usually leave at 1.0.
+"""
+function projwfx_workf(dft::dftout; directory="./", nprocs=1, freeze=true, writefile="projham.xml",writefilek="projham_K.xml", skip_og=true, skip_proj=true, shift_energy=true, cleanup=true, skip_nscf=true, localized_factor = 0.15, only_kspace=false, screening = 1.0)
+"""
 
 Steps:
 
-1) open_grid scf calc 
 2) run projwfc.x
 2a) load output
 3) make projected ham in k-space
@@ -546,7 +616,11 @@ end
     
 
 
+"""
+    function loadXML_proj(savedir, B=missing)
 
+Load proj from QE output file. Need the QE save dir like "qe.save". `B` are reciprocal lattice vectors.
+"""
 function loadXML_proj(savedir, B=missing)
     
     d= makedict_proj(savedir)
@@ -610,6 +684,11 @@ function loadXML_proj(savedir, B=missing)
     
 end
 
+"""
+    function make_proj(bs, proj, overlaps)
+
+Constructor for proj_dat.
+"""
 function make_proj(bs, proj, overlaps)
 
     if bs.nks != size(proj)[1] || bs.nks != size(overlaps)[1]
@@ -634,6 +713,18 @@ end
 #    return
 #end
 
+"""
+    function create_tb(p::proj_dat, d::dftout; energy_froz=missing, nfroz=0, shift_energy=true)
+
+Does the main creation of TB hamiltonian from DFT projection data in k-space.
+
+# Arguments
+- `p::proj_dat` Projection data
+- `d::dftout` DFT scf data
+- `energy_froz=missing` Energy to start freezing eigenvalues
+- `nfroz=0` number of frozen bands.
+- `shift_energy=true` if `true` shift eigenvalues so band energy `==` total energy
+"""
 function create_tb(p::proj_dat, d::dftout; energy_froz=missing, nfroz=0, shift_energy=true)
 
 
@@ -664,6 +755,7 @@ function create_tb(p::proj_dat, d::dftout; energy_froz=missing, nfroz=0, shift_e
     EIGS = zeros(p.bs.nks, NBND)
     PROJ = zeros(Complex{Float64}, p.bs.nks, nwan, NBND)
 
+    # setup data
     for k = 1:p.bs.nks
         counter = 0
         for n = 1:p.bs.nbnd
@@ -701,24 +793,16 @@ function create_tb(p::proj_dat, d::dftout; energy_froz=missing, nfroz=0, shift_e
         
         etot_dft = d.energy
         e_smear = d.energy_smear
-        print("e_smear $e_smear")
- #       println("etot_dft $etot_dft etotal_atoms $etotal_atoms etypes $etypes")
 
-#        println("atomization_energy ", etot_dft - etotal_atoms)
-
-#        atomization_energy = etot_dft - etotal_atoms
         atomization_energy = etot_dft - etotal_atoms - etypes  - e_smear
-#        println("subtract smearing energy")
+
 
         println("atomization_energy $atomization_energy")
 
         band_en = band_en 
         shift = (atomization_energy - band_en  )/nval
 
-#        println("shift $shift")
-#        println("band_en $band_en etot_dft $etot_dft atomization_energy $atomization_energy shift $shift nval $nval")
-        
-#        p.bs.eigs = p.bs.eigs .+ shift
+
         EIGS = EIGS .+ shift
         
 
@@ -735,23 +819,6 @@ function create_tb(p::proj_dat, d::dftout; energy_froz=missing, nfroz=0, shift_e
         println("no shift: match dft eigenvals")
     end
     
-    #testing
-#    nsemi = 0
- #   nwan = 2
- #   wan = [1,2]
- #   semicore = []
- #   nfroz = 0
-    
-    #nsemi = 0
-    #nwan = 5
-    #wan = [1,2,3,4,5]
-    #semicore = []
-    #nfroz = 0
-    #---
-    
-#    println("semicore ", semicore, " nsemi ", nsemi)
-#    println("wan ", wan, " nwan ", nwan)
-
 
     P = zeros(Complex{Float64}, NBND, NBND)  #p.bs.nbnd-nsemi,p.bs.nbnd-nsemi)
 
@@ -761,9 +828,6 @@ function create_tb(p::proj_dat, d::dftout; energy_froz=missing, nfroz=0, shift_e
     Btilde = zeros(Complex{Float64}, nwan, NBND)
     B = zeros(Complex{Float64}, nwan, NBND)
 
-    #    Pa = zeros(Complex{Float64}, nfroz, nfroz)
-    #    Ba = zeros(Complex{Float64}, nwan, nfroz)
-    #    Btildea = zeros(Complex{Float64}, nwan, nfroz)
     
     ham_dft = zeros(Float64, NBND)
 
@@ -771,20 +835,16 @@ function create_tb(p::proj_dat, d::dftout; energy_froz=missing, nfroz=0, shift_e
 
 
     htemp = zeros(Complex{Float64}, nwan, nwan)
-    #    htemp = zeros(Complex{Float64}, p.bs.nbnd-nsemi,p.bs.nbnd-nsemi)
 
-#    max_c = minimum(p.bs.eigs[:,end])
     max_c = minimum(EIGS[:,end])
     min_c = max_c - 0.1
 
-#    min_c = max(maximum(p.bs.eigs[:,wan])+.001, min_c) #ensure we don't cut off needed states
+
 
     min_c = max(maximum(EIGS[:,1:nwan])+.001, min_c) #ensure we don't cut off needed states
-#    min_c = max(maximum(EIGS[:,1:nwan])+.001, min_c) #ensure we don't cut off needed states
 
-    
-#    println("min of highest eigenvals: ", max_c, " " , min_c)
-    
+
+    #simple cutoff function
     function cutoff(num, min_c, max_c)
         if num < min_c
             return 1.0
@@ -795,7 +855,7 @@ function create_tb(p::proj_dat, d::dftout; energy_froz=missing, nfroz=0, shift_e
             return 1.0 - 10.0 * t^3 + 15.0 *  t^4  - 6.0 * t^5
         end
     end
-#    Palt = zeros(4,4)
+
 
     Palt_min = 1.0
     
@@ -804,20 +864,17 @@ function create_tb(p::proj_dat, d::dftout; energy_froz=missing, nfroz=0, shift_e
 #    for k = 1:nks
         
         #this avoids breaking symmetry by cutting off a symmetrically equivalent pair/triplet, etc because we include a finite number of bands
-#        energy_cutoff = p.bs.eigs[k,end]
+
         energy_cutoff = EIGS[k,end]
         max_ind = 0
-#        for i=max(1,p.bs.nbnd-5):p.bs.nbnd
+
         for i=max(1,NBND-5):NBND
 #            if p.bs.eigs[k,i] < energy_cutoff - 1e-3
             if EIGS[k,i] < energy_cutoff - 1e-3
                 max_ind = i
             end
         end
-#        if k == 1
-#            println("wan $wan nsemi $nsemi max_ind $max_ind NBND $NBND")
-#            println("EIGS ", EIGS[k,:])
-#        end
+
         
 #        B[:,1:max_ind-nsemi] = p.proj[k,wan, 1+nsemi:max_ind]
         B[:,1:max_ind] = PROJ[k,:, 1:max_ind]
@@ -829,7 +886,7 @@ function create_tb(p::proj_dat, d::dftout; energy_froz=missing, nfroz=0, shift_e
         end
         
         P[:,:] .= 0.0
-#        P[1:max_ind-nsemi,1:max_ind-nsemi] = B[:,1:max_ind-nsemi]'*B[:,1:max_ind-nsemi]
+
         P[1:max_ind,1:max_ind] = B[:,1:max_ind]'*B[:,1:max_ind]
         
 
@@ -838,10 +895,13 @@ function create_tb(p::proj_dat, d::dftout; energy_froz=missing, nfroz=0, shift_e
 
         
         for i in 1:nwan
+
+
             if real(Palt[i,i]) < Palt_min
                 Palt_min = real(Palt[i,i])
             end
-            #            println("Palt $i ", real(Palt[i,i]))
+
+            #warn user if projection is bad, i.e. projectors aren't projecting onto anything. 
             if real(Palt[i,i]) < 0.80
                 println("Warning, difficult to project atomic wfc ", i," ",  real(Palt[i,i]), " k ", k, " tr(P) = " , tr(real(P)))
             end
@@ -855,55 +915,35 @@ function create_tb(p::proj_dat, d::dftout; energy_froz=missing, nfroz=0, shift_e
             end
             
         end
-        
-        #        println("P ", real(diag(P)))
-        #        println("EIG ", (p.bs.eigs[k,1+nsemi:end]))
 
+        #eigenvalues of projection matrix are key to this method
         val, vect = eigen( 0.5 * (P[1:max_ind,1:max_ind] + P[1:max_ind,1:max_ind]')     ) # 
-#        if k == 1; println("P VAL ", val); end
+
         good_proj = (max_ind - nwan + 1 ) : max_ind
-#        if k == 1; println("good proj", good_proj); end
+
 
         Btilde[:,1:max_ind] = vect[:,good_proj]'
 
-        #        for (i, g) = enumerate(good_proj)
-        #            Btilde[:,i] =  Btilde[:,i] ./ val[g]^0.5
-        #        end
+        #approximate hamiltonian using highest eigenvalues of projection matrix.
         
-#        htemp[:,:] = Btilde[:,1:max_ind-nsemi] * Diagonal(p.bs.eigs[k,nsemi+1:max_ind])  * Btilde[:,1:max_ind-nsemi]'
-#        htemp[:,:] = Btilde[:,1:max_ind-nsemi] * Diagonal(EIGS[k,1:max_ind])  * Btilde[:,1:max_ind-nsemi]'
         htemp[:,:] = Btilde[:,1:max_ind] * Diagonal(EIGS[k,1:max_ind])  * Btilde[:,1:max_ind]'
 
         neweigs, newvect = eigen((htemp+htemp')/2.0)
 
-#        if k == 1
-#            println( "NEW EIGS !!!!!!!!!!!!!!! ", neweigs)
-#        end
-        #        println("neweig ", neweigs)
         Pmat[k, :] = real(diag(P))
         Nmat[k, :] = neweigs
         
-#        ham_k[:,:,k] = B[:,1:max_ind-nsemi] * Btilde[:,1:max_ind-nsemi]' * htemp * Btilde[:,1:max_ind-nsemi] *  B[:,1:max_ind-nsemi]'        
+
         ham_k[:,:,k] = B[:,1:max_ind] * Btilde[:,1:max_ind]' * htemp * Btilde[:,1:max_ind] *  B[:,1:max_ind]'        
         
         
         ham_k[:,:,k] = (ham_k[:,:,k]  + ham_k[:,:,k]')/2.0
 
-#        if k == 1
-#            println( "hamk ", eigvals(ham_k[:,:,k]))
-#        end
-
-
-#        if k < 10
-#            println("k $k")
-#            println(EIGS[k, 1:10])
-#            println("calc xxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-#            println(eigvals(ham_k[:,:,k]))
-#            println()
-#        end            
 
     end
 
+
+    #decide if need to send serious warning to user.
     if badk / p.bs.nks > 0.15
         println("warning lots of bad kpoints ", badk, " of ", p.bs.nks)
         warn_badk=true
@@ -913,6 +953,10 @@ function create_tb(p::proj_dat, d::dftout; energy_froz=missing, nfroz=0, shift_e
 
     println("Min Palt: $Palt_min")
 
+
+    #here we shift the eigenvalues around to match DFT eigenvalues below a cutoff.
+    #this requires identifying which bands are supposed to match which eigenvlues, which
+    #can be tricky. I use a projection heuriestic, but it can fail at band crossings that mix bands.
     if !(ismissing(energy_froz))
         energy_froz2 = energy_froz+0.25
         println("energy_froz: $energy_froz , $energy_froz2")
@@ -960,12 +1004,8 @@ function create_tb(p::proj_dat, d::dftout; energy_froz=missing, nfroz=0, shift_e
                     end
                 end
             end
-#            if k < 10
-#                for n = 1:nwan
-#                    println("ORDER $n ", order[n])
-#                end
-#            end
 
+#acutally do the change
             for n in 1:nwan
                 if val_pw[order[n]] < energy_froz
                     val_tb_new[n] = val_pw[order[n]]
@@ -999,16 +1039,7 @@ function create_tb(p::proj_dat, d::dftout; energy_froz=missing, nfroz=0, shift_e
         end
     end
     
-#    for k = 1:10
-#
-#        println("$k ", p.bs.kpts[k,:])
-#        val_tb_new, vect = eigen(ham_k[:,:,k] )
-#        println("val new ", val_tb_new)
-#        println("val dft ", EIGS[k,1:nwan])
-#    end
-
-    
-
+#alternate eigenvalue fix method.
     if nfroz >= 1 && (ismissing(energy_froz))
         println("nfroz: ", nfroz)
         for k = 1:p.bs.nks
@@ -1031,7 +1062,8 @@ function create_tb(p::proj_dat, d::dftout; energy_froz=missing, nfroz=0, shift_e
     end
 
    
-    #reshift!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    #reshift to match dft total energy
+    
     VAL = zeros(Float64, p.bs.nks, nwan)
     VECT = zeros(Complex{Float64}, p.bs.nks, nwan, nwan)
     for k = 1:p.bs.nks
@@ -1071,8 +1103,6 @@ function create_tb(p::proj_dat, d::dftout; energy_froz=missing, nfroz=0, shift_e
 
     end
     
-    
-#    writedlm("new.csv", real(ham_k))
     return ham_k, EIGS, Pmat, Nmat, VAL, warn_badk
 
 
@@ -1081,6 +1111,13 @@ function create_tb(p::proj_dat, d::dftout; energy_froz=missing, nfroz=0, shift_e
 end
     
 
+"""
+    function get_ham_r_slow(p::proj_dat, d::dftout, grid, ham_k::Array{Complex{Float64}, 3}; nonorth=true, K=missing)
+
+Slow method for doing fourier transform. Uses standard ft formula, not fft.
+
+Use fast version instead.
+"""
 function get_ham_r_slow(p::proj_dat, d::dftout, grid, ham_k::Array{Complex{Float64}, 3}; nonorth=true, K=missing)
 """
 DOESN'T USE FFTW. MOSTLY FOR DEBUGGING / missing fft libraries
@@ -1247,8 +1284,22 @@ K is already inside p. K must match ham_k
     
 end    
     
+"""
+    function prepare_ham_k(p::proj_dat, d::dftout, grid, ham_k::Array{Complex{Float64}, 3}; nonorth=true, K=missing, localized_factor = 0.05, screening=1.0)
 
-function prepare_ham_k(p::proj_dat, d::dftout, grid, ham_k::Array{Complex{Float64}, 3}; nonorth=true, K=missing, localized_factor = 0.05, screening=1.0)
+Constructs the actual k-space hamiltonain, which involves lots of putting matricies in the correct form and de-orthogonalizing if desired.
+
+#arguments
+- `p::proj_dat` projection data
+- `d::dftout` dft data
+- `grid` kpoint grid spacing 
+- `ham_k::Array{Complex{Float64}, 3}` Hamiltonian
+- `nonorth=true` make a non-orthogonal TB 
+- `K=missing` k-point array, usually get from `p`
+- `localized_factor = 0.15` increase localization of overlaps.
+- `screening=1.0` mulitply U by this factor. usually not used.
+"""
+function prepare_ham_k(p::proj_dat, d::dftout, grid, ham_k::Array{Complex{Float64}, 3}; nonorth=true, K=missing, localized_factor = 0.15, screening=1.0)
 
     wan, semicore, nwan, nsemi, wan_atom, atom_wan = tb_indexes(d)
     
@@ -1264,7 +1315,9 @@ function prepare_ham_k(p::proj_dat, d::dftout, grid, ham_k::Array{Complex{Float6
         nks = size(K)[1]
     end
     
-    #fix mysterious sign error K-space
+    #fix mysterious sign error K-space. QE overlaps have weird signs in x and y direction
+    # I don't know why, you have to ask them.
+    
     ind2orb, orb2ind, etotal_atoms, nval =  orbital_index(d.crys)
     
     OVERLAPS = deepcopy(p.overlaps)
@@ -1334,48 +1387,19 @@ function prepare_ham_k(p::proj_dat, d::dftout, grid, ham_k::Array{Complex{Float6
         end
 
 
-#        for i=1:nwan #normalize overlaps
- #           sumi = sum(Sk[i,i,:] .* p.bs.kweights)
-#            println("normalize $i ", sumi/sum(p.bs.kweights) )
-#            Sk[i,i,:] = Sk[i,i,:] / real(sumi) * sum(p.bs.kweights)
-#        end
-
-#        println("fourteen2")
-#        println(Sk[:,:,14])
-
         for k in 1:nks
             S = Sk[:,:,k]
             S = (S + S')/2.0
             Sk[:,:,k] = S
-#            vals, vects = eigen(S)
-#            Sprime = vects*diagm(vals .+ localized_factor)*vects'
-#            Sk[:,:,k] = Sprime
         end            
 
-#        Sk = Sk ./ (1.0 + localized_factor)
-
-        
-#        for i=1:nwan #normalize overlaps
-#            sumi = sum(Sk[i,i,:])
-#            Sk[i,i,:] = Sk[i,i,:] / real(sumi) * Float64(nks)
-#        end
-
-#        for i=1:nwan #normalize overlaps
-#            sumi = sum(Sk[i,i,:] .* p.bs.kweights)
-#            Sk[i,i,:] = Sk[i,i,:] / real(sumi) * sum(p.bs.kweights)
-#        end
-
-        
         if localized_factor > 1e-5
             for k = 1:nks
                 Sk[:,:,k] = Sk[:,:,k] * (1.0 - localized_factor) + I(nwan) * localized_factor 
             end
         end
 
-#        println("fourteen3")
-#        println(Sk[:,:,14])
-        
-        
+        #does the de-orthogonalization
         for k in 1:nks
             S[:,:] = Sk[:,:,k]
             S = (S+S')/2.0
@@ -1413,12 +1437,14 @@ end
 
 
 
-#function get_ham_r(p::proj_dat, d::dftout, grid, ham_k::Array{Complex{Float64}, 3}; nonorth=true, K=missing, localized_factor = 0.05)
+"""
+    function get_ham_r(tbck::tb_crys_kspace)
+
+Do fft to get the real-space ham. Requires tbck to be on a regular grid centered at Gamma with no symmetry.
+"""
 function get_ham_r(tbck::tb_crys_kspace)
 """
-Do Fourier transform k->R. grid is the size of the k-space grid. 
-Optionally you can include the k space grid explictly, but normally 
-K is already inside p. K must match ham_k
+Do Fourier transform k->R. 
 """
 
     nonorth = tbck.tb.nonorth
@@ -1436,36 +1462,6 @@ K is already inside p. K must match ham_k
 
     ind2orb, orb2ind, etotal_atoms, nval =  orbital_index(tbck.crys)
 
-#=
-    #fix mysterious sign issue
-
-
-    for n = 1:nwan
-        a1,t1,orb = ind2orb[n]
-        if orb == :px || orb == :py
-            println("fix mysterious sign issue R-space $n, $a1, $t1, $orb")
-            ham_r[n,:,:] = -1.0 * ham_r[n,:,:]
-            ham_r[:,n,:] = -1.0 * ham_r[:,n,:]
-
-            if nonorth
-                S_r[:,n,:] = -1.0*S_r[:,n,:]
-                S_r[n,:,:] = -1.0*S_r[n,:,:]
-                
-            end
-        elseif orb == :dxz || orb == :dyz
-            println("fix mysterious sign issue R-space D ORBITALS $n, $a1, $t1, $orb")
-            ham_r[n,:,:] = -1.0 * ham_r[n,:,:]
-            ham_r[:,n,:] = -1.0 * ham_r[:,n,:]
-
-            if nonorth
-                S_r[:,n,:] = -1.0*S_r[:,n,:]
-                S_r[n,:,:] = -1.0*S_r[n,:,:]
-        
-            end
-
-        end
-    end
-=#
     #turn ham_r into tight-binding object
     if nonorth
         tb = make_tb(ham_r, ind_arr, r_dict, S_r )        
@@ -1476,7 +1472,7 @@ K is already inside p. K must match ham_k
 
         r = r_dict[[0,0,0]]
         for i =  1:nwan
-            S_r[i,i,r] = 1.0
+            S_r[i,i,r] = 1.0  #trivial overlaps
         end
         tb = make_tb(ham_r, ind_arr, r_dict, S_r)        
     end

@@ -1,3 +1,8 @@
+"""
+    module Utility
+
+Some useful functions, mostly for converting stuff and loading files.
+"""
 module Utility
 
 using Printf
@@ -121,6 +126,13 @@ function str2tuplesdict(st::String, d=missing)
     return d
 end
 
+function write_to_file(str, filename, directory="./")
+
+    f=open("$directory/$filename", "w")
+    write(f, str)
+    close(f)
+
+end
 
 
 

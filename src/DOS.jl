@@ -28,6 +28,8 @@ using ..TightlyBound:global_energy_units
     function projection(tbc::tb_crys, vects, sk3, grid; ptype=missing)
 
 Figures out the projections.
+`ptype` can be `:atomic` or `:orbs` for atom projection or orbital projection (:s,:p,:d)
+Default is to choose `:atomic` except for elemental systems.
 """
 function projection(tbc::tb_crys, vects, sk3, grid; ptype=missing)    
 
@@ -48,7 +50,7 @@ function projection(tbc::tb_crys, vects, sk3, grid; ptype=missing)
     PROJ = []       
     pwan=[]
     
-    if ptype == :atomic || ptype == "atomic" || ptype == :atoms || ptype == "atoms"
+    if ptype == :atomic || ptype == "atomic" || ptype == :atoms || ptype == "atoms" || ptype == :atom || ptype == "atom" || ptype == :Atomic || ptype == "Atomic"
         for ti in tbc.crys.stypes
             
             proj_inds = Int64[]
@@ -131,7 +133,7 @@ The combination of `smearing` and `grid` are important to get converged results.
 
 See also `dos`
 
-return energies, dos, projected_dos, pdos_names
+`return energies, dos, projected_dos, pdos_names`
 """
 function gaussian_dos(tbc::tb_crys; grid=missing, smearing=0.02, npts=300, proj_type=missing, do_display=true)
 
@@ -308,7 +310,7 @@ DOS, using tetrahedral integration
 - `proj_type` can be `"none"`, `"atomic"`, or `"orbital"`. Defaults to `atomic` if more than one atom type.
 - `do_display=false` will suppress plotting
 
-return energies, dos, projected_dos, pdos_names
+`return energies, dos, projected_dos, pdos_names`
 """
 function dos(tbc::tb_crys; grid=missing, npts=300, proj_type=missing, do_display=true)
 

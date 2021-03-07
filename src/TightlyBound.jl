@@ -1,5 +1,7 @@
 """
-holds three body tight binding important stuff
+    module TightlyBound
+
+Main Module
 """
 module TightlyBound
 

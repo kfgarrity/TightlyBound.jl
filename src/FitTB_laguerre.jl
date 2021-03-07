@@ -74,14 +74,29 @@ function do_fitting_renorm(list_of_tbcs; kpoints = [0 0 0; 0 0 0.5; 0 0.5 0.5; 0
 end
 =#
 
+"""
+    function do_fitting(list_of_tbcs; kpoints = missing,  atoms_to_fit=missing, fit_threebody=true, fit_threebody_onsite=true, do_plot = true)
 
-function do_fitting(list_of_tbcs; kpoints = missing,  atoms_to_fit=missing, fit_threebody=true, fit_threebody_onsite=true, do_plot = true)
+Used for simple linear fitting of coefficients. Interface for more complicated fitting.
 
-    ret = do_fitting_linear(list_of_tbcs; kpoints = kpoints,  atoms_to_fit=atoms_to_fit, fit_threebody=fit_threebody, fit_threebody_onsite = fit_threebody_onsite, do_plot = do_plot)
+- `list_of_tbcs` - List of `tbc_crys` or tbc_crys_k` objects to fit to.
+- `dft_list` - for kspace fitting, use 
+- `fit_threebody=true` - Fit threebody coefficients. Sometimes `false` for testing, but `true` for production.
+- `fit_threebody_onsite=true` - Fit threebody onsite coefficients. See above.
+- `do_plot=true` - show simple plot comparing coefficients to tbc reference.
+"""
+function do_fitting(list_of_tbcs; fit_threebody=true, fit_threebody_onsite=true, do_plot = true)
+
+    ret = do_fitting_linear(list_of_tbcs; fit_threebody=fit_threebody, fit_threebody_onsite = fit_threebody_onsite, do_plot = do_plot)
     return ret[1]
 
 end
 
+"""
+    function prepare_for_fitting(list_of_tbcs; kpoints = missing, dft_list = missing, fit_threebody=false, fit_threebody_onsite=false, starting_database=missing, refit_database=missing)
+
+Make lots of preperations for fitting. Moves things around, put stuff in materices, etc.
+"""
 function prepare_for_fitting(list_of_tbcs; kpoints = missing, dft_list = missing, fit_threebody=false, fit_threebody_onsite=false, starting_database=missing, refit_database=missing)
 
 
@@ -132,10 +147,10 @@ function prepare_for_fitting(list_of_tbcs; kpoints = missing, dft_list = missing
 
     for (counter, tbc) in enumerate(tbc_list)
         
-
+        #rearrange info for fitting.
         @time twobody_arrays, threebody_arrays, hvec, svec, Rvec, INDvec, h_onsite, ind_convert, dmin_types, dmin_types3 =  calc_tb_prepare_fast(tbc, use_threebody=fit_threebody, use_threebody_onsite=fit_threebody_onsite)
 
-        
+        #take into account prefit information
         if !ismissing(starting_database)
             goodmin=true
             for key in keys(dmin_types)
@@ -279,7 +294,8 @@ function prepare_for_fitting(list_of_tbcs; kpoints = missing, dft_list = missing
         nh=hnum
         ns=snum
         println("using starting database, $nh $ns")
-        
+
+        #get starting info arranged.
         ch_start, cs_start = extract_database(starting_database, nh, ns, KEYS, HIND, SIND)
 
         ch_lin = zeros(hnum)
@@ -397,6 +413,8 @@ function prepare_for_fitting(list_of_tbcs; kpoints = missing, dft_list = missing
 
     println("setup matricies")
 
+
+    #reformat the data into matrices, fourier transform the real-space fitting data to k-space if using kspace
     c=0
     for (arr2, arr3, hvec, svec, rind, Rvec, INDvec, h_on, ind_convert, tbc_real, tbc) in zip(ARR2,ARR3, HVEC, SVEC, RIND, RVEC, INDVEC, HON, IND_convert, tbc_list_real, list_of_tbcs[keepind])
         c+=1
@@ -518,7 +536,8 @@ function prepare_for_fitting(list_of_tbcs; kpoints = missing, dft_list = missing
 #    println("A error H: ", sum((X_H[:, :] * ch2  - Y_H[:]).^2))
 #    println("A error S: ", sum((X_S[:, :] * cs2  - Y_S[:]).^2))
 
-
+    #make big fitting matrices.
+    
     println("assign memory S ", size(Xc_Hnew_BIG))
     @time X_Snew_BIG = zeros(Float32, size(Xc_Hnew_BIG)[1], snum_new)
     @time for (c,S) in enumerate(X_Snew_BIG_list)
@@ -561,8 +580,26 @@ function prepare_for_fitting(list_of_tbcs; kpoints = missing, dft_list = missing
     
 end
 
+"""
+    function do_fitting_linear(list_of_tbcs; kpoints = missing, dft_list = missing,  fit_threebody=true, fit_threebody_onsite=true, do_plot = true, starting_database=missing, mode=:kspace, return_database=true, NLIM=100, refit_database=missing)
 
-function do_fitting_linear(list_of_tbcs; kpoints = missing, dft_list = missing,  atoms_to_fit=missing, fit_threebody=true, fit_threebody_onsite=true, do_plot = true, starting_database=missing, mode=:kspace, return_database=true, NLIM=100, refit_database=missing)
+Linear fitting (not recursive). Used as starting point of recursive fitting.
+
+# Arguments.
+
+- `list_of_tbcs` The main data to fit to. Consists of a list of `tb_crys` or `tb_crys_kspace` objects.
+- `kpoints = missing` Kpoints to do fitting to in k-space. Usually, this is not used, see below.
+- `dft_list = missing` List of `dftout` objects. Normally, we get symmetry reduced k-grids from these objects.
+- `fit_threebody=true` Fit three body coefficients. Yes for production runs.
+- `fit_threebody_onsite=true` Fit 3body onsite coefficients. Yes for production runs.
+- `do_plot = true` Make a plot to assess fitting. 
+- `starting_database=missing` Use a database dict with some of the coefficents already fit and fixed.
+- `mode=:kspace` Fit in either `:kspace` or `:rspace`. Can only use r-space if using only `tbc_crys` real-space objects to fit to. `:kspace` is normal.
+- `return_database=true` Return the final database. For use when called by other functions.
+- `NLIM=100` Largest number of k-points per structure. Set to smaller numbers to make code go faster / reduce memory, but may be less accurate.
+- `refit_database=missing` starting point for coefficients we are fitting. Usually not used, as it doesn't always speed things up in practice. Something may not work about this option.
+"""
+function do_fitting_linear(list_of_tbcs; kpoints = missing, dft_list = missing,  fit_threebody=true, fit_threebody_onsite=true, do_plot = true, starting_database=missing, mode=:kspace, return_database=true, NLIM=100, refit_database=missing)
 
     if ismissing(kpoints) && !ismissing(dft_list)
         kpoints, KWEIGHTS, nk_max = get_k(dft_list, length(dft_list), NLIM=NLIM)
@@ -681,12 +718,12 @@ function do_fitting_linear(list_of_tbcs; kpoints = missing, dft_list = missing, 
         
         if mode == :rspace
             rows = size(X_H)[1]
-            plot(X_H[1:rows, :] * ch, Y_H[1:rows], "g.", MarkerSize=8)
-            plot(X_S[1:rows, :] * cs, Y_S[1:rows], ".", MarkerSize=4, color="orange")
+            scatter(X_H[1:rows, :] * ch, Y_H[1:rows], color="green", MarkerSize=8)
+            scatter!(X_S[1:rows, :] * cs, Y_S[1:rows], MarkerSize=4, color="orange")
         else
             rows1 = size(X_Hnew_BIG)[1]
-            plot(X_Hnew_BIG[1:rows1, :] * ch + Xc_Hnew_BIG , Y_Hnew_BIG[1:rows1] , "c.", MarkerSize=4)
-            plot(Ys_new + Xc_Snew_BIG, Y_Snew_BIG  , "+", MarkerSize=6, color="magenta")
+            scatter(X_Hnew_BIG[1:rows1, :] * ch + Xc_Hnew_BIG , Y_Hnew_BIG[1:rows1] , color="green", MarkerSize=4)
+            scatter!(Ys_new + Xc_Snew_BIG, Y_Snew_BIG  , MarkerSize=6, color="orange")
 #            plot(Xc_Snew_BIG, Y_Snew_BIG , "k.")
         end
 
@@ -906,7 +943,11 @@ function do_optim_S(list_of_tbcs, dft_list ,  atoms_to_fit=missing, fit_threebod
 end
 =#
 
+"""
+    function make_database(ch, cs,  KEYS, HIND, SIND, DMIN_TYPES, DMIN_TYPES3; scf=false, starting_database=missing, tbc_list=missing)
 
+Construct the `coefs` and database from final results of fitting.
+"""
 function make_database(ch, cs,  KEYS, HIND, SIND, DMIN_TYPES, DMIN_TYPES3; scf=false, starting_database=missing, tbc_list=missing)
     println("make_database")
     if ismissing(starting_database)
@@ -1054,6 +1095,11 @@ function make_database(ch, cs,  KEYS, HIND, SIND, DMIN_TYPES, DMIN_TYPES3; scf=f
     return database
 end
 
+"""
+    function extract_database(database_old,nh,ns, KEYS, HIND, SIND)
+
+If we are using fixed prefit coefficients, we have to get them in the same form as our current fitting.
+"""
 function extract_database(database_old,nh,ns, KEYS, HIND, SIND)
     ch = zeros(nh) .- 999999.0
     cs = zeros(ns) .- 999999.0
@@ -1105,7 +1151,11 @@ function extract_database(database_old,nh,ns, KEYS, HIND, SIND)
 end
 
 
+"""
+    function fourierspace(tbc, kpoints, X_H, X_S, Y_H, Y_S, Xhc, Xsc, rind, Rvec, INDVec, h_on, ind_convert)
 
+Do analytic fourier transform of real space fitting matrices into kspace.
+"""
 function fourierspace(tbc, kpoints, X_H, X_S, Y_H, Y_S, Xhc, Xsc, rind, Rvec, INDVec, h_on, ind_convert)
 
 #    for i = 1:length(Y_S)
@@ -1529,6 +1579,11 @@ function hermetian_indpt(nwan::Int64)
 end
 
 
+"""
+    function hermetian_index(i::Int64,j::Int64,nwan::Int64)
+
+This is used to reduce memory by only keeping track of independet coefficients of Hermetian matrices, which is nearly a factor of 2 reduction.
+"""
 function hermetian_index(i::Int64,j::Int64,nwan::Int64)
     if i <= j
         return nwan * (i-1) + j - (i-1)*(i)÷2
@@ -1538,6 +1593,14 @@ function hermetian_index(i::Int64,j::Int64,nwan::Int64)
 end
 
 
+
+"""
+    function get_k(dft_list, ncalc; NLIM = 100)
+
+Decide which k-points to include in fitting, as we limit the total number to `NLIM` or less per structure
+
+Uses some randomness, but puts high symmetry points at front of line.
+"""
 function get_k(dft_list, ncalc; NLIM = 100)
 
     if ismissing(dft_list)
@@ -1628,8 +1691,35 @@ function get_k(dft_list, ncalc; NLIM = 100)
 
 end
 
+"""
+    function do_fitting_recursive(list_of_tbcs ; weights_list = missing, dft_list=missing, X_cv = missing, kpoints = [0 0 0; 0 0 0.5; 0 0.5 0.5; 0.5 0.5 0.5], starting_database = missing,  update_all = false, fit_threebody=true, fit_threebody_onsite=true, do_plot = false, energy_weight = missing, rs_weight=missing,ks_weight=missing, niters=50, lambda=0.0, leave_one_out=false, prepare_data = missing, RW_PARAM=0.0, NLIM = 100, refit_database = missing, start_small = false)
 
-function do_fitting_recursive(list_of_tbcs ; weights_list = missing, dft_list=missing, X_cv = missing, kpoints = [0 0 0; 0 0 0.5; 0 0.5 0.5; 0.5 0.5 0.5], starting_database = missing,  update_all = false, fit_threebody=true, fit_threebody_onsite=true, do_plot = false, energy_weight = missing, rs_weight=missing,ks_weight=missing, niters=50, lambda=0.0, leave_one_out=false, prepare_data = missing, RW_PARAM=0.0, NLIM = 100, refit_database = missing, start_small = false)
+This is the primary function for fitting. Uses the self-consistent linear fitting algorithm.
+
+# Arguments
+- `list_of_tbcs` List of `tbc_crys` or `tbc_crys_kspace` object to fit to.
+- `weights_list = missing` relative weights of different tbc objects in fitting code.
+- `dft_list=missing` List of `dftout` objects used to get symmetry-reduced kpoint lists / weights to use in kspace fitting.
+- `kpoints = [0 0 0; 0 0 0.5; 0 0.5 0.5; 0.5 0.5 0.5]` alternate way of setting k-points, not usually used.
+- `starting_database = missing` If using already fit coefficents for some of the atoms, from another calculation, include that database dict here.
+- `update_all = false` If update_all is true, then we refit the starting coefficients from `starting_database`. Normally `false` except for testing.
+- `fit_threebody=true` Fit 3body intersite coefficents. `true` for production runs.
+- `fit_threebody_onsite=true` Fit 3body onsite coefficents. `true` for production runs.
+- `do_plot = false` make plot for the linear fit.
+- `energy_weight = missing` Weighting for the total energy terms in the fit.
+- `rs_weight=missing` Real space hamiltonian matrix els weighting. zero for pure k-space fit.
+- `ks_weight=missing`  K-space hamiltonian matrix els weighting. Set to zero to ignore hamiltonian matrix els and only fit to band structure.
+- `niters=50` Maximum number of iterations.
+- `lambda=0.0`  If greater than zero, include a simple ridge regression with this lambda value. Usually zero.
+- `leave_one_out=false`  Leave-one-out cross-validation. Too slow to be very useful.
+- `prepare_data = missing` Rarely used option to reuse previous linear fitting.
+- `RW_PARAM=0.0` Weighting of non-occupied bands in fit.
+- `NLIM = 100` Maximum k-points per structure. Smaller for faster but less accurate fit that uses less memory.
+- `refit_database = missing` Option to include starting data. Rarely used.
+- `start_small = false` When fitting only 3body data, setting this to true will start the 3body terms with very small values, which can improve convergence. Not useful if also fitting 2body terms.
+
+"""
+function do_fitting_recursive(list_of_tbcs ; weights_list = missing, dft_list=missing, kpoints = [0 0 0; 0 0 0.5; 0 0.5 0.5; 0.5 0.5 0.5], starting_database = missing,  update_all = false, fit_threebody=true, fit_threebody_onsite=true, do_plot = false, energy_weight = missing, rs_weight=missing,ks_weight=missing, niters=50, lambda=0.0, leave_one_out=false, prepare_data = missing, RW_PARAM=0.0, NLIM = 100, refit_database = missing, start_small = false)
 
     
     
@@ -1652,11 +1742,11 @@ function do_fitting_recursive(list_of_tbcs ; weights_list = missing, dft_list=mi
 #        database_linear, ch_lin, cs_lin, X_Hnew_BIG, Y_Hnew_BIG, X_H, X_Snew_BIG, Y_H, h_on, ind_BIG, KEYS, HIND, SIND, DMIN_TYPES, DMIN_TYPES3 = prepare_data
     end
 
-    return do_fitting_recursive_main(list_of_tbcs, pd; weights_list = weights_list, dft_list=dft_list, X_cv = X_cv, kpoints = kpoints, starting_database = starting_database,  update_all = update_all, fit_threebody=fit_threebody, fit_threebody_onsite=fit_threebody_onsite, do_plot = do_plot, energy_weight = energy_weight, rs_weight=rs_weight,ks_weight = ks_weight, niters=niters, lambda=lambda, leave_one_out=leave_one_out, RW_PARAM=RW_PARAM, KPOINTS=KPOINTS, KWEIGHTS=KWEIGHTS, nk_max=nk_max,  start_small = start_small )
+    return do_fitting_recursive_main(list_of_tbcs, pd; weights_list = weights_list, dft_list=dft_list, kpoints = kpoints, starting_database = starting_database,  update_all = update_all, fit_threebody=fit_threebody, fit_threebody_onsite=fit_threebody_onsite, do_plot = do_plot, energy_weight = energy_weight, rs_weight=rs_weight,ks_weight = ks_weight, niters=niters, lambda=lambda, leave_one_out=leave_one_out, RW_PARAM=RW_PARAM, KPOINTS=KPOINTS, KWEIGHTS=KWEIGHTS, nk_max=nk_max,  start_small = start_small )
 
 end
 
-function do_fitting_recursive_main(list_of_tbcs, prepare_data; weights_list=missing, dft_list=missing, X_cv = missing, kpoints = [0 0 0; 0 0 0.5; 0 0.5 0.5; 0.5 0.5 0.5], starting_database = missing,  update_all = false, fit_threebody=true, fit_threebody_onsite=true, do_plot = false, energy_weight = missing, rs_weight=missing, ks_weight = missing, niters=50, lambda=0.0, leave_one_out=false, RW_PARAM=0.0001, KPOINTS=missing, KWEIGHTS=missing, nk_max=0, start_small=false)
+function do_fitting_recursive_main(list_of_tbcs, prepare_data; weights_list=missing, dft_list=missing, kpoints = [0 0 0; 0 0 0.5; 0 0.5 0.5; 0.5 0.5 0.5], starting_database = missing,  update_all = false, fit_threebody=true, fit_threebody_onsite=true, do_plot = false, energy_weight = missing, rs_weight=missing, ks_weight = missing, niters=50, lambda=0.0, leave_one_out=false, RW_PARAM=0.0001, KPOINTS=missing, KWEIGHTS=missing, nk_max=0, start_small=false)
 
 
 #    database_linear, ch_lin, cs_lin, X_Hnew_BIG, Y_Hnew_BIG,               X_H,               X_Snew_BIG, Y_H, h_on,              ind_BIG, KEYS, HIND, SIND, DMIN_TYPES, DMIN_TYPES3,keepind, keepdata = prepare_data

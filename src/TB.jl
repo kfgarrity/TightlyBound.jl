@@ -1087,7 +1087,7 @@ end
 """
     function load_hr_dat(filename, directory="")
 Load a wannier90 hr.dat file
-Not curretnly a major part of program, but you can use if you want.
+Not currently a major part of program, but you can use if you want.
 """
 function load_hr_dat(filename, directory="")
 """
@@ -2019,7 +2019,7 @@ end
 
 -`kgrid` is an array of 3 integers like `[8,8,8]` 
 
-returns regular zero-centered k-point grid and (equal) k-weights.
+returns regular MP Gamma-centered k-point grid and (equal) k-weights.
 """
 function make_kgrid(kgrid)
     kpts = zeros(Float64, prod(kgrid),3)

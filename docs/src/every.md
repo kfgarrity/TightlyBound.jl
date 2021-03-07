@@ -39,3 +39,97 @@ Modules = [TightlyBound.BandStruct]
 ```@autodocs
 Modules = [TightlyBound.DOS]
 ```
+
+## Atomdata
+
+```@autodocs
+Modules = [TightlyBound.Atomdata]
+```
+
+## AtomicMod
+
+```@autodocs
+Modules = [TightlyBound.AtomicMod]
+```
+
+## BandTools
+
+```@autodocs
+Modules = [TightlyBound.BandTools]
+```
+
+## CalcTB
+
+```@autodocs
+Modules = [TightlyBound.CalcTB]
+```
+
+## CrystalMod
+
+```@docs
+TightlyBound.CrystalMod.parsePOSCAR
+TightlyBound.CrystalMod.parseQEinput
+TightlyBound.CrystalMod.generate_supercell
+TightlyBound.CrystalMod.generate_random
+TightlyBound.CrystalMod.write_poscar
+TightlyBound.CrystalMod.write_efs
+TightlyBound.CrystalMod.get_grid
+TightlyBound.CrystalMod.orbital_index
+```
+
+## DFToutMod
+
+```@autodocs
+Modules = [TightlyBound.DFToutMod]
+```
+
+## DFT
+
+```@autodocs
+Modules = [TightlyBound.DFT]
+```
+
+## QE 
+
+```@autodocs
+Modules = [TightlyBound.QE]
+```
+
+## Ewald
+
+```@autodocs
+Modules = [TightlyBound.Ewald]
+```
+
+## FitTB
+
+```@autodocs
+Modules = [TightlyBound.FitTB]
+```
+
+
+## Force_Stress
+
+```@autodocs
+Modules = [TightlyBound.Force_Stress]
+```
+
+## ManageDatabase
+
+```@autodocs
+Modules = [TightlyBound.ManageDatabase]
+```
+
+## SCF
+
+```@autodocs
+Modules = [TightlyBound.SCF]
+```
+
+## Utilty
+
+```@autodocs
+Modules = [TightlyBound.Utility]
+```
+
+

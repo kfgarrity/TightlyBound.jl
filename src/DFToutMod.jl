@@ -1,11 +1,14 @@
 #include("Crystal.jl")
 
 
+"""
+    module DFToutMod
 
+Deal with energy, force, stress, band structure, etc, from a DFT calculation
+
+Generic to different DFT codes.
+"""
 module DFToutMod
-"""
-Holds Energy, Force, Stress, band structure, etc, from a DFT calculation
-"""
 
 #using LinearAlgebra
 using ..CrystalMod:crystal
@@ -28,6 +31,21 @@ export test2
 
 
 #holds data
+"""
+    mutable struct bandstructure
+
+Band structure. Has
+
+- `nbnd::Int` Number of bands
+- `nks::Int` Number of k-points
+- `nelec::Float64` Number of electrons
+- `efermi::Float64` Fermi energy
+- `kpts::Array{Float64,2}` List of k-points, `nks × 3` array in BZ crystal units.
+- `kweights::Array{Float64,1}` Weights of k-points (`nks`).
+- `kgrid::Array{Int,1}` Equivalent gamma centered Monkhorst-Pack k-grid dimensions, if applies.
+- `eigs::Array{Float64,2}` Eigenvalues. `nks × nbnd`
+
+"""
 mutable struct bandstructure
     nbnd::Int
     nks::Int
@@ -39,7 +57,24 @@ mutable struct bandstructure
     eigs::Array{Float64,2}
 end
 
-#holds data
+"""
+    mutable struct dftout
+
+DFT output struct. Has
+
+- `crys::crystal`  crystal structure
+- `energy::Float64` the actual DFT energy, depends on pseudopotentials.
+- `energy_smear::Float64` smearing energy
+- `forces::Array{Float64,2}` forces Ryd / a.u.
+- `stress::Array{Float64,2}` stress  Ryd / (a.u.)^3
+- `bandstruct::bandstructure` See bandstructure struct
+- `hasband::Bool` does this object have a band structure, usually `true`
+- `hasham::Bool` not used, always `false`
+- `prefix::String`  A string has a name used to find output files.
+- `outdir::String` Directly loaded from
+- `tot_charge::Float64` If charge of unit cell is nonzero
+- `atomize_energy::Float64` Atomization energy, relative to non-spin-polarized atoms.
+"""
 mutable struct dftout
 
     crys::crystal
@@ -118,7 +153,11 @@ Base.show(io::IO, d::bandstructure) = begin
     
 end   
 
+"""
+    function makebs(nelec::Number, efermi::Number,  kpoints, kweights,kgrid, vals)
 
+Constructor for `bandstructure`.
+"""
 function makebs(nelec::Number, efermi::Number,  kpoints, kweights,kgrid, vals)
     try
         kpoints = convert(Array{Float64,2},kpoints)
@@ -150,7 +189,11 @@ function make_empty_bs()
 
 end
 
+"""
+    function makedftout(crys::crystal, energy::Number, energy_smear::Number,  forces, stress, bandstruct=missing; prefix="PREFIX", outdir="TMPDIR", tot_charge=0.0)
 
+Constructor for dftout. Usually called by function that loads DFT output files, not called directly.
+"""
 function makedftout(crys::crystal, energy::Number, energy_smear::Number,  forces, stress, bandstruct=missing; prefix="PREFIX", outdir="TMPDIR", tot_charge=0.0)
 """
 Creates a struct with the desired data
@@ -192,6 +235,9 @@ Creates a struct with the desired data
 end
 
 #alterate version, will make the crys for you.
+"""
+    function makedftout(A, pos, types, energy::Number,energy_smear::Number,  forces, stress, bandstruct=missing; prefix="PREFIX", outdir="TMPDIR", tot_charge=0.0)
+"""
 function makedftout(A, pos, types, energy::Number,energy_smear::Number,  forces, stress, bandstruct=missing; prefix="PREFIX", outdir="TMPDIR", tot_charge=0.0)
     c = makecrys(A,pos,types)
     if ismissing(bandstruct)

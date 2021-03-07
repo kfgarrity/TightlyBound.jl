@@ -5,6 +5,11 @@
 
 
 ####################### Wannier90 specific 
+"""
+    module Ewald
+
+Module for electrostatic preperation.
+"""
 module Ewald
 """
 Electrostatics
@@ -22,7 +27,11 @@ import Base.Threads.@spawn
 
 
 
+"""
+   function getU(types)
 
+Get values of `U` from `Atomdata`.
+"""
 function getU(types)
 
     U = zeros(length(types))
@@ -34,6 +43,11 @@ function getU(types)
 
 end
 
+"""
+    function get_onsite(crys::crystal, U::Array{Float64,1})
+
+return Onsite terms, Coulumb `U`.
+"""
 function get_onsite(crys::crystal, U::Array{Float64,1})
 
     return diagm(U)
@@ -47,6 +61,17 @@ function get_onsite(crys::crystal, U::Array{Float64,1})
 
 end
 
+"""
+    function electrostatics_getgamma(crys::crystal;  kappa=missing, noU=false, onlyU=false, screening = 1.0)
+
+Main function. Does Ewald calculation on `crys`. Returns `gamma`, which is used in scf calculation.
+This is only run once for a given `tb_crys` object and stored.
+
+- `kappa` is the splitting parameter between real/k-space in Ewald calculation. Will estimate best one if not provided.
+- `noU=false` for testing only
+- `onlyU=false` for testing only
+- `screening=1.0` Not used. Purpose is to reduce U values for values < 1.
+"""
 function electrostatics_getgamma(crys::crystal;  kappa=missing, noU=false, onlyU=false, screening = 1.0)
 #noU and onlyU are for testing purposes
 
@@ -81,6 +106,7 @@ function electrostatics_getgamma(crys::crystal;  kappa=missing, noU=false, onlyU
 
 
     #can do these at same time.
+    # can run real space and k-space in parallel with asyncronous parallelization. Only a minor improvement.
     rs = @spawn begin
     #rs = begin    
         gamma_rs, gamma_U = real_space(crys, kappa, U, starting_size_rspace)
@@ -137,6 +163,11 @@ function electrostatics_getgamma(crys::crystal;  kappa=missing, noU=false, onlyU
 
 end
 
+"""
+    function real_space(crys::crystal, kappa::Float64, U::Array{Float64}, starting_size_rspace=2)
+
+Real-space Ewald sum.
+"""
 function real_space(crys::crystal, kappa::Float64, U::Array{Float64}, starting_size_rspace=2)
     
     T = typeof(crys.coords[1,1])
@@ -294,7 +325,13 @@ end
 
 
 
+"""
+    function estimate_best_kappa(A)
 
+Estimate best value of `kappa` for Ewald sum.
+Shouldn't effect final value, only calculation speed.
+There is probably a better way to do this.
+"""
 function estimate_best_kappa(A)
 
     a1 = sqrt(sum(A[1,:].^2))
@@ -337,6 +374,11 @@ function estimate_best_kappa(A)
     return kappa
 end
 
+"""
+    function k_space(crys::crystal, kappa, starting_size_kspace=2)
+
+K-space Ewald sum.
+"""
 function k_space(crys::crystal, kappa, starting_size_kspace=2)
 
     T = typeof(crys.coords[1,1])

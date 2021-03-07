@@ -8,6 +8,7 @@ using ..Atomdata:atoms
 using GZip
 
 using ..TightlyBound:global_length_units
+using ..TightlyBound:convert_length
 using ..TightlyBound:Ang
 
 
@@ -340,6 +341,13 @@ function parseARRint(sp)
 
 end
 
+"""
+    function parsePOSCAR(lines)
+
+Parse a POSCAR from VASP
+
+Called by makecrys, doesn't need to be called directly.
+"""
 function parsePOSCAR(lines)
 
     
@@ -399,7 +407,15 @@ function parsePOSCAR(lines)
 
     return A, coords, types
 end
-    
+
+"""
+    function parseQEinput(lines)
+
+Parse a quantum espresso inputfile. Can only handle simple cases with explict CELL_PARAMETERS
+Cannot handle nonzero ibrav. or celldm
+
+Called by makecrys, doesn't need to be called directly.
+"""
 function parseQEinput(lines)
 
     posind = -1
@@ -468,6 +484,16 @@ function parseQEinput(lines)
     
 end
 
+"""
+    function generate_supercell(crys, cell)
+
+Generate supercell. cell is `[1,1,2]`, etc. 
+
+Note, perfered notation is to use syntax:
+`c * [1,1,2]` , where `c` is a crystal, thus 
+using overloading of the `*` operator, 
+rather than calling directly.
+"""
 function generate_supercell(crys, cell)
 
     if typeof(cell) == Int
@@ -505,9 +531,15 @@ function generate_supercell(crys, cell)
     return csuper
 end
 
+"""
+    function generate_random(crys, amag, strain_mag)
+
+Randomly distort a crystal. `amag` is the atom distance, `strain_mag` is the strain magnitude
+"""
 function generate_random(crys, amag, strain_mag)
 
-
+    amag = convert_length(amag)
+    
     st = (rand(3,3) .- 0.5) * strain_mag
     st = (st + st')/2.0
     
@@ -519,6 +551,11 @@ function generate_random(crys, amag, strain_mag)
     
 end
 
+"""
+    function write_poscar(crys, filename)
+
+Write a `crystal` to a POSCAR.
+"""
 function write_poscar(crys, filename)
 
     fil = open(filename, "w")
@@ -551,6 +588,12 @@ function write_poscar(crys, filename)
 end
 
 
+"""
+    function function write_efs(crys, energy, forces, stress, filename)
+
+Write `crystal`, energy, force, stress to fake quantum espresso output file.
+This is for testing purposes only.
+"""
 function write_efs(crys, energy, forces, stress, filename)
 
     fil = open(filename, "w")
@@ -597,6 +640,11 @@ function write_efs(crys, energy, forces, stress, filename)
 
 end
 
+"""
+    function get_grid(c, kden=55.0)
+
+Get a default k-point grid size with `kden` density.
+"""
 function get_grid(c, kden=55.0)
 
     B = transpose(inv(c.A))
@@ -647,6 +695,18 @@ function get_grid(c, kden=55.0)
 
 end    
 
+"""
+    function orbital_index(c::crystal)
+
+Get correspondence between `crystal` and the TB orbital numbers.
+
+`return ind2orb, orb2ind, etotal, nval`
+
+- `ind2orb` dictionary which gives `[atom_number,atom_type, :orbital_symbol]` from TB index integer.
+- `orb2ind` dictionary which gives TB index integer from `[atom_number,atom_type, :orbital_symbol]`
+- `etotal` total DFT energy of atoms, for calculation atomization energy.
+- `nval` number of valence orbitals.
+"""
 function orbital_index(c::crystal)
 
     ind2orb = Dict()
