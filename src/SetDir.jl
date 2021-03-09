@@ -14,6 +14,9 @@ DATSDIR1 = joinpath(dirname(pathof(TightlyBound)), "..", "dats", "pbesol", "v1.0
 
 DATSDIR2 = joinpath(dirname(pathof(TightlyBound)), "..", "dats", "pbesol", "v0.4")
 
+DOCSDIR = joinpath(dirname(pathof(TightlyBound)), "..", "docs")
+
+
 #DATSDIR1 = "/home/kfg/codes/TB_fit/fit_dimer/datab_2/"
 #DATSDIR2 = ""
 

@@ -36,7 +36,9 @@ makedocs(
 
 @info "edit docs"
 
-stuff=readlines("nist_stuff/html_stuff.txt")
+DD = TightlyBound.DOCSDIR
+
+stuff=readlines("$DD/nist_stuff/html_stuff.txt")
 
 function fix_html(f)
     lines=readlines(f)
@@ -55,22 +57,22 @@ function fix_html(f)
 
 end
     
-for d in readdir("build")
-    if isdir("build/$d")
-        f = "build/$d/index.html"
+for d in readdir("$DD/build")
+    if isdir("$DD/build/$d")
+        f = "$DD/build/$d/index.html"
         if isfile(f)
             fix_html(f)
         end
-        if !isfile("build/$d/nist-combined.css")
-            cp("nist_stuff/nist-combined.css", "build/$d/nist-combined.css")
+        if !isfile("$DD/build/$d/nist-combined.css")
+            cp("$DD/nist_stuff/nist-combined.css", "$DD/build/$d/nist-combined.css")
         end
     end
 
 end
 
-fix_html("build/index.html")
-if !isfile("build/nist-combined.css")
-    cp("nist_stuff/nist-combined.css", "build/nist-combined.css")
+fix_html("$DD/build/index.html")
+if !isfile("$DD/build/nist-combined.css")
+    cp("$DD/nist_stuff/nist-combined.css", "$DD/build/nist-combined.css")
 end
 
 
