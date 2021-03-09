@@ -17,7 +17,7 @@ makedocs(
     sitename="TightlyBound.jl Documentation",
     authors = "Kevin F. Garrity",
     format = Documenter.HTML(
-        assets = ["assets/favicon.ico"],
+        assets = ["assets/favicon.ico", "assets/nist-combined.css"],
     ),
     pages = [
         "Home" => "index.md",
@@ -39,14 +39,15 @@ makedocs(
 DD = TightlyBound.DOCSDIR
 
 stuff=readlines("$DD/nist_stuff/html_stuff.txt")
+stuff2=readlines("$DD/nist_stuff/html_stuff_v2.txt")
 
-function fix_html(f)
+function fix_html(f, s)
     lines=readlines(f)
 
     f2 = open(f, "w")
     for line in lines
         if occursin("</head>", line )
-            line2 = replace(line, "</head>" => stuff[1]*"</head>")
+            line2 = replace(line, "</head>" => s[1]*"</head>")
             write(f2, line2*"\n")
         else
             write(f2, line*"\n")
@@ -61,7 +62,7 @@ for d in readdir("$DD/build")
     if isdir("$DD/build/$d")
         f = "$DD/build/$d/index.html"
         if isfile(f)
-            fix_html(f)
+            fix_html(f, stuff2)
         end
         if !isfile("$DD/build/$d/nist-combined.css")
             cp("$DD/nist_stuff/nist-combined.css", "$DD/build/$d/nist-combined.css")
@@ -70,7 +71,7 @@ for d in readdir("$DD/build")
 
 end
 
-fix_html("$DD/build/index.html")
+fix_html("$DD/build/index.html", stuff)
 if !isfile("$DD/build/nist-combined.css")
     cp("$DD/nist_stuff/nist-combined.css", "$DD/build/nist-combined.css")
 end
