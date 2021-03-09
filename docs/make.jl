@@ -11,6 +11,7 @@ using Documenter, TightlyBound
 #  ),
 
 
+
 @info "Making documentation..."
 makedocs(
     sitename="TightlyBound.jl Documentation",
@@ -31,6 +32,46 @@ makedocs(
         "Additional Docstrings" => "every.md"
     ]
 )
+
+
+@info "edit docs"
+
+stuff=readlines("nist_stuff/html_stuff.txt")
+
+function fix_html(f)
+    lines=readlines(f)
+
+    f2 = open(f, "w")
+    for line in lines
+        if occursin("</head>", line )
+            line2 = replace(line, "</head>" => stuff[1]*"</head>")
+            write(f2, line2*"\n")
+        else
+            write(f2, line*"\n")
+        end
+
+    end
+    close(f2)
+
+end
+    
+for d in readdir("build")
+    if isdir("build/$d")
+        f = "build/$d/index.html"
+        if isfile(f)
+            fix_html(f)
+        end
+        if !isfile("build/$d/nist-combined.css")
+            cp("nist_stuff/nist-combined.css", "build/$d/nist-combined.css")
+        end
+    end
+
+end
+
+fix_html("build/index.html")
+if !isfile("build/nist-combined.css")
+    cp("nist_stuff/nist-combined.css", "build/nist-combined.css")
+end
 
 
 @info "Deploy docs ..."
