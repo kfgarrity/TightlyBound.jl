@@ -35,6 +35,29 @@ function prepare_database(c::crystal)
 end
 
 """
+    function clear_database()
+
+Remove loaded databasea
+"""
+function clear_database()
+
+    if length(database_list) > 0
+        for a in database_list
+            delete!(database_list, a)
+        end
+    end
+
+    for a in keys(database_cached)
+        delete!(database_cached, a)
+    end
+    database_cached["SCF"] = true
+    database_cached["scf"] = true
+
+
+end
+
+
+"""
     function prepare_database(at_list)
 """
 function prepare_database(at_list)
@@ -45,8 +68,10 @@ function prepare_database(at_list)
     s = Set(at_list)
     for s1 in s
         for s2 in s
-            if ! ( Set([s1,s2]) in database_list)
-                add_to_database(Set([s1,s2]))
+            for s3 in s
+                if ! ( Set([s1,s2,s3]) in database_list)
+                    add_to_database(Set([s1,s2,s3]))
+                end
             end
         end
     end
@@ -204,8 +229,39 @@ function add_to_database(s::Set)#
             end
             
         end
+    elseif length(s) == 3
+
+
+        a1 = Symbol(at_arr[1])
+        a2 = Symbol(at_arr[2])
+        a3 = Symbol(at_arr[3])
+
+        ats  = sort([a1,a2,a3])
+
+        a1 = ats[1]
+        a2 = ats[2]
+        a3 = ats[3]
+
+        if !haskey(database_cached , Tuple(ats))
+            
+            f =  "$datdir1/tern_$a1/coef.el.3bdy.$a1.$a2.$a3.xml.gz"
+            if ! isfile(f) && ! isfile(f*".gz")
+                println("difficulty loading ternary ", ats, "  ", f)
+            else
+                dat = read_coefs(f)
+                database_cached[(a1,a2,a3)] = dat
+                database_cached[(a1,a3,a2)] = dat
+                database_cached[(a2,a1,a3)] = dat
+                database_cached[(a2,a3,a1)] = dat
+                database_cached[(a3,a1,a2)] = dat
+                database_cached[(a3,a2,a1)] = dat
+                println("added to cache ", (a1, a2, a3), " threebody ")
+                
+            end
+        end
+
     else
-        println("warning - not setup to load ternary ", s)
+        println("warning - not setup for quaternary+ ", s)
     end
 
     

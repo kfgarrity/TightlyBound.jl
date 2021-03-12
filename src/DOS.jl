@@ -51,7 +51,7 @@ function projection(tbc::tb_crys, vects, sk3, grid; ptype=missing)
     pwan=[]
     
     if ptype == :atomic || ptype == "atomic" || ptype == :atoms || ptype == "atoms" || ptype == :atom || ptype == "atom" || ptype == :Atomic || ptype == "Atomic"
-        for ti in tbc.crys.stypes
+        for ti in Set(tbc.crys.stypes)
             
             proj_inds = Int64[]
             for n = 1:tbc.tb.nwan
@@ -606,16 +606,23 @@ function plot_dos(energies, dos, pdos, names; filename=missing, do_display=true)
 
     if global_energy_units == "eV"
         ylabel!("DOS  ( 1 / eV )", guidefontsize="16")
-        xlabel!("Energy - E_F ( eV )", fontsize="16")
+        xlabel!("Energy - E_F ( eV )", guidefontsize="16")
     else
         ylabel!("DOS  ( 1 / Ryd. )", guidefontsize="16")
-        xlabel!("Energy - E_F ( Ryd. )", fontsize="16")
+        xlabel!("Energy - E_F ( Ryd. )", guidefontsize="16")
     end
+
+    xl1 = minimum(energies)
+    xl2 = min(10.0, maximum(energies))
+
+    xlims!(xl1, xl2)
     
     if do_display
         display(plot!([0,0], [0, maximum(dos) * 1.1], color="black", linestyle=:dash, label=""))
     else
-        plot!([0,0], [0, maximum(dos) * 1.1], color="black", linestyle=:dash, label="")
+
+    plot!([0,0], [0, maximum(dos) * 1.1], color="black", linestyle=:dash, label="")
+
     end        
 
     if !ismissing(filename)

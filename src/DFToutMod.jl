@@ -15,6 +15,11 @@ using ..CrystalMod:crystal
 using ..CrystalMod:makecrys
 using ..CrystalMod:orbital_index
 using Printf
+
+
+using ..TightlyBound:convert_energy
+using ..TightlyBound:global_energy_units
+
 ##using Formatting
 
 export dftout
@@ -92,15 +97,28 @@ mutable struct dftout
 
 end
 
+"""
+    function get_atomize_energy(d::dftout)
+
+Return atomization energy in current energy units
+"""
+function get_atomize_energy(d::dftout)
+
+    return convert_energy(d.atomize_energy)
+
+end
+
 #printing
 Base.show(io::IO, d::dftout) = begin
-    println(io)
-    for i in 1:3
-        @printf(io, "A%.1i=     % .5f  % .5f  % .5f\n", i, d.crys.A[i,1],  d.crys.A[i,2],  d.crys.A[i,3])
-    end
+#    println(io)
+#    for i in 1:3
+#        @printf(io, "A%.1i=     % .5f  % .5f  % .5f\n", i, d.crys.A[i,1],  d.crys.A[i,2],  d.crys.A[i,3])
+#    end
+    println(io, d.crys)
+
 
     println(io)
-    println("Energy ", d.energy, " Ryd")
+    println("Energy (direct from dft) ", d.energy, " Ryd")
     println(io)    
     println(io,"STRUCTURE =====================| FORCES =================")
     println(io)
@@ -117,7 +135,7 @@ Base.show(io::IO, d::dftout) = begin
         @printf(io, "% .5f  % .5f  % .5f\n", d.stress[i,1], d.stress[i,2], d.stress[i,3])        
     end
     println(io,)
-    println(io, "Atomization energy (no spin): ", d.atomize_energy)
+    println(io, "Atomization energy (no spin): ", convert_energy(d.atomize_energy), " $global_energy_units ")
     println(io,"=========================")
     println(io,"Has bandstructure: ", d.hasband,"; Has hamiltonian: ", d.hasham)
     println(io)
@@ -239,7 +257,7 @@ end
     function makedftout(A, pos, types, energy::Number,energy_smear::Number,  forces, stress, bandstruct=missing; prefix="PREFIX", outdir="TMPDIR", tot_charge=0.0)
 """
 function makedftout(A, pos, types, energy::Number,energy_smear::Number,  forces, stress, bandstruct=missing; prefix="PREFIX", outdir="TMPDIR", tot_charge=0.0)
-    c = makecrys(A,pos,types)
+    c = makecrys(A,pos,types, units="Bohr")
     if ismissing(bandstruct)
         return makedftout(c, energy, energy_smear, forces,stress, prefix=prefix, outdir=outdir, tot_charge=0.0)
     else
