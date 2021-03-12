@@ -121,7 +121,7 @@ end
     
 
 """
-    function gaussian_dos(tbc::tb_crys; grid=missing, smearing=0.02, npts=500, proj_type=missing, do_display=true)
+    function gaussian_dos(tbc::tb_crys; grid=missing, smearing=0.02, npts=missing, proj_type=missing, do_display=true)
 
 Simple Gaussian DOS, mostly for testing.
 
@@ -135,7 +135,7 @@ See also `dos`
 
 `return energies, dos, projected_dos, pdos_names`
 """
-function gaussian_dos(tbc::tb_crys; grid=missing, smearing=0.02, npts=300, proj_type=missing, do_display=true)
+function gaussian_dos(tbc::tb_crys; grid=missing, smearing=0.02, npts=missing, proj_type=missing, do_display=true)
 
     if ismissing(grid)
         grid = get_grid(tbc.crys)
@@ -151,10 +151,14 @@ function gaussian_dos(tbc::tb_crys; grid=missing, smearing=0.02, npts=300, proj_
     nk = size(vals)[1]
     
     vmin = minimum(vals)
-    vmax = maximum(vals)
+    vmax = min(maximum(vals), 5.0)
     r = vmax - vmin
 
-    energies = collect(vmin - r*0.05 : r*1.1 / npts    : vmax + r*0.05 + 1e-7)
+    if ismissing(npts)
+        npts = Int64(round(r * 100 ))
+    end
+    
+    energies = collect(vmin - r*0.01 : r*1.02 / npts    : vmax + r*0.01 + 1e-7)
     
     dos = zeros(length(energies))
 
@@ -301,7 +305,7 @@ end
 
 
 """
-    function dos(tbc::tb_crys; grid=missing, npts=300, proj_type=missing, do_display=true)
+    function dos(tbc::tb_crys; grid=missing, npts=missing, proj_type=missing, do_display=true)
 
 DOS, using tetrahedral integration
 
@@ -312,7 +316,7 @@ DOS, using tetrahedral integration
 
 `return energies, dos, projected_dos, pdos_names`
 """
-function dos(tbc::tb_crys; grid=missing, npts=300, proj_type=missing, do_display=true)
+function dos(tbc::tb_crys; grid=missing, npts=missing, proj_type=missing, do_display=true)
 
     if ismissing(grid)
         grid = get_grid(tbc.crys)
@@ -329,9 +333,15 @@ function dos(tbc::tb_crys; grid=missing, npts=300, proj_type=missing, do_display
     
     vmin = minimum(vals)
     vmax = maximum(vals)
+    vmax = min(maximum(vals), 5.0)
     r = vmax - vmin
 
-    energies = collect(vmin - r*0.05 : r*1.1 / npts    : vmax + r*0.05 + 1e-7)
+    if ismissing(npts)
+        npts = Int64(round(r * 100 ))
+    end
+
+    
+    energies = collect(vmin - r*0.01 : r*1.02 / npts    : vmax + r*0.01 + 1e-7)
     
     dos = zeros(size(energies))
     dos_id = zeros( length(energies), nthreads())
@@ -604,12 +614,13 @@ function plot_dos(energies, dos, pdos, names; filename=missing, do_display=true)
         end
     end    
 
+    
     if global_energy_units == "eV"
-        ylabel!("DOS  ( 1 / eV )", guidefontsize="16")
-        xlabel!("Energy - E_F ( eV )", guidefontsize="16")
+        ylabel!("DOS  ( 1 / eV )", guidefontsize=16)
+        xlabel!("Energy - E_F ( eV )", guidefontsize=16)
     else
-        ylabel!("DOS  ( 1 / Ryd. )", guidefontsize="16")
-        xlabel!("Energy - E_F ( Ryd. )", guidefontsize="16")
+        ylabel!("DOS  ( 1 / Ryd. )", guidefontsize=16)
+        xlabel!("Energy - E_F ( Ryd. )", guidefontsize=16)
     end
 
     xl1 = minimum(energies)
