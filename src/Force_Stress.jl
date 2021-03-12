@@ -23,7 +23,7 @@ using LinearAlgebra
 using ForwardDiff
 #using ReverseDiff
 using Optim
-#using LineSearches
+using LineSearches
 using ..CrystalMod:crystal
 using ..CrystalMod:makecrys
 
@@ -409,11 +409,11 @@ end
 ######################################################
 
 """
-    function relax_structure(crys::crystal, database; smearing = 0.01, grid = missing, mode="vc-relax", nsteps=100, update_grid=true)
+    function relax_structure(crys::crystal, database; smearing = 0.01, grid = missing, mode="vc-relax", nsteps=100, update_grid=true, conv_thr=2e-4)
 
 Relax structure. Primary user function is relax_structure in TightlyBound.jl, which calls this one.
 """
-function relax_structure(crys::crystal, database; smearing = 0.01, grid = missing, mode="vc-relax", nsteps=100, update_grid=true)
+function relax_structure(crys::crystal, database; smearing = 0.01, grid = missing, mode="vc-relax", nsteps=100, update_grid=true, conv_thr = 2e-4)
 
     if update_grid==false
         grid = get_grid(crys)
@@ -589,11 +589,16 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
     println()
 
 
-    opts = Optim.Options(g_tol = 7e-4,f_tol = 7e-4, x_tol = 7e-4,
+#    opts = Optim.Options(g_tol = 7e-4,f_tol = 7e-4, x_tol = 7e-4,
+#                         iterations = nsteps,
+#                         store_trace = true,
+#                         show_trace = false)
+
+    opts = Optim.Options(g_tol = conv_thr,f_tol = conv_thr, x_tol = conv_thr,
                          iterations = nsteps,
                          store_trace = true,
                          show_trace = false)
-
+    
 
     #res = optimize(fn,grad, x0, ConjugateGradient(), opts)
 
@@ -601,7 +606,8 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
     #preconditioner, guess for inv Hess is based on the  metric. see qe bfgs_module.f90
     function init(x)
         num = 3*nat + 9
-        
+
+        factor=1.0
 
         P = zeros(eltype(x), num, num)
 
@@ -613,7 +619,7 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
             aa = (a-1)*3
             for i = 1:3
                 for j = 1:3
-                    P[aa+i ,aa+j] = g[i,j]
+                    P[aa+i ,aa+j] = g[i,j] * factor
                 end
             end
         end
@@ -625,7 +631,7 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
             bb = 3 * nat + (b - 1)*3
             for i = 1:3
                 for j = 1:3
-                    P[bb+i,bb+j] = 0.04 * vol * ginv[i,j]
+                    P[bb+i,bb+j] = 0.04 * vol * ginv[i,j] * factor
                 end
             end
         end
@@ -645,7 +651,8 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 
     #x -> Matrix{eltype(x)}(I, length(x), length(x))
 
-    res = optimize(fn,grad, x0, BFGS(  initial_invH = init ), opts)
+    #    res = optimize(fn,grad, x0, BFGS(  initial_invH = init ), opts)
+    res = optimize(fn,grad, x0, BFGS(  initial_invH = init, linesearch=LineSearches.MoreThuente() ), opts)    
 
     energy = res.minimum
     
