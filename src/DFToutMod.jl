@@ -18,6 +18,8 @@ using Printf
 
 
 using ..TightlyBound:convert_energy
+using ..TightlyBound:convert_force
+using ..TightlyBound:convert_stress
 using ..TightlyBound:global_energy_units
 
 ##using Formatting
@@ -122,17 +124,22 @@ Base.show(io::IO, d::dftout) = begin
     println(io)    
     println(io,"STRUCTURE =====================| FORCES =================")
     println(io)
+
+    forces = convert_force(d.forces)
+    
     for i in 1:d.crys.nat
-        @printf(io, "%-3s  % .5f  % .5f  % .5f | % .5f % .5f % .5f\n", d.crys.types[i], d.crys.coords[i,1], d.crys.coords[i,2], d.crys.coords[i,3], d.forces[i,1], d.forces[i,2], d.forces[i,3])
+        @printf(io, "%-3s  % .5f  % .5f  % .5f | % .5f % .5f % .5f\n", d.crys.types[i], d.crys.coords[i,1], d.crys.coords[i,2], d.crys.coords[i,3], forces[i,1], forces[i,2], forces[i,3])
     end
     println(io,)
     println(io,"=========================================================")
     println(io)
     println(io,"STRESS ==================")
 
+    stress = convert_stress(d.stress)
+    
     @printf(io, "\n")
     for i in 1:3
-        @printf(io, "% .5f  % .5f  % .5f\n", d.stress[i,1], d.stress[i,2], d.stress[i,3])        
+        @printf(io, "% .5f  % .5f  % .5f\n", stress[i,1], stress[i,2], stress[i,3])        
     end
     println(io,)
     println(io, "Atomization energy (no spin): ", convert_energy(d.atomize_energy), " $global_energy_units ")

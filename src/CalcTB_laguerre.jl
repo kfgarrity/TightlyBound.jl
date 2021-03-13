@@ -1013,6 +1013,7 @@ function distances_etc_3bdy_parallel(crys, cutoff=missing, cutoff2=missing; var_
     found_arr[:] .= false
     
     @threads for r1 = -R[1]:R[1]
+    #for r1 = -R[1]:R[1]    
         c1 = r1 + R[1] + 1
         id = threadid()
         R_f[1, id] = r1
@@ -1146,7 +1147,8 @@ function distances_etc_3bdy_parallel(crys, cutoff=missing, cutoff2=missing; var_
     dmat = dist_arr[:,:,:,2:4] .* dist_arr[:,:,:, 1]
     if threebody
 #        println("THREE")
-        @threads for a = 1:crys.nat
+        #        @threads for a = 1:crys.nat
+        for a = 1:crys.nat        
         ta = crys.stypes[a]
         id = threadid()
         array_ind3X = AI3[id]

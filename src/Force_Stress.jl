@@ -314,7 +314,7 @@ function finite_diff(crys::crystal, database, ind1, ind2; stress_mode=false, ste
 
     tbc0 = calc_tb_fast(crys, database, verbose=false, check_frontier=false)
 
-    energy_tot0, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc0, smearing=smearing, grid=grid, conv_thr = 1e-7)
+    energy_tot0, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc0, smearing=smearing, grid=grid, conv_thr = 1e-9)
 
 
     if stress_mode == false
@@ -329,7 +329,7 @@ function finite_diff(crys::crystal, database, ind1, ind2; stress_mode=false, ste
 
         tbc1 = calc_tb_fast(crys1, database, verbose=false, check_frontier=false)
 
-        energy_tot1, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc1, smearing=smearing, grid=grid, conv_thr = 1e-7)
+        energy_tot1, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc1, smearing=smearing, grid=grid, conv_thr = 1e-9)
 
 
         crys2 = deepcopy(crys)
@@ -340,7 +340,7 @@ function finite_diff(crys::crystal, database, ind1, ind2; stress_mode=false, ste
 
         tbc2 = calc_tb_fast(crys2, database, verbose=false, check_frontier=false)
 
-        energy_tot2, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc2, smearing=smearing, grid=grid, conv_thr = 1e-7)
+        energy_tot2, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc2, smearing=smearing, grid=grid, conv_thr = 1e-9)
         
         force = - (energy_tot1 - energy_tot2) / (2 * step)
 
@@ -423,7 +423,7 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 
     #do this ahead of first iteration, to get memory in correct place
     tbc = calc_tb_fast(deepcopy(crys), database)
-    energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=eden)
+    energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=eden, conv_thr=1e-7)
 
     if error_flag
         println("warning error computing scf in relax_structure, zeroth iteration")
@@ -472,9 +472,10 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
                 
             end
 #            println(crys_working)
-            energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=eden, verbose=false)
+            energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=eden, verbose=false, conv_thr=1e-7)
             eden = deepcopy(tbc.eden)
         end
+#        println("fn $energy_tot fnffnfnfnffnfnfnfnfnfnfnfnfnfnfffffff")
         return energy_tot
 
     end
@@ -505,7 +506,7 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 #            println("yes calc forces -----------------------------------------------------------------------------------------")
 #            println(crys_working)
             tbc = calc_tb_fast(deepcopy(crys_working), database, verbose=false)
-            energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=eden, verbose=false)
+            energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=eden, verbose=false, conv_thr=1e-7)
 #        else
 #            println("no calc forces ------------------------------------------------------------------------------------------")
 #            println(crys_working)
@@ -515,12 +516,16 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 
 
         energy_tmp,  f_cart, stress =  get_energy_force_stress_fft(tbc, database; do_scf = false, smearing = smearing, grid = grid, vv=[VECTS, VALS, efermi] )
+        #energy_tmp,  f_cart, stress =  get_energy_force_stress_fft(tbc, database; do_scf = true, smearing = smearing, grid = grid )
 
         f_cart_global = f_cart
         stress_global = stress
         
-        fsum = sum(abs.(f_cart))
-        ssum= sum(abs.(stress))
+        fsum = sum((f_cart).^2)^0.5
+        ssum= sum((stress).^2)^0.5
+
+#        println("f_cart")
+#        println(f_cart)
         
         println("FCALL $fcall en:  $energy_tot (Ryd)  fsum:  $fsum  ssum:  $ssum    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 
@@ -607,8 +612,9 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
     function init(x)
         num = 3*nat + 9
 
-        factor=1.0
-
+#        factor=0.1
+        factor = 1.0
+        
         P = zeros(eltype(x), num, num)
 
         A = crys.A
@@ -651,8 +657,19 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 
     #x -> Matrix{eltype(x)}(I, length(x), length(x))
 
-    #    res = optimize(fn,grad, x0, BFGS(  initial_invH = init ), opts)
-    res = optimize(fn,grad, x0, BFGS(  initial_invH = init, linesearch=LineSearches.MoreThuente() ), opts)    
+#    res = optimize(fn,x0, NelderMead(), opts)
+
+    
+    
+    #    res = optimize(fn,grad, x0, ConjugateGradient())
+    
+#    res = optimize(fn,grad, x0, BFGS( ), opts)
+
+    #res = optimize(fn,grad, x0, BFGS(  initial_invH = init ), opts)
+    
+    res = optimize(fn,grad, x0, BFGS(  initial_invH = init, linesearch=LineSearches.MoreThuente() ), opts)
+    
+    #res = optimize(fn,grad, x0, BFGS(  initial_invH = init, linesearch=LineSearches.HagerZhang() ), opts)    
 
     energy = res.minimum
     
@@ -932,7 +949,7 @@ function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smear
                 #prepare eigenvectors / values
                 error_flag = false
                 if do_scf
-                    energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=e_den0, conv_thr = 1e-9)
+                    energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=e_den0, conv_thr = 1e-8)
                 else
                     energy_tot, efermi, e_den, VECTS, VALS, error_flag =  calc_energy_charge_fft(tbc, grid=grid, smearing=smearing)
                 end

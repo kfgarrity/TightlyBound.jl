@@ -208,7 +208,7 @@ function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0
     if clear_previous
         #println("clear")
         #        display(plot(legend=false, grid=false, framestyle=:box))
-        plot(legend=false, grid=false, framestyle=:box, xtickfontsize=12, ytickfontsize=12)
+        plot(legend=false, grid=false, framestyle=:box, xtickfontsize=12, ytickfontsize=12, legendfontsize=16)
     end
 
     if ismissing(MarkerSize)
@@ -315,7 +315,7 @@ function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0
     #    println("yyyyyyyyyyyyyyyyy")
     if ismissing(proj_inds)
         println("color = $color markersize = $MarkerSize")
-        plot!(convert_energy(vals), color=color, lw=1.5, marker=(:circle), markersize=MarkerSize, markerstrokecolor=color, legend=false, grid=false)
+        plot!(convert_energy(vals), color=color, lw=2.0, marker=(:circle), markersize=MarkerSize, markerstrokecolor=color, legend=false, grid=false)
 #        plot!(vals, color="red", marker=(:circle), markersize=MarkerSize, markeredgecolor=color, legend=false, grid=false)
 #        plot(vals, color=color, marker=(:circle), markersize=0.1)
     else
@@ -338,13 +338,14 @@ function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0
         if size(yrange) == (1,2)
             yrange=yrange'
         end
-        ylims!(convert_energy(yrange[1]), convert_energy(yrange[2]))
+        ylims!(convert_energy(yrange[1]), convert_energy(  yrange[2]))
 
     end
 
     if ismissing(yrange)
-        r = maximum(vals) - minimum(vals) 
-        yrange = [minimum(vals)-0.05*r,  maximum(vals)+0.05*r]
+        maxV = min(maximum(vals), 1.0)
+        r = maxV - minimum(vals) 
+        yrange = [minimum(vals)-0.05*r,  maxV+0.05*r]
     end
     
     ylims!(convert_energy(yrange[1]), convert_energy(yrange[2]))
@@ -476,15 +477,17 @@ function plot_compare_dft(tbc::tb_crys, bs; tbc2=missing)
 #    vbm = 0.0
 #    vbmD = 0.0
 
+    plot(legend=true, grid=false, framestyle=:box, xtickfontsize=16, ytickfontsize=16)
 
-    plot(convert_energy( bs.eigs[:,1] .- vbmD) , color="orange", lw=2, label="DFT", grid=false, box=true, legend=:topright)    
+    
+    plot!(convert_energy( bs.eigs[:,1] .- vbmD) , color="orange", lw=3, label="DFT", grid=false, legend=:topright)    
     if bs.nbnd > 1
-        plot!(convert_energy(bs.eigs[:,2:end] .- vbmD) , color="orange", lw=2, label=missing)    
+        plot!(convert_energy(bs.eigs[:,2:end] .- vbmD) , color="orange", lw=3, label=missing)    
     end
 
-    plot!( convert_energy(vals[:,1] .- vbm), color="blue",  lw=1, label="TB")
+    plot!( convert_energy(vals[:,1] .- vbm), color="blue",  lw=2, label="TB")
     if tbc.tb.nwan > 1
-        plot!(convert_energy(vals[:,2:end] .- vbm), color="blue",  lw=1, label=missing)
+        plot!(convert_energy(vals[:,2:end] .- vbm), color="blue",  lw=2, label=missing)
     end
 
 
@@ -502,11 +505,11 @@ function plot_compare_dft(tbc::tb_crys, bs; tbc2=missing)
     plot!([0, nk], convert_energy([efermi_tbc, efermi_tbc] .- vbm), color="black", linestyle=:dash, label="E_F TB")
 
     if global_energy_units == "eV"
-        ylabel!("Energy - VBM (eV)", fontsize=12)
+        ylabel!("Energy - VBM (eV)", guidefontsize=16)
     else
-        ylabel!("Energy - VBM (Ryd.)", fontsize=12)
+        ylabel!("Energy - VBM (Ryd.)", guidefontsize=16)
     end
-    display(ylims!(convert_energy(minimum(vals .- vbm)*1.05), convert_energy(maximum(vals .- vbm) * 1.05 )))
+    display(ylims!(convert_energy(minimum(vals .- vbm)*1.05), convert_energy(min(maximum(vals .- vbm), 0.8) * 1.05 )))
 
 #    end
 

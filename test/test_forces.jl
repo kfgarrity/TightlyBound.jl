@@ -45,8 +45,8 @@ function test_force()
 
     @testset "testing force dimer" begin
 
-#        if true
-        @suppress begin
+        if true
+#        @suppress begin
             ft = open("$TESTDIR/data_forces/fil_MgS_dimer", "r"); 
             dirst = readlines(ft); 
             close(ft); 
@@ -55,18 +55,27 @@ function test_force()
 
 
 #            for scf = [false true]
+            f_cart = zeros(2,3)
+            f_cartFD = 0.0
+            
             for scf = [false, true]
+                @suppress begin
                 tbc_list, dft_list = loaddata(dirst, scf=scf);
-                database_rec = TightlyBound.FitTB.do_fitting_recursive(tbc_list,dft_list = dft_list,  fit_threebody=false, fit_threebody_onsite=false);
+                     database_rec = TightlyBound.FitTB.do_fitting_recursive(tbc_list,dft_list = dft_list,  fit_threebody=false, fit_threebody_onsite=false);
 
 
                 x = 4;
                 smearing = 0.01;  
-                en, f_cart,stress = TightlyBound.Force_Stress.get_energy_force_stress(tbc_list[x].crys, database_rec,   smearing = smearing);
+
+                    #en, tbc_x, flag = scf_energy(tbc_list[x].crys, database = database_rec)
+                    #en, f_cart,stress = TightlyBound.Force_Stress.get_energy_force_stress(tbc_x, database_rec,   smearing = smearing);
+                    
+                    en, f_cart,stress = TightlyBound.Force_Stress.get_energy_force_stress(tbc_list[x].crys, database_rec,   smearing = smearing);
 
                 enFD, f_cartFD = TightlyBound.Force_Stress.finite_diff(tbc_list[x].crys, database_rec,1, 3,   smearing = smearing);
+                end
 
-                println(scf, " ,  ", f_cartFD, "  ", f_cart[1,3])
+#                println(scf, " xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  ", f_cartFD, "  ", f_cart[1,3])
                 
                 @test abs(f_cartFD - f_cart[1,3]) < 1e-3
 #                @test abs(f_cartFD - f_cart_fft[1,3]) < 1e-3
