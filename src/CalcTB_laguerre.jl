@@ -748,7 +748,7 @@ function get_data_info(at_set, dim)
                         data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1, 3, 2, 4, 5, 7, 6  ] #switch 2 4 and 3 6
                     end
                     
-                    
+#                    println([at1, o1, at2, o2, at3,  symb], tot, " ",  n, " " , data_info[[at1, o1, at2, o2, at3,  symb]] )
                     tot += n
 
 #                    if same_at
@@ -804,14 +804,18 @@ function get_data_info(at_set, dim)
             return tot
         end
         
+        #this is not efficient storage, we are reassigning permutations multiple times.
         tot_size = 0
-        for p in perm_ij
+        for p in perm_ij 
             if p[1] == p[2]
                 tot_size = get3bdy(n_3body_same, :H, tot_size, p[1], p[2], p[3])
             else
                 tot_size = get3bdy(n_3body, :H, tot_size, p[1], p[2], p[3])
             end
         end
+
+#        println("data_info between")
+#        println(data_info)
 
         for p in perm_on
 #            if  (p[1] == p[2] ||  p[2] == p[3] || p[1] == p[3])
@@ -1944,11 +1948,14 @@ function calc_tb_fast(crys::crystal, database=missing; reference_tbc=missing, ve
                     elseif !warned_onsite && use_threebody_onsite
                         println("WARNING, missing 3bdy onsite ", (t1, t2, t3))
                         warned_onsite = true
+                        within_fit = false
                     end
                     ###########################################
 
                 elseif !warned
                     println("WARNING, missing 3bdy ", (t1, t2, t3))
+                    within_fit = false
+
                     warned = true
                 end
             end

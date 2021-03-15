@@ -258,6 +258,10 @@ function scf_energy_force_stress(tbc::tb_crys; database = missing, smearing = 0.
     println("done")
     println("----")
 
+    energy_tot = convert_energy(energy_tot)
+    f_cart = convert_force(f_cart)
+    stress = convert_stress(stress)
+
     return energy_tot, f_cart, stress, tbc
 
 end

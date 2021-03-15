@@ -2774,7 +2774,7 @@ function do_fitting_recursive_main(list_of_tbcs, prepare_data; weights_list=miss
                 println()
             end
 
-            if abs(error_new_energy - err_old_en) < 5e-3
+            if abs(error_new_energy - err_old_en) < 5e-3 && iters >= 6
                 println("break")
                 break
             else

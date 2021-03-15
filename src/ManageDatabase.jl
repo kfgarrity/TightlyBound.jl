@@ -99,7 +99,7 @@ function add_to_database(s::Set)#
                     database_cached[(a1, a1)] = dat
                     println("added to cache ", (a1, a1))
                 catch
-                    println("warning - error loading $f")
+                    println("WARNING - error loading $f")
                 end
             elseif isfile(f2) || isfile(f2*".gz")
                 try
@@ -107,10 +107,10 @@ function add_to_database(s::Set)#
                     database_cached[(a1, a1)] = dat
                     println("added to cache ", (a1, a1))
                 catch
-                    println("warning - error loading $f2")
+                    println("WARNING - error loading $f2")
                 end
             else
-                println("warning - no file for database $a1 ")
+                println("WARNING - no file for database $a1 ")
             end
         end
 
@@ -125,7 +125,7 @@ function add_to_database(s::Set)#
                     database_cached[(a1, a1, a1)] = dat
                     println("added to cache ", (a1, a1, a1))
                 catch
-                    println("warning - error loading $f")
+                    println("WARNING - error loading $f")
                 end
             elseif isfile(f2) || isfile(f2*".gz")
                 try
@@ -134,10 +134,10 @@ function add_to_database(s::Set)#
                     database_cached[(a1, a1, a1)] = dat
                     println("added to cache ", (a1, a1, a1))
                 catch
-                    println("warning - error loading $f2")
+                    println("WARNING - error loading $f2")
                 end
             else
-                println("warning, no file for 3bdy database $a1")
+                println("WARNING, no file for 3bdy database $a1")
             end
         end
            
@@ -168,7 +168,7 @@ function add_to_database(s::Set)#
                 f = fba2
             else
                 f = missing
-                println("warning - binary file missing ")
+                println("WARNING - binary file missing ")
             end
 
             if !ismissing(f)
@@ -182,7 +182,7 @@ function add_to_database(s::Set)#
                     println("added to cache ", (a1, a2), " twobody ")
                     
                 catch
-                    println("warning - error loading binary file $f")
+                    println("WARNING - error loading binary file $f")
                 end
             end
 #################
@@ -207,7 +207,7 @@ function add_to_database(s::Set)#
 
             else
                 f = missing
-                println("warning - binary file missing ")
+                println("WARNING - binary file missing ")
             end
 
             if !ismissing(f)
@@ -224,7 +224,7 @@ function add_to_database(s::Set)#
                     database_cached[(a2,a2,a1)] = dat
                     println("added to cache ", (a1, a2), " threebody ")
                 catch
-                    println("warning - error loading binary 3body $f ")
+                    println(" MISSING FILE - WARNING loading binary 3body $f ")
                 end
             end
             
@@ -246,7 +246,7 @@ function add_to_database(s::Set)#
             
             f =  "$datdir1/tern_$a1/coef.el.3bdy.$a1.$a2.$a3.xml.gz"
             if ! isfile(f) && ! isfile(f*".gz")
-                println("difficulty loading ternary ", ats, "  ", f)
+                println("MISSING FILE - WARNING loading ternary ", ats, "  ", f)
             else
                 dat = read_coefs(f)
                 database_cached[(a1,a2,a3)] = dat
@@ -261,7 +261,7 @@ function add_to_database(s::Set)#
         end
 
     else
-        println("warning - not setup for quaternary+ ", s)
+        println("WARNING - not setup for quaternary+ ", s)
     end
 
     
