@@ -1643,7 +1643,12 @@ function calc_energy_fft_band(hk3, sk3, nelec; smearing=0.01, return_more_info=f
 #                    println("tb check ", sum(vects' * sk * vects))
 #                    println("tb check2    ", sum(VECTS[c,:,:]' * sk3[:,:,k1,k2,k3] * VECTS[c,:,:]))
                     
-                catch
+                catch e
+                    if e isa InterruptException
+                        println("user interrupt")
+                        rethrow(InterruptException)
+                    end
+
                     println("error calc_energy_fft $k1 $k2 $k3")
                     sk[:,:] = 0.5*(sk3[:,:,k1,k2,k3] + sk3[:,:,k1,k2,k3]')
                     valsS, vectsS = eigen(sk)
@@ -1721,7 +1726,12 @@ function calc_energy_charge_fft_band(hk3, sk3, nelec; smearing=0.01, h1 = missin
 
                     VECTS[c,:,:] = vects
                     SK[c,:,:] = sk
-                catch
+                catch e
+                    if e isa InterruptException
+                        println("user interrupt")
+                        rethrow(InterruptException)
+                    end
+                        
                     if error_flag == false
                         println("error calc_energy_fft $k1 $k2 $k3")
                         sk[:,:] = 0.5*(sk3[:,:,k1,k2,k3] + sk3[:,:,k1,k2,k3]')
@@ -3128,7 +3138,11 @@ function get_energy_electron_density_kspace(tb_k::tb_k, nelec; smearing = 0.01)
             VECTS[k,:,:] = vects
             SK[k,:,:] = sk
             VALS0[k,:] = vals0
-        catch
+        catch e
+            if e isa InterruptException
+                println("user interrupt")
+                rethrow(InterruptException)
+            end
             println("warning, get_energy_electron_density_kspace error")
             error_flag = true
         end

@@ -440,7 +440,7 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
     nat = crys.nat
 
     function fn(x)
-
+        println("CALL FN", x)
         coords, A = reshape_vec(x, nat)
 
 #        println("coords ", coords)
@@ -450,7 +450,9 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
         if  mode == "vc-relax"
             crys_working.A = A
         end
-
+        println("FN crys")
+        println(crys_working)
+        
         tooshort, energy_short = safe_mode_energy(crys_working, database)
 #        println("fn too short ", tooshort)
         if tooshort
@@ -472,8 +474,8 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
                 
             end
 #            println(crys_working)
-            energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=eden, verbose=false, conv_thr=1e-7)
-            eden = deepcopy(tbc.eden)
+            energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=eden, verbose=false, conv_thr=1e-6)
+            eden = deepcopy(tbcx.eden)
         end
 #        println("fn $energy_tot fnffnfnfnffnfnfnfnfnfnfnfnfnfnfffffff")
         return energy_tot
@@ -484,7 +486,8 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
     stress_global = []
     
     function grad(storage, x)
-#        println("grad x ", x)
+        println("CALL GRAD", x)
+
 #        println("typeof x ", typeof(x))
         fcall += 1
 
@@ -495,6 +498,10 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
             crys_working.A = A
         end
 
+        println("GRAD crys")
+        println(crys_working)
+
+        
 #        println("crys_working $fcall")
 #        println(crys_working)
 
@@ -506,8 +513,11 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 #            println("yes calc forces -----------------------------------------------------------------------------------------")
 #            println(crys_working)
             tbc = calc_tb_fast(deepcopy(crys_working), database, verbose=false)
-            energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=eden, verbose=false, conv_thr=1e-7)
-#        else
+            energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=eden, verbose=false, conv_thr=1e-6)
+
+            eden = deepcopy(tbcx.eden)
+
+            #        else
 #            println("no calc forces ------------------------------------------------------------------------------------------")
 #            println(crys_working)
 #            println(tbc.crys)
@@ -599,11 +609,12 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 #                         store_trace = true,
 #                         show_trace = false)
 
-    opts = Optim.Options(g_tol = conv_thr,f_tol = conv_thr, x_tol = conv_thr,
-                         iterations = nsteps,
-                         store_trace = true,
-                         show_trace = false)
     
+    opts = Optim.Options(g_tol = conv_thr,f_tol = conv_thr, x_tol = conv_thr,
+                             iterations = nsteps,
+                             store_trace = true,
+                             show_trace = false)
+
 
     #res = optimize(fn,grad, x0, ConjugateGradient(), opts)
 
@@ -666,8 +677,25 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 #    res = optimize(fn,grad, x0, BFGS( ), opts)
 
     #res = optimize(fn,grad, x0, BFGS(  initial_invH = init ), opts)
+
+    res = missing
     
-    res = optimize(fn,grad, x0, BFGS(  initial_invH = init, linesearch=LineSearches.MoreThuente() ), opts)
+    try    
+        res = optimize(fn,grad, x0, BFGS(  initial_invH = init, linesearch=LineSearches.MoreThuente() ), opts)
+
+        #res = optimize(fn,grad, x0, BFGS(initial_invH = init ), opts)
+        
+    catch e
+        if e isa InterruptException
+            println("user interrupt")
+
+            return tbc.crys
+        else
+            println("unknown error")
+            return tbc.crys
+            
+        end
+    end
     
     #res = optimize(fn,grad, x0, BFGS(  initial_invH = init, linesearch=LineSearches.HagerZhang() ), opts)    
 
@@ -949,6 +977,7 @@ function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smear
                 #prepare eigenvectors / values
                 error_flag = false
                 if do_scf
+                    println("doing scf aaaaaaaaaaa")
                     energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=e_den0, conv_thr = 1e-8)
                 else
                     energy_tot, efermi, e_den, VECTS, VALS, error_flag =  calc_energy_charge_fft(tbc, grid=grid, smearing=smearing)
