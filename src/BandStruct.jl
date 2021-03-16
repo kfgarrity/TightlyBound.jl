@@ -264,22 +264,59 @@ function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0
 #        println("proj inds $proj_inds")
         for i = 1:nk
             vect, vals_t, hk, sk, vals0 = Hk(h, K[i,:])
+
             for p in proj_inds
                 for a = 1:h.nwan
-                    for b = 1:h.nwan
-                        temp[a,b] = vect[a,p]'*sk[a, b]* vect[b,p]
+                    for j = 1:h.nwan
+                        t = vect[p,a]*conj(vect[j,a])
+                        proj[i, a] += 0.5*real( (t*sk[j,p]  + conj(t)* conj(sk[j,p])))
                     end
                 end
-                temp = temp + conj(temp)
-                proj[i,:] += 0.5*sum(real(temp), dims=1)[:]
             end
+            
+#            sk5 = ( 0.5*(sk+sk'))^0.5
+#            sv = sk5 * vect
+            
+            #if i == 1
+            #    println("K ", K[i,:])
+            #    println("vect")
+            #    println(vect)
+            #    println("vals_t")
+            #    println(vals_t)
+            #    println("sk")
+            #    println(sk)
+            #end
+
+#            for p in proj_inds
+#                proj[i,:] +=  real(conj(sv[p,:]) .* sv[p,:])
+#            end
+                
+                #                for a = 1:h.nwan
+ #                   for b = 1:h.nwan
+#                        temp[a,b] = vect[a,p]'*sk[a, b]* vect[b,p]
+
+                        #temp[a,b] = vect[p,a]'*sk[a, b]* vect[p, b]
+#                    end
+#                end
+#                temp = temp + conj(temp)
+                
+#                proj[i,:] += 0.5*sum(real(temp), dims=1)[:]
+
+            #               proj[i,:] += real(vect[:,
+
+#sum(vect[:,2:4] .* ( sk * vect[:,2:4]), dims=2)
+#            proj[i,:] = real(sum( conj(vect[:,proj_inds]) .* (sk * vect[:,proj_inds]) , dims=2))
+#            end
+#            println("$i proj ", proj[i,:])
+#            println("check ", sum(vect'*sk*vect))
+            
             #            println(vect[proj_inds,:] .* conj(vect[proj_inds,:]))
 #            println()
 #            proj[i,:] = sum(vect[proj_inds,:]*vect[proj_inds, :]', dims=1)
             #            proj[i,:] = real(diag(vect[proj_inds,:]'*sk[proj_inds, proj_inds]*vect[proj_inds,:]))
             vals[i,:] = vals_t
         end
-                
+
         
     else
         vals = calc_bands(h, K)

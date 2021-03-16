@@ -67,6 +67,11 @@ function projection(tbc::tb_crys, vects, sk3, grid; ptype=missing)
             push!(pwan, length(proj_inds))
         end
 
+        println("PROJ")
+        for a in zip(names, PROJ, pwan)
+            println(a)
+        end
+        
     else
         
         for o in [:s, :p, :d, :f]
@@ -90,26 +95,79 @@ function projection(tbc::tb_crys, vects, sk3, grid; ptype=missing)
     temp = zeros(Complex{Float64}, tbc.tb.nwan, tbc.tb.nwan)
     proj = zeros(nk, tbc.tb.nwan, length(PROJ))
 
-    for (pind, proj_inds) in enumerate(PROJ)
-        c=0
-        for k1 = 1:grid[1]
-            for k2 = 1:grid[2]
-                for k3 = 1:grid[3]
-                    c += 1
+#    sk5 = zeros(Complex{Float64}, tbc.tb.nwan, tbc.tb.nwan)
+    sk = zeros(Complex{Float64}, tbc.tb.nwan, tbc.tb.nwan)    
+    c=0
+#=
+    for k1 = 1:grid[1]
+        for k2 = 1:grid[2]
+            for k3 = 1:grid[3]
+                c += 1
+                sk5[:,:] = ( 0.5 * (sk3[:, :, k1, k2, k3] + sk3[:, :, k1, k2, k3]'))^0.5
+                sv = sk5 * vects[c,:,:]
+                for (pind, proj_inds) in enumerate(PROJ)
                     for p in proj_inds
-                        for a = 1:tbc.tb.nwan
-                            for b = 1:tbc.tb.nwan
-                                temp[a,b] = vects[c, a,p]'*sk3[a, b, k1, k2, k3]* vects[c, b,p]
-                            end
-                        end
-                        temp = temp + conj(temp)
-                        proj[c,:, pind] += 0.5*sum(real(temp), dims=1)[:]
+                        proj[c,:, pind] += real(conj(sv[p,:]) .* sv[p,:])
                     end
+#                    if c == 1
+#                        println("pind ", pind, " $proj_inds ", proj[c,:,pind])
+#                        println("check ", 0.5*sum(vects[c,:,:]' * (sk3[:, :, k1, k2, k3] + sk3[:, :, k1, k2, k3]') * vects[c,:,:]))
+#                    end
                 end
             end
         end
-                        
     end
+=#
+    for k1 = 1:grid[1]
+        for k2 = 1:grid[2]
+            for k3 = 1:grid[3]
+                c += 1
+                sk[:,:] = ( 0.5 * (sk3[:, :, k1, k2, k3] + sk3[:, :, k1, k2, k3]'))
+                for (pind, proj_inds) in enumerate(PROJ)
+                    for p in proj_inds
+                        for a = 1:tbc.tb.nwan
+                            for j = 1:tbc.tb.nwan
+                                t = vects[c,p,a]*conj(vects[c,j,a])
+                                proj[c,a, pind] += 0.5*real( (t*sk[j,p]  + conj(t)* conj(sk[j,p])))
+                            end
+                        end
+                    end
+                end
+
+#                    if c == 1
+#                        println("pind ", pind, " $proj_inds ", proj[c,:,pind])
+#                        println("check ", 0.5*sum(vects[c,:,:]' * (sk3[:, :, k1, k2, k3] + sk3[:, :, k1, k2, k3]') * vects[c,:,:]))
+#                    end
+#                end
+            end
+        end
+    end
+
+
+    #    for (pind, proj_inds) in enumerate(PROJ)
+#        println("SUM $pind", sum(proj[:,:,pind], dims=1) / prod(grid))
+#    end
+    
+                    #                    for p in proj_inds
+#                        for a = 1:tbc.tb.nwan
+#                            for b = 1:tbc.tb.nwan
+#                                #                                temp[a,b] = vects[c, a,p]'*sk3[a, b, k1, k2, k3]* vects[c, b,p]
+#                                temp[a,b] = vects[c, p,a]'*sk3[a, b, k1, k2, k3]* vects[c, p,b]                                
+#                            end
+#                        end
+#                        temp = temp + conj(temp)
+#                        proj[c,:, pind] += 0.5*sum(real(temp), dims=1)[:]
+#                    end
+#                    if k1 == 1 && k2 == 1 && k3 == 1
+#                        println("inds, ",proj_inds)
+#                        println(proj[c,:, pind])
+#                    end
+#                    
+#                end
+#            end
+#        end
+                        
+#    end
 
     return proj, names, pwan
     
@@ -143,8 +201,10 @@ function gaussian_dos(tbc::tb_crys; grid=missing, smearing=0.02, npts=missing, p
         println("grid $grid")
     end
 
-    etot, efermi, vals, vects, sk3 = calc_energy_fft(tbc, grid=grid, smearing=smearing, return_more_info=true)
+    etot, efermi, vals, vects, hk3, sk3 = calc_energy_fft(tbc, grid=grid, smearing=smearing, return_more_info=true)
 
+#    println("precheck ", sum(vects[1,:,:]' * sk3[:,:,1,1,1] * vects[1,:,:]))
+    
     #prelim
     vals = vals .- efermi
 
@@ -158,7 +218,7 @@ function gaussian_dos(tbc::tb_crys; grid=missing, smearing=0.02, npts=missing, p
         npts = Int64(round(r * 100 ))
     end
     
-    energies = collect(vmin - r*0.01 : r*1.02 / npts    : vmax + r*0.01 + 1e-7)
+    energies = collect(vmin - r*0.02 : r*1.04 / npts    : vmax + r*0.02 + 1e-7)
     
     dos = zeros(length(energies))
 
@@ -197,6 +257,13 @@ function gaussian_dos(tbc::tb_crys; grid=missing, smearing=0.02, npts=missing, p
 
     println("Int DOS " , sum(dos) * (energies[2]-energies[1]) )
 
+    ind = energies .< 0
+
+    println("Int DOS occ " , sum(dos[ind]) * (energies[2]-energies[1]) )
+    for p in 1:nproj
+        println("Int pDOS occ $p : " , sum(pdos[ind, p]) * (energies[2]-energies[1]) )
+    end
+    
     energies = convert_energy(energies)
     dos = convert_dos(dos)
     pdos = convert_dos(pdos)
@@ -325,8 +392,18 @@ function dos(tbc::tb_crys; grid=missing, npts=missing, proj_type=missing, do_dis
     end
 
 
-    etot, efermi, vals, vects,sk3 = calc_energy_fft(tbc, grid=grid, return_more_info=true)
+    etot, efermi, vals, vects,hk3, sk3 = calc_energy_fft(tbc, grid=grid, return_more_info=true)
 
+#    println("vects ", size(vects))
+#    println(vects[1,:,:])
+#    println("vals ", size(vals))
+#    println(vals[1, :])
+#    println("sk ", size(sk3))
+#    println(sk3[:,:,1,1,1])
+
+
+
+    
     vals = vals .- efermi
     
     nk = size(vals)[1]

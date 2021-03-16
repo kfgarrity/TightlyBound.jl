@@ -1581,14 +1581,16 @@ function calc_energy_fft(tbc::tb_crys; grid=missing, smearing=0.01, return_more_
 
     hk3, sk3 = myfft_R_to_K(tbc, grid)
 
-    ret =  calc_energy_fft_band(hk3, sk3, tbc.nelec, smearing=smearing, return_more_info=return_more_info)
+    ret =  calc_energy_fft_band(hk3, sk3, tbc.nelec, smearing=smearing, return_more_info=return_more_info, h1=tbc.tb.h1)
 
     
     if return_more_info
         energy, efermi, vals, vects  = ret
 
+#        println("PRE-precheck ", sum(vects[1,:,:]' * sk3[:,:,1,1,1] * vects[1,:,:]))
+        
         etot = etypes + energy
-        return etot, efermi, vals, vects, sk3
+        return etot, efermi, vals, vects, hk3, sk3
         
     end
     return ret + etypes
@@ -1637,6 +1639,9 @@ function calc_energy_fft_band(hk3, sk3, nelec; smearing=0.01, return_more_info=f
                     if return_more_info
                         VECTS[c,:,:] = vects
                     end
+
+#                    println("tb check ", sum(vects' * sk * vects))
+#                    println("tb check2    ", sum(VECTS[c,:,:]' * sk3[:,:,k1,k2,k3] * VECTS[c,:,:]))
                     
                 catch
                     println("error calc_energy_fft $k1 $k2 $k3")
@@ -1907,6 +1912,64 @@ function calc_energy_charge_fft(tbc::tb_crys; grid=missing, smearing=0.01)
     return energy, efermi, chargeden, VECTS, VALS, error_flag
 
 end
+
+
+function dumb_cd(tbc, nband; grid=missing, smearing=0.01)
+
+    if ismissing(grid)
+        grid = get_grid(tbc.crys)
+    end
+
+    hk3, sk3 = myfft_R_to_K(tbc, grid)
+
+    h1 = tbc.tb.h1
+
+    eband, efermi, chargeden, VECTS, VALS, error_flag  =  calc_energy_charge_fft_band(hk3, sk3, tbc.nelec, smearing=smearing, h1 = h1)
+
+    
+    K1 = size(sk3)[3]
+    K2 = size(sk3)[3]
+    K3 = size(sk3)[3]
+
+    nw = size(sk3)[1]
+
+    charge = zeros(nw, nw)
+    charge2 = zeros(nw)
+
+    c=0
+    for k1 in 1:K1
+        for k2 in 1:K2
+            for k3 in 1:K3
+                c += 1
+                sk = 0.5*(sk3[:,:,k1,k2,k3] + sk3[:,:,k1,k2,k3]')
+                
+                for a = 1:nband
+                    for ind1 = 1:nw
+                        for ind2 = 1:nw
+                            charge[ind1,ind2] += real( 0.5* ( VECTS[c,ind1,a]' * VECTS[c,ind2,a] * sk[ind1,ind2]  + VECTS[c,ind1,a] * VECTS[c,ind2,a]' * conj(sk[ind1,ind2])))
+                        end
+                    end
+                end
+
+#                sk = 0.5*(sk3[:,:,k1,k2,k3] + sk3[:,:,k1,k2,k3]')
+#                st = (sk ^ -0.5)
+#                ht =  st *   (sk.*h1 + hk3[:,:,k1,k2,k3]) * st
+#                val, vect = eigen(0.5*(ht + ht'))
+#                println(val - VALS[c,:])
+#                for a = 1:nband
+#                    charge2 += 0.5*real(conj(vect[:,a]) .* vect[:,a] + (vect[:,a]) .* conj(vect[:,a]) )
+#                end
+                
+                
+            end
+        end
+    end
+    charge = charge / K1/K2/K3
+    charge2 = charge2 / K1/K2/K3
+    chargeX =  sum(charge, dims=1)[:]
+    return chargeX, charge2
+end    
+
 
 """
     function calc_energy(tbc::tb_crys; smearing=0.01, returnk=false)
