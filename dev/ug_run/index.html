@@ -53,7 +53,7 @@ CHECK FRONTIER - everything fine
 onsite
 -----
 
- 10.649634 seconds (19.99 M allocations: 982.434 MiB, 3.22% gc time)
+ 10.619594 seconds (19.99 M allocations: 982.335 MiB, 3.88% gc time)
 ------
 Do SCF
 Mixing mode: pulay
@@ -85,7 +85,10 @@ knames=[&quot;Γ&quot;, &quot;X&quot;, &quot;V&quot;];
 plot_bandstr(tbc_alp, kpath=kpath, names=knames, npts=100, proj_orbs=[:s], proj_types=[&quot;Al&quot;], do_display=false);</code></pre><pre class="documenter-example-output">proj_inds [1]
 plot_bandstr
 align vbm</pre><p><img src="../alp2.png" alt="AlP plot 2"/></p><p>You can also plot the DOS.</p><pre><code class="language-julia">dos(tbc_alp, do_display=false);</code></pre><pre class="documenter-example-output">grid [14, 14, 14]
-Projection type: atomic</pre><p><img src="../alp_dos.png" alt="AlP DOS"/></p><p>Project onto orbitals instead with <code>proj_type=:orbs</code></p><h2 id="**Calculate-force-/-stress**"><a class="docs-heading-anchor" href="#**Calculate-force-/-stress**"><strong>Calculate force / stress</strong></a><a id="**Calculate-force-/-stress**-1"></a><a class="docs-heading-anchor-permalink" href="#**Calculate-force-/-stress**" title="Permalink"></a></h2><pre><code class="language-julia">energy, force, stress, tbc = scf_energy_force_stress(tbc_alp);
+Projection type: atomic
+PROJ
+(&quot;P&quot;, [5, 6, 7, 8], 4)
+(&quot;Al&quot;, [1, 2, 3, 4], 4)</pre><p><img src="../alp_dos.png" alt="AlP DOS"/></p><p>Project onto orbitals instead with <code>proj_type=:orbs</code></p><h2 id="**Calculate-force-/-stress**"><a class="docs-heading-anchor" href="#**Calculate-force-/-stress**"><strong>Calculate force / stress</strong></a><a id="**Calculate-force-/-stress**-1"></a><a class="docs-heading-anchor-permalink" href="#**Calculate-force-/-stress**" title="Permalink"></a></h2><pre><code class="language-julia">energy, force, stress, tbc = scf_energy_force_stress(tbc_alp);
 
 println(&quot;energy $energy&quot;)
 println()
@@ -96,7 +99,7 @@ println(&quot;Stress&quot;)
 show(stdout, &quot;text/plain&quot;, stress)</code></pre><pre class="documenter-example-output">prepare atoms [&quot;Al&quot;, &quot;P&quot;]
 
 Calculate Force, Stress (no scf)
- 24.735211 seconds (53.06 M allocations: 2.720 GiB, 5.33% gc time)
+ 24.805406 seconds (53.05 M allocations: 2.719 GiB, 6.13% gc time)
 done
 ----
 energy -10.198638200937783
@@ -157,7 +160,7 @@ END SCF ------------------
 starting vec
 [0.0, 0.0, 0.0, 0.25, 0.25, 0.25, 4.9132898822133235, 4.9132898822133235, 0.0, 4.9132898822133235, 0.0, 4.9132898822133235, 0.0, 4.9132898822133235, 4.9132898822133235]
 
-  1.169553 seconds (8.02 M allocations: 759.887 MiB, 14.43% gc time)
+  1.218556 seconds (8.02 M allocations: 759.887 MiB, 15.13% gc time)
 FCALL 1 en:  -0.7495852118811797 (Ryd)  fsum:  8.454981952325583e-13  ssum:  0.0024890373799055397    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -175,7 +178,7 @@ SCF CALC 0010 energy  -10.53759492  en_diff:   6.512976E-07  dq_diff:   5.678458
 YES convergence in 10 iters, energy -10.537594918156868 eV   dq = [-1.024, 1.024]
 END SCF ------------------
 
-  0.971321 seconds (6.22 M allocations: 618.229 MiB, 15.93% gc time)
+  0.949538 seconds (6.22 M allocations: 618.229 MiB, 14.09% gc time)
 FCALL 2 en:  -0.7744986598348285 (Ryd)  fsum:  6.516761982956295e-14  ssum:  0.0009277484355050423    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -208,7 +211,7 @@ SCF CALC 0009 energy  -10.62564990  en_diff:   2.714884E-06  dq_diff:   2.226819
 YES convergence in 9 iters, energy -10.625649904232718 eV   dq = [-0.957, 0.957]
 END SCF ------------------
 
-  0.998389 seconds (6.19 M allocations: 614.656 MiB, 14.26% gc time)
+  1.013502 seconds (6.19 M allocations: 614.656 MiB, 16.52% gc time)
 FCALL 3 en:  -0.7809705795885487 (Ryd)  fsum:  1.5015043420435073e-13  ssum:  0.0003160441115125093    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -240,7 +243,7 @@ SCF CALC 0009 energy  -10.63755690  en_diff:   1.606403E-06  dq_diff:   1.288897
 YES convergence in 9 iters, energy -10.63755689862721 eV   dq = [-0.919, 0.919]
 END SCF ------------------
 
-  0.964347 seconds (6.17 M allocations: 612.271 MiB, 14.82% gc time)
+  0.970994 seconds (6.17 M allocations: 612.271 MiB, 15.62% gc time)
 FCALL 4 en:  -0.7818457272169039 (Ryd)  fsum:  1.0082326814235051e-8  ssum:  3.7208108401785344e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -271,7 +274,7 @@ SCF CALC 0008 energy  -10.63772601  en_diff:   8.565350E-07  dq_diff:   6.972240
 YES convergence in 8 iters, energy -10.637726005124156 eV   dq = [-0.923, 0.923]
 END SCF ------------------
 
-  0.961947 seconds (6.17 M allocations: 612.283 MiB, 14.76% gc time)
+  0.970111 seconds (6.17 M allocations: 612.283 MiB, 15.03% gc time)
 FCALL 5 en:  -0.781858156310665 (Ryd)  fsum:  1.6909885294099134e-8  ssum:  7.333415427379945e-7    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 START SCF ----------------
@@ -332,4 +335,4 @@ Stress
 3×3 Array{Float64,2}:
   3.88743e-5  -3.68479e-8  -3.68479e-8
  -3.68479e-8   3.88743e-5  -3.68479e-8
- -3.68479e-8  -3.68479e-8   3.88743e-5</pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p><p>Force/Stress defaults are eV/Ang and eV/Ang^3.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Monday 15 March 2021 13:29">Monday 15 March 2021</span>. Using Julia version 1.5.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ -3.68479e-8  -3.68479e-8   3.88743e-5</pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p><p>Force/Stress defaults are eV/Ang and eV/Ang^3.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Tuesday 16 March 2021 00:14">Tuesday 16 March 2021</span>. Using Julia version 1.5.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
