@@ -16,6 +16,7 @@ include("Atomic.jl")
 include("Atomdata.jl")
 include("Crystal.jl")
 
+using Printf
 using .CrystalMod:crystal
 using .CrystalMod:makecrys
 
@@ -71,6 +72,8 @@ include("SCF.jl")
 
 include("FitTB_laguerre.jl")
 include("Force_Stress.jl")
+
+include("Relax.jl")
 
 
 
@@ -167,7 +170,7 @@ function relax_structure(c::crystal; database=missing, smearing = 0.01, grid = m
         update_grid = false
     end
 
-    cfinal, tbc, energy, force, stress = Force_Stress.relax_structure(c, database, smearing=smearing, grid=grid, mode=mode, nsteps=nsteps, update_grid=update_grid, conv_thr=conv_thr)
+    cfinal, tbc, energy, force, stress = Relax.relax_structure(c, database, smearing=smearing, grid=grid, mode=mode, nsteps=nsteps, update_grid=update_grid, conv_thr=conv_thr)
 
    
     println("Final crystal")
@@ -187,7 +190,21 @@ function relax_structure(c::crystal; database=missing, smearing = 0.01, grid = m
     energy = convert_energy(energy)
     force = convert_force(force)
     stress = convert_stress(stress)
-   
+
+    println("Final Energy $energy")
+    println()
+    println("Final Forces")
+    for i in 1:cfinal.nat
+        @printf("%-3s  %.5f  %.5f  %.5f\n", cfinal.types[i], force[i,1], force[i,2], force[i,3])
+    end
+    println()
+    println("Final Stress")
+    for i in 1:3
+        @printf("%.5f  %.5f  %.5f\n", stress[i,1], stress[i,2], stress[i,3])
+    end
+
+    println()
+    
     
     return cfinal, tbc, energy, force, stress
 

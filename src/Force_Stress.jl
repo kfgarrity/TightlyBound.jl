@@ -47,7 +47,7 @@ using ..BandTools:gaussian
 using ..CrystalMod:get_grid
 
 export get_energy_force_stress
-export relax_structure
+#export relax_structure
 
 
 """
@@ -407,7 +407,7 @@ end
 
 
 ######################################################
-
+#=
 """
     function relax_structure(crys::crystal, database; smearing = 0.01, grid = missing, mode="vc-relax", nsteps=100, update_grid=true, conv_thr=2e-4)
 
@@ -762,6 +762,7 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 #    return res
 
 end
+=#
 
 """
     function reshape_vec(x, nat; strain_mode=false)
