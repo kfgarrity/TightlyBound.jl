@@ -53,7 +53,7 @@ CHECK FRONTIER - everything fine
 onsite
 -----
 
-  8.343199 seconds (19.99 M allocations: 982.311 MiB, 4.24% gc time)
+ 10.224895 seconds (20.01 M allocations: 983.079 MiB, 4.06% gc time)
 ------
 Do SCF
 Mixing mode: pulay
@@ -99,7 +99,7 @@ println(&quot;Stress&quot;)
 show(stdout, &quot;text/plain&quot;, stress)</code></pre><pre class="documenter-example-output">prepare atoms [&quot;Al&quot;, &quot;P&quot;]
 
 Calculate Force, Stress (no scf)
- 19.203205 seconds (53.06 M allocations: 2.719 GiB, 6.58% gc time)
+ 23.710215 seconds (53.12 M allocations: 2.721 GiB, 6.17% gc time)
 done
 ----
 energy -10.198638200937783
@@ -160,328 +160,1053 @@ END SCF ------------------
 starting vec
 [0.0, 0.0, 0.0, 0.25, 0.25, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
-  0.924517 seconds (8.02 M allocations: 759.887 MiB, 17.94% gc time)
+  1.175550 seconds (8.07 M allocations: 760.596 MiB, 15.35% gc time)
 
 FCALL 1 en:  -0.7495852118811797 (Ryd)  fsum:  8.454981952325583e-13  ssum:  0.0024890373799055397    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
+A1=     +2.60000  +2.60000  +0.00000  |  +0.13194  +0.00000  +0.00000
+A2=     +2.60000  +0.00000  +2.60000  |  +0.00000  +0.13194  +0.00000
+A3=     +0.00000  +2.60000  +2.60000  |  +0.00000  +0.00000  +0.13194
 
-START SCF ----------------
-SCF CALC 0001 energy  -6.97552797
-SCF CALC 0002 energy  -7.79401256  en_diff:   8.184846E-01  dq_diff:   5.635384E-01
-SCF CALC 0003 energy  -7.89220569  en_diff:   9.819313E-02  dq_diff:   4.360175E-01
-SCF CALC 0004 energy  -7.99669378  en_diff:   1.044881E-01  dq_diff:   1.191022E-01
-SCF CALC 0005 energy  -8.05894645  en_diff:   6.225266E-02  dq_diff:   1.287351E-02
-SCF CALC 0006 energy  -8.05450230  en_diff:   4.444149E-03  dq_diff:   4.368984E-03
-SCF CALC 0007 energy  -8.05727638  en_diff:   2.774084E-03  dq_diff:   1.467461E-03
-SCF CALC 0008 energy  -8.05649020  en_diff:   7.861852E-04  dq_diff:   1.208791E-04
-SCF CALC 0009 energy  -8.05650999  en_diff:   1.979892E-05  dq_diff:   2.277909E-05
-
-YES convergence in 9 iters, energy -8.05650999475548 eV   dq = [-0.419, 0.419]
-END SCF ------------------
-
-  0.228487 seconds (1.86 M allocations: 234.217 MiB, 12.64% gc time)
-
-FCALL 2 en:  -0.5921423476938338 (Ryd)  fsum:  1.2418673945579016e-10  ssum:  0.0014134016828247302    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Al   +0.00000  +0.00000  +0.00000 |  -0.00000  -0.00000  -0.00000
+P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.73188323
-SCF CALC 0002 energy  -10.67745009  en_diff:   5.443313E-02  dq_diff:   4.139091E-01
-SCF CALC 0003 energy  -10.65972061  en_diff:   1.772948E-02  dq_diff:   3.284168E-01
-SCF CALC 0004 energy  -10.60998612  en_diff:   4.973449E-02  dq_diff:   6.696256E-02
-SCF CALC 0005 energy  -10.59696905  en_diff:   1.301707E-02  dq_diff:   1.322094E-02
-SCF CALC 0006 energy  -10.59459311  en_diff:   2.375948E-03  dq_diff:   2.666916E-03
-SCF CALC 0007 energy  -10.59407939  en_diff:   5.137174E-04  dq_diff:   5.303411E-04
-SCF CALC 0008 energy  -10.59398152  en_diff:   9.787025E-05  dq_diff:   1.064669E-04
-SCF CALC 0009 energy  -10.59396129  en_diff:   2.022666E-05  dq_diff:   2.123997E-05
+SCF CALC 0001 energy  -10.49868728
+SCF CALC 0002 energy  -10.51182409  en_diff:   1.313681E-02  dq_diff:   5.238792E-02
+SCF CALC 0003 energy  -10.51533754  en_diff:   3.513452E-03  dq_diff:   4.073134E-02
+SCF CALC 0004 energy  -10.52467368  en_diff:   9.336134E-03  dq_diff:   8.416834E-03
+SCF CALC 0005 energy  -10.52660754  en_diff:   1.933862E-03  dq_diff:   1.665905E-03
+SCF CALC 0006 energy  -10.52698675  en_diff:   3.792171E-04  dq_diff:   3.342965E-04
+SCF CALC 0007 energy  -10.52706294  en_diff:   7.618926E-05  dq_diff:   6.678837E-05
+SCF CALC 0008 energy  -10.52707815  en_diff:   1.521049E-05  dq_diff:   1.336222E-05
 
-YES convergence in 9 iters, energy -10.593961291999133 eV   dq = [-0.852, 0.852]
+YES convergence in 8 iters, energy -10.527078154560222 eV   dq = [-1.029, 1.029]
 END SCF ------------------
 
-  0.648451 seconds (5.99 M allocations: 576.423 MiB, 15.91% gc time)
+  0.950435 seconds (6.25 M allocations: 618.708 MiB, 16.88% gc time)
 
-FCALL 3 en:  -0.7786415103941493 (Ryd)  fsum:  4.121814210073478e-9  ssum:  0.00047455037678065725    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 2 en:  -0.7737256922483285 (Ryd)  fsum:  1.3441818509752544e-13  ssum:  0.0009839913758527756    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.68863  +2.68863  +0.00000  |  +0.05216  +0.00000  +0.00000
+A2=     +2.68863  +0.00000  +2.68863  |  +0.00000  +0.05216  +0.00000
+A3=     +0.00000  +2.68863  +2.68863  |  +0.00000  +0.00000  +0.05216
+
+Al   +0.00000  +0.00000  +0.00000 |  -0.00000  -0.00000  -0.00000
+P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.65601499
-SCF CALC 0002 energy  -10.64627558  en_diff:   9.739409E-03  dq_diff:   3.726953E-02
-SCF CALC 0003 energy  -10.64365264  en_diff:   2.622948E-03  dq_diff:   2.875060E-02
-SCF CALC 0004 energy  -10.63687222  en_diff:   6.780416E-03  dq_diff:   6.057659E-03
-SCF CALC 0005 energy  -10.63537179  en_diff:   1.500435E-03  dq_diff:   1.183947E-03
-SCF CALC 0006 energy  -10.63508240  en_diff:   2.893833E-04  dq_diff:   2.390578E-04
-SCF CALC 0007 energy  -10.63502355  en_diff:   5.885012E-05  dq_diff:   4.761794E-05
-SCF CALC 0008 energy  -10.63501186  en_diff:   1.169059E-05  dq_diff:   9.539863E-06
+SCF CALC 0001 energy  -10.54107385
+SCF CALC 0002 energy  -10.54233643  en_diff:   1.262576E-03  dq_diff:   5.287643E-03
+SCF CALC 0003 energy  -10.54268028  en_diff:   3.438536E-04  dq_diff:   4.109767E-03
+SCF CALC 0004 energy  -10.54360659  en_diff:   9.263097E-04  dq_diff:   8.473686E-04
+SCF CALC 0005 energy  -10.54380069  en_diff:   1.940975E-04  dq_diff:   1.679009E-04
+SCF CALC 0006 energy  -10.54383893  en_diff:   3.824181E-05  dq_diff:   3.367368E-05
+SCF CALC 0007 energy  -10.54384661  en_diff:   7.681406E-06  dq_diff:   6.729114E-06
 
-YES convergence in 8 iters, energy -10.63501186233582 eV   dq = [-0.906, 0.906]
+YES convergence in 7 iters, energy -10.54384661278079 eV   dq = [-1.021, 1.021]
 END SCF ------------------
-
-  0.697479 seconds (6.17 M allocations: 612.272 MiB, 15.80% gc time)
-
-FCALL 4 en:  -0.781658670567619 (Ryd)  fsum:  7.023753210109037e-8  ssum:  0.00014254363548711426    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.64575507
-SCF CALC 0002 energy  -10.64185464  en_diff:   3.900431E-03  dq_diff:   1.479729E-02
-SCF CALC 0003 energy  -10.64080937  en_diff:   1.045264E-03  dq_diff:   1.142996E-02
-SCF CALC 0004 energy  -10.63809799  en_diff:   2.711377E-03  dq_diff:   2.396946E-03
-SCF CALC 0005 energy  -10.63750804  en_diff:   5.899553E-04  dq_diff:   4.701587E-04
-SCF CALC 0006 energy  -10.63739367  en_diff:   1.143696E-04  dq_diff:   9.474488E-05
-SCF CALC 0007 energy  -10.63737050  en_diff:   2.316787E-05  dq_diff:   1.889219E-05
+SCF CALC 0001 energy  -10.59405718
+SCF CALC 0002 energy  -10.60215035  en_diff:   8.093167E-03  dq_diff:   3.047486E-02
+SCF CALC 0003 energy  -10.60430121  en_diff:   2.150864E-03  dq_diff:   2.360436E-02
+SCF CALC 0004 energy  -10.60991431  en_diff:   5.613096E-03  dq_diff:   4.911712E-03
+SCF CALC 0005 energy  -10.61109985  en_diff:   1.185537E-03  dq_diff:   9.685491E-04
+SCF CALC 0006 energy  -10.61133118  en_diff:   2.313315E-04  dq_diff:   1.946669E-04
+SCF CALC 0007 energy  -10.61137779  en_diff:   4.661545E-05  dq_diff:   3.886611E-05
+SCF CALC 0008 energy  -10.61138709  en_diff:   9.296509E-06  dq_diff:   7.777936E-06
 
-YES convergence in 7 iters, energy -10.637370501669647 eV   dq = [-0.928, 0.928]
+YES convergence in 8 iters, energy -10.611387089475551 eV   dq = [-0.973, 0.973]
 END SCF ------------------
 
-  0.707354 seconds (6.17 M allocations: 612.267 MiB, 14.74% gc time)
+  0.961082 seconds (6.22 M allocations: 615.132 MiB, 15.56% gc time)
 
-FCALL 5 en:  -0.781832027298189 (Ryd)  fsum:  3.4499646189356912e-6  ssum:  5.546699749358197e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 3 en:  -0.7799222824201061 (Ryd)  fsum:  9.64712850928278e-15  ssum:  0.00045140375802243276    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.74026  +2.74026  +0.00000  |  +0.02393  +0.00000  +0.00000
+A2=     +2.74026  +0.00000  +2.74026  |  +0.00000  +0.02393  +0.00000
+A3=     +0.00000  +2.74026  +2.74026  |  +0.00000  +0.00000  +0.02393
+
+Al   +0.00000  +0.00000  +0.00000 |  -0.00000  -0.00000  -0.00000
+P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63534939
-SCF CALC 0002 energy  -10.63646524  en_diff:   1.115856E-03  dq_diff:   4.075100E-03
-SCF CALC 0003 energy  -10.63676096  en_diff:   2.957212E-04  dq_diff:   3.145545E-03
-SCF CALC 0004 energy  -10.63752033  en_diff:   7.593629E-04  dq_diff:   6.606907E-04
-SCF CALC 0005 energy  -10.63768496  en_diff:   1.646301E-04  dq_diff:   1.294893E-04
-SCF CALC 0006 energy  -10.63771679  en_diff:   3.183643E-05  dq_diff:   2.610517E-05
-SCF CALC 0007 energy  -10.63772324  en_diff:   6.451689E-06  dq_diff:   5.204335E-06
+SCF CALC 0001 energy  -10.61456496
+SCF CALC 0002 energy  -10.61548471  en_diff:   9.197453E-04  dq_diff:   3.583317E-03
+SCF CALC 0003 energy  -10.61573180  en_diff:   2.470890E-04  dq_diff:   2.775307E-03
+SCF CALC 0004 energy  -10.61638105  en_diff:   6.492525E-04  dq_diff:   5.780798E-04
+SCF CALC 0005 energy  -10.61651969  en_diff:   1.386419E-04  dq_diff:   1.138868E-04
+SCF CALC 0006 energy  -10.61654674  en_diff:   2.705314E-05  dq_diff:   2.290018E-05
 
-YES convergence in 7 iters, energy -10.637723244690882 eV   dq = [-0.922, 0.922]
+YES convergence in 6 iters, energy -10.616546743192332 eV   dq = [-0.968, 0.968]
 END SCF ------------------
-
-  1.071630 seconds (6.17 M allocations: 612.271 MiB, 41.93% gc time)
-
-FCALL 6 en:  -0.7818579534226353 (Ryd)  fsum:  8.50083614021123e-5  ssum:  2.6824791921699657e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63764116
-SCF CALC 0002 energy  -10.63760230  en_diff:   3.886585E-05  dq_diff:   1.388106E-04
-SCF CALC 0003 energy  -10.63759197  en_diff:   1.032209E-05  dq_diff:   1.070392E-04
+SCF CALC 0001 energy  -10.62373142
+SCF CALC 0002 energy  -10.62794257  en_diff:   4.211150E-03  dq_diff:   1.557049E-02
+SCF CALC 0003 energy  -10.62905986  en_diff:   1.117283E-03  dq_diff:   1.203692E-02
+SCF CALC 0004 energy  -10.63194894  en_diff:   2.889085E-03  dq_diff:   2.518648E-03
+SCF CALC 0005 energy  -10.63256844  en_diff:   6.195028E-04  dq_diff:   4.948916E-04
+SCF CALC 0006 energy  -10.63268870  en_diff:   1.202535E-04  dq_diff:   9.964079E-05
+SCF CALC 0007 energy  -10.63271301  en_diff:   2.430983E-05  dq_diff:   1.987736E-05
 
-YES convergence in 3 iters, energy -10.637591972981587 eV   dq = [-0.922, 0.922]
+YES convergence in 7 iters, energy -10.63271300655062 eV   dq = [-0.944, 0.944]
 END SCF ------------------
 
-  0.708044 seconds (6.17 M allocations: 612.267 MiB, 15.92% gc time)
+  0.927990 seconds (6.21 M allocations: 614.445 MiB, 15.54% gc time)
 
-FCALL 7 en:  -0.7818483051334657 (Ryd)  fsum:  0.002806624126918346  ssum:  1.0368107104045276e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 4 en:  -0.7814897078452313 (Ryd)  fsum:  3.255945919060652e-14  ssum:  0.00020685107836768412    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.76680  +2.76680  +0.00000  |  +0.01097  +0.00000  +0.00000
+A2=     +2.76680  +0.00000  +2.76680  |  +0.00000  +0.01097  +0.00000
+A3=     +0.00000  +2.76680  +2.76680  |  +0.00000  +0.00000  +0.01097
+
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63765354
-SCF CALC 0002 energy  -10.63768701  en_diff:   3.347031E-05  dq_diff:   1.190338E-04
-SCF CALC 0003 energy  -10.63769590  en_diff:   8.887440E-06  dq_diff:   9.177493E-05
+SCF CALC 0001 energy  -10.63286125
+SCF CALC 0002 energy  -10.63334681  en_diff:   4.855651E-04  dq_diff:   1.826959E-03
+SCF CALC 0003 energy  -10.63347638  en_diff:   1.295686E-04  dq_diff:   1.412294E-03
+SCF CALC 0004 energy  -10.63381263  en_diff:   3.362536E-04  dq_diff:   2.955952E-04
+SCF CALC 0005 energy  -10.63388512  en_diff:   7.248130E-05  dq_diff:   5.806243E-05
+SCF CALC 0006 energy  -10.63389919  en_diff:   1.407267E-05  dq_diff:   1.169218E-05
 
-YES convergence in 3 iters, energy -10.637695899285868 eV   dq = [-0.922, 0.922]
+YES convergence in 6 iters, energy -10.633899188032517 eV   dq = [-0.942, 0.942]
 END SCF ------------------
-
-  0.703153 seconds (6.17 M allocations: 612.269 MiB, 15.09% gc time)
-
-FCALL 8 en:  -0.7818559435731677 (Ryd)  fsum:  8.606743203029488e-5  ssum:  2.5698161196701226e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63771399
-SCF CALC 0002 energy  -10.63771908  en_diff:   5.092985E-06  dq_diff:   1.856365E-05
+SCF CALC 0001 energy  -10.63319164
+SCF CALC 0002 energy  -10.63483230  en_diff:   1.640659E-03  dq_diff:   6.055698E-03
+SCF CALC 0003 energy  -10.63526802  en_diff:   4.357213E-04  dq_diff:   4.677809E-03
+SCF CALC 0004 energy  -10.63639187  en_diff:   1.123849E-03  dq_diff:   9.807687E-04
+SCF CALC 0005 energy  -10.63663454  en_diff:   2.426720E-04  dq_diff:   1.924473E-04
+SCF CALC 0006 energy  -10.63668156  en_diff:   4.701946E-05  dq_diff:   3.877412E-05
+SCF CALC 0007 energy  -10.63669108  en_diff:   9.518182E-06  dq_diff:   7.732374E-06
 
-YES convergence in 2 iters, energy -10.637719084352138 eV   dq = [-0.922, 0.922]
+YES convergence in 7 iters, energy -10.63669107878761 eV   dq = [-0.932, 0.932]
 END SCF ------------------
 
-  0.675749 seconds (6.17 M allocations: 612.279 MiB, 15.85% gc time)
+  0.956514 seconds (6.20 M allocations: 612.749 MiB, 16.46% gc time)
 
-FCALL 9 en:  -0.7818576476434888 (Ryd)  fsum:  8.427121436860684e-5  ssum:  2.683685528190007e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 5 en:  -0.7817820906555599 (Ryd)  fsum:  1.2062796023385367e-8  ssum:  9.409954687502926e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.77759  +2.77759  +0.00000  |  +0.00499  -0.00000  -0.00000
+A2=     +2.77759  +0.00000  +2.77759  |  -0.00000  +0.00499  -0.00000
+A3=     +0.00000  +2.77759  +2.77759  |  -0.00000  -0.00000  +0.00499
+
+Al   +0.00000  +0.00000  +0.00000 |  -0.00000  -0.00000  -0.00000
+P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63772041
-SCF CALC 0002 energy  -10.63772249  en_diff:   2.080211E-06  dq_diff:   8.019585E-06
+SCF CALC 0001 energy  -10.63649133
+SCF CALC 0002 energy  -10.63668713  en_diff:   1.957933E-04  dq_diff:   7.276534E-04
+SCF CALC 0003 energy  -10.63673924  en_diff:   5.211562E-05  dq_diff:   5.620778E-04
+SCF CALC 0004 energy  -10.63687385  en_diff:   1.346105E-04  dq_diff:   1.178551E-04
+SCF CALC 0005 energy  -10.63690298  en_diff:   2.912371E-05  dq_diff:   2.312331E-05
+SCF CALC 0006 energy  -10.63690862  en_diff:   5.643655E-06  dq_diff:   4.659102E-06
 
-YES convergence in 2 iters, energy -10.637722493615675 eV   dq = [-0.922, 0.922]
+YES convergence in 6 iters, energy -10.636908620861211 eV   dq = [-0.931, 0.931]
 END SCF ------------------
-
-  0.701344 seconds (6.17 M allocations: 612.272 MiB, 15.15% gc time)
-
-FCALL 10 en:  -0.7818578982196458 (Ryd)  fsum:  8.500824784728969e-5  ssum:  2.683283496640054e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63772305
-SCF CALC 0002 energy  -10.63772389  en_diff:   8.457635E-07  dq_diff:   3.727732E-06
+SCF CALC 0001 energy  -10.63600518
+SCF CALC 0002 energy  -10.63668829  en_diff:   6.831162E-04  dq_diff:   2.518645E-03
+SCF CALC 0003 energy  -10.63686976  en_diff:   1.814649E-04  dq_diff:   1.944937E-03
+SCF CALC 0004 energy  -10.63733726  en_diff:   4.674996E-04  dq_diff:   4.081057E-04
+SCF CALC 0005 energy  -10.63743848  en_diff:   1.012197E-04  dq_diff:   8.003534E-05
+SCF CALC 0006 energy  -10.63745807  en_diff:   1.959736E-05  dq_diff:   1.612994E-05
 
-YES convergence in 2 iters, energy -10.6377238917682 eV   dq = [-0.922, 0.922]
+YES convergence in 6 iters, energy -10.637458073908117 eV   dq = [-0.928, 0.928]
 END SCF ------------------
 
-  0.707809 seconds (6.17 M allocations: 612.271 MiB, 15.73% gc time)
+  0.939493 seconds (6.20 M allocations: 612.759 MiB, 14.96% gc time)
 
-FCALL 11 en:  -0.7818580009819237 (Ryd)  fsum:  8.500832024810041e-5  ssum:  2.682790575236085e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 6 en:  -0.7818384637366611 (Ryd)  fsum:  2.0633748837606057e-8  ssum:  4.7272254351432485e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  0.708107 seconds (6.17 M allocations: 612.271 MiB, 15.56% gc time)
+A1=     +2.78202  +2.78202  -0.00000  |  +0.00251  -0.00000  -0.00000
+A2=     +2.78202  -0.00000  +2.78202  |  -0.00000  +0.00251  -0.00000
+A3=     -0.00000  +2.78202  +2.78202  |  -0.00000  -0.00000  +0.00251
 
-FCALL 12 en:  -0.7818580009819237 (Ryd)  fsum:  8.500832024810041e-5  ssum:  2.682790575236085e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63772412
-SCF CALC 0002 energy  -10.63772446  en_diff:   3.438672E-07  dq_diff:   1.739840E-06
+SCF CALC 0001 energy  -10.63732216
+SCF CALC 0002 energy  -10.63741128  en_diff:   8.912354E-05  dq_diff:   3.295490E-04
+SCF CALC 0003 energy  -10.63743498  en_diff:   2.369683E-05  dq_diff:   2.544817E-04
 
-YES convergence in 2 iters, energy -10.637724460226556 eV   dq = [-0.922, 0.922]
+YES convergence in 3 iters, energy -10.637434979459611 eV   dq = [-0.927, 0.927]
 END SCF ------------------
 
-  0.762287 seconds (6.17 M allocations: 612.273 MiB, 18.93% gc time)
+  0.964517 seconds (6.20 M allocations: 612.760 MiB, 15.95% gc time)
 
-FCALL 13 en:  -0.7818580427628271 (Ryd)  fsum:  8.500826757736381e-5  ssum:  2.682590075466924e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 7 en:  -0.7818367663266205 (Ryd)  fsum:  2.9068367799921703e-9  ssum:  4.256300618708706e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  0.769796 seconds (6.17 M allocations: 612.273 MiB, 16.98% gc time)
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
 
-FCALL 14 en:  -0.7818580427628271 (Ryd)  fsum:  8.500826757736381e-5  ssum:  2.682590075466924e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-  0.752359 seconds (6.17 M allocations: 612.273 MiB, 14.76% gc time)
-
-FCALL 15 en:  -0.7818580427628271 (Ryd)  fsum:  8.500826757736381e-5  ssum:  2.682590075466924e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63772455
-SCF CALC 0002 energy  -10.63772469  en_diff:   1.398083E-07  dq_diff:   8.150092E-07
+SCF CALC 0001 energy  -10.63756659
+SCF CALC 0002 energy  -10.63753000  en_diff:   3.658858E-05  dq_diff:   1.348375E-04
+SCF CALC 0003 energy  -10.63752027  en_diff:   9.731374E-06  dq_diff:   1.041090E-04
 
-YES convergence in 2 iters, energy -10.637724691348371 eV   dq = [-0.922, 0.922]
+YES convergence in 3 iters, energy -10.637520265325845 eV   dq = [-0.927, 0.927]
 END SCF ------------------
 
-  0.780404 seconds (6.17 M allocations: 612.276 MiB, 15.11% gc time)
+  0.945019 seconds (6.20 M allocations: 612.768 MiB, 15.12% gc time)
 
-FCALL 16 en:  -0.781858059749961 (Ryd)  fsum:  8.50082419304271e-5  ssum:  2.6825085524357593e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 8 en:  -0.7818430347198938 (Ryd)  fsum:  1.17641351533808e-8  ssum:  4.4917953589339894e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  1.068958 seconds (6.17 M allocations: 612.276 MiB, 43.03% gc time)
+A1=     +2.78224  +2.78224  -0.00000  |  +0.00238  -0.00000  -0.00000
+A2=     +2.78224  -0.00000  +2.78224  |  -0.00000  +0.00238  -0.00000
+A3=     -0.00000  +2.78224  +2.78224  |  -0.00000  -0.00000  +0.00238
 
-FCALL 17 en:  -0.781858059749961 (Ryd)  fsum:  8.50082419304271e-5  ssum:  2.6825085524357593e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-  0.677044 seconds (6.17 M allocations: 612.276 MiB, 15.10% gc time)
-
-FCALL 18 en:  -0.781858059749961 (Ryd)  fsum:  8.50082419304271e-5  ssum:  2.6825085524357593e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63772473
-SCF CALC 0002 energy  -10.63772479  en_diff:   5.684276E-08  dq_diff:   3.830264E-07
+SCF CALC 0001 energy  -10.63746005
+SCF CALC 0002 energy  -10.63747905  en_diff:   1.899305E-05  dq_diff:   7.007539E-05
 
-YES convergence in 2 iters, energy -10.637724785317168 eV   dq = [-0.922, 0.922]
+YES convergence in 2 iters, energy -10.637479046011347 eV   dq = [-0.927, 0.927]
 END SCF ------------------
 
-  0.653728 seconds (6.17 M allocations: 612.275 MiB, 15.84% gc time)
+  1.234722 seconds (6.20 M allocations: 612.764 MiB, 38.58% gc time)
 
-FCALL 19 en:  -0.7818580666565377 (Ryd)  fsum:  8.500822938716742e-5  ssum:  2.6824754047566616e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 9 en:  -0.7818400051572576 (Ryd)  fsum:  7.333159893244908e-9  ssum:  4.373291741668997e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  0.702393 seconds (6.17 M allocations: 612.275 MiB, 16.11% gc time)
+A1=     +2.78236  +2.78236  -0.00000  |  +0.00232  -0.00000  -0.00000
+A2=     +2.78236  -0.00000  +2.78236  |  -0.00000  +0.00232  -0.00000
+A3=     -0.00000  +2.78236  +2.78236  |  -0.00000  -0.00000  +0.00232
 
-FCALL 20 en:  -0.7818580666565377 (Ryd)  fsum:  8.500822938716742e-5  ssum:  2.6824754047566616e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-  0.681655 seconds (6.17 M allocations: 612.275 MiB, 14.32% gc time)
-
-FCALL 21 en:  -0.7818580666565377 (Ryd)  fsum:  8.500822938716742e-5  ssum:  2.6824754047566616e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-  0.678288 seconds (6.17 M allocations: 612.275 MiB, 15.04% gc time)
-
-FCALL 22 en:  -0.7818580666565377 (Ryd)  fsum:  8.500822938716742e-5  ssum:  2.6824754047566616e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63772480
-SCF CALC 0002 energy  -10.63772482  en_diff:   2.311086E-08  dq_diff:   1.805275E-07
+SCF CALC 0001 energy  -10.63746642
+SCF CALC 0002 energy  -10.63748523  en_diff:   1.881575E-05  dq_diff:   7.045069E-05
 
-YES convergence in 2 iters, energy -10.637724823522731 eV   dq = [-0.922, 0.922]
+YES convergence in 2 iters, energy -10.637485231191823 eV   dq = [-0.927, 0.927]
 END SCF ------------------
 
-  0.771324 seconds (6.17 M allocations: 612.273 MiB, 17.88% gc time)
+  0.863650 seconds (6.20 M allocations: 612.757 MiB, 16.26% gc time)
 
-FCALL 23 en:  -0.7818580694645938 (Ryd)  fsum:  8.500821945732899e-5  ssum:  2.682461922437945e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 10 en:  -0.7818404597594726 (Ryd)  fsum:  5.1191580445068906e-9  ssum:  4.314469762642961e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  0.787751 seconds (6.17 M allocations: 612.273 MiB, 18.19% gc time)
+A1=     +2.78241  +2.78241  -0.00000  |  +0.00229  -0.00000  -0.00000
+A2=     +2.78241  -0.00000  +2.78241  |  -0.00000  +0.00229  -0.00000
+A3=     -0.00000  +2.78241  +2.78241  |  -0.00000  -0.00000  +0.00229
 
-FCALL 24 en:  -0.7818580694645938 (Ryd)  fsum:  8.500821945732899e-5  ssum:  2.682461922437945e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
 
-  0.747802 seconds (6.17 M allocations: 612.273 MiB, 16.69% gc time)
 
-FCALL 25 en:  -0.7818580694645938 (Ryd)  fsum:  8.500821945732899e-5  ssum:  2.682461922437945e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+START SCF ----------------
+SCF CALC 0001 energy  -10.63748136
+SCF CALC 0002 energy  -10.63749457  en_diff:   1.320413E-05  dq_diff:   5.018175E-05
 
-  0.761644 seconds (6.17 M allocations: 612.273 MiB, 16.09% gc time)
+YES convergence in 2 iters, energy -10.63749456772835 eV   dq = [-0.927, 0.927]
+END SCF ------------------
 
-FCALL 26 en:  -0.7818580694645938 (Ryd)  fsum:  8.500821945732899e-5  ssum:  2.682461922437945e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  0.855346 seconds (6.20 M allocations: 612.758 MiB, 14.61% gc time)
 
-  0.775295 seconds (6.17 M allocations: 612.273 MiB, 15.52% gc time)
+FCALL 11 en:  -0.7818411459820009 (Ryd)  fsum:  4.012688836719103e-9  ssum:  4.285286889447035e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-FCALL 27 en:  -0.7818580694645938 (Ryd)  fsum:  8.500821945732899e-5  ssum:  2.682461922437945e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+A1=     +2.78244  +2.78244  -0.00000  |  +0.00227  -0.00000  -0.00000
+A2=     +2.78244  -0.00000  +2.78244  |  -0.00000  +0.00227  -0.00000
+A3=     -0.00000  +2.78244  +2.78244  |  -0.00000  -0.00000  +0.00227
 
-  0.756449 seconds (6.17 M allocations: 612.273 MiB, 14.13% gc time)
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
 
-FCALL 28 en:  -0.7818580694645938 (Ryd)  fsum:  8.500821945732899e-5  ssum:  2.682461922437945e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  0.757981 seconds (6.17 M allocations: 612.273 MiB, 14.91% gc time)
+START SCF ----------------
+SCF CALC 0001 energy  -10.63749364
+SCF CALC 0002 energy  -10.63750178  en_diff:   8.148415E-06  dq_diff:   3.230249E-05
 
-FCALL 29 en:  -0.7818580694645938 (Ryd)  fsum:  8.500821945732899e-5  ssum:  2.682461922437945e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+YES convergence in 2 iters, energy -10.637501784442042 eV   dq = [-0.927, 0.927]
+END SCF ------------------
 
-  0.760995 seconds (6.17 M allocations: 612.273 MiB, 14.83% gc time)
+  0.958949 seconds (6.20 M allocations: 612.761 MiB, 17.34% gc time)
 
-FCALL 30 en:  -0.7818580694645938 (Ryd)  fsum:  8.500821945732899e-5  ssum:  2.682461922437945e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 12 en:  -0.7818416764004813 (Ryd)  fsum:  3.459627168564492e-9  ssum:  4.270787830721612e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-  0.769912 seconds (6.17 M allocations: 612.273 MiB, 15.07% gc time)
+A1=     +2.78245  +2.78245  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78245  -0.00000  +2.78245  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78245  +2.78245  |  -0.00000  -0.00000  +0.00226
 
-FCALL 31 en:  -0.7818580694645938 (Ryd)  fsum:  8.500821945732899e-5  ssum:  2.682461922437945e-6    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63750173
+SCF CALC 0002 energy  -10.63750643  en_diff:   4.704104E-06  dq_diff:   1.969178E-05
+
+YES convergence in 2 iters, energy -10.637506432100999 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.948150 seconds (6.20 M allocations: 612.757 MiB, 15.56% gc time)
+
+FCALL 13 en:  -0.7818420179969899 (Ryd)  fsum:  3.1831571630335006e-9  ssum:  4.26357579330543e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78246  +2.78246  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78246  -0.00000  +2.78246  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78246  +2.78246  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63750657
+SCF CALC 0002 energy  -10.63750918  en_diff:   2.608642E-06  dq_diff:   1.150875E-05
+
+YES convergence in 2 iters, energy -10.637509179585747 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.957467 seconds (6.20 M allocations: 612.761 MiB, 14.95% gc time)
+
+FCALL 14 en:  -0.7818422199333209 (Ryd)  fsum:  3.0449421632161057e-9  ssum:  4.259985012500221e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78246  +2.78246  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78246  -0.00000  +2.78246  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78246  +2.78246  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63750932
+SCF CALC 0002 energy  -10.63751073  en_diff:   1.408846E-06  dq_diff:   6.537640E-06
+
+YES convergence in 2 iters, energy -10.6375107259797 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.941330 seconds (6.20 M allocations: 612.759 MiB, 13.73% gc time)
+
+FCALL 15 en:  -0.7818423335911387 (Ryd)  fsum:  2.9758429971781636e-9  ssum:  4.2581958207627825e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751082
+SCF CALC 0002 energy  -10.63751157  en_diff:   7.470030E-07  dq_diff:   3.638715E-06
+
+YES convergence in 2 iters, energy -10.637511569526072 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.940274 seconds (6.20 M allocations: 612.763 MiB, 13.89% gc time)
+
+FCALL 16 en:  -0.7818423955906311 (Ryd)  fsum:  2.941298096914048e-9  ssum:  4.257303747859984e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751163
+SCF CALC 0002 energy  -10.63751202  en_diff:   3.908471E-07  dq_diff:   1.994433E-06
+
+YES convergence in 2 iters, energy -10.637512019961605 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.940283 seconds (6.20 M allocations: 612.757 MiB, 17.08% gc time)
+
+FCALL 17 en:  -0.78184242869702 (Ryd)  fsum:  2.92402716457524e-9  ssum:  4.256858738639783e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751205
+SCF CALC 0002 energy  -10.63751226  en_diff:   2.024896E-07  dq_diff:   1.080245E-06
+
+YES convergence in 2 iters, energy -10.637512256856558 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.934660 seconds (6.20 M allocations: 612.765 MiB, 16.89% gc time)
+
+FCALL 18 en:  -0.7818424461084716 (Ryd)  fsum:  2.915390302561409e-9  ssum:  4.256636652355238e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751228
+SCF CALC 0002 energy  -10.63751238  en_diff:   1.041233E-07  dq_diff:   5.795659E-07
+
+YES convergence in 2 iters, energy -10.63751238006114 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.918842 seconds (6.20 M allocations: 612.761 MiB, 14.94% gc time)
+
+FCALL 19 en:  -0.7818424551638382 (Ryd)  fsum:  2.9110721576497136e-9  ssum:  4.256525779596092e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751239
+SCF CALC 0002 energy  -10.63751244  en_diff:   5.323424E-08  dq_diff:   3.085485E-07
+
+YES convergence in 2 iters, energy -10.63751244360141 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.918690 seconds (6.20 M allocations: 612.757 MiB, 14.25% gc time)
+
+FCALL 20 en:  -0.7818424598339602 (Ryd)  fsum:  2.9089152703508964e-9  ssum:  4.256470412614673e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751245
+SCF CALC 0002 energy  -10.63751248  en_diff:   2.709480E-08  dq_diff:   1.632136E-07
+
+YES convergence in 2 iters, energy -10.637512476161067 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.921908 seconds (6.20 M allocations: 612.757 MiB, 14.64% gc time)
+
+FCALL 21 en:  -0.7818424622270499 (Ryd)  fsum:  2.90783549400731e-9  ssum:  4.256442757392312e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751248
+SCF CALC 0002 energy  -10.63751249  en_diff:   1.374201E-08  dq_diff:   8.586993E-08
+
+YES convergence in 2 iters, energy -10.637512492762465 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  1.219613 seconds (6.20 M allocations: 612.757 MiB, 38.23% gc time)
+
+FCALL 22 en:  -0.7818424634472297 (Ryd)  fsum:  2.9072961655304915e-9  ssum:  4.256428941299235e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751249
+SCF CALC 0002 energy  -10.63751250  en_diff:   6.950267E-09  dq_diff:   4.496997E-08
+
+YES convergence in 2 iters, energy -10.637512501194273 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.860394 seconds (6.20 M allocations: 612.757 MiB, 16.19% gc time)
+
+FCALL 23 en:  -0.7818424640669559 (Ryd)  fsum:  2.907023782459381e-9  ssum:  4.256422037937522e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751250
+SCF CALC 0002 energy  -10.63751251  en_diff:   3.507433E-09  dq_diff:   2.345718E-08
+
+YES convergence in 2 iters, energy -10.637512505463498 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.848227 seconds (6.20 M allocations: 612.757 MiB, 14.72% gc time)
+
+FCALL 24 en:  -0.781842464380738 (Ryd)  fsum:  2.906889038938224e-9  ssum:  4.256418588170769e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751251
+SCF CALC 0002 energy  -10.63751251  en_diff:   1.766895E-09  dq_diff:   1.219337E-08
+
+YES convergence in 2 iters, energy -10.637512507619826 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.949773 seconds (6.20 M allocations: 612.761 MiB, 16.23% gc time)
+
+FCALL 25 en:  -0.7818424645392252 (Ryd)  fsum:  2.9068229075575694e-9  ssum:  4.2564168640674756e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751251
+SCF CALC 0002 energy  -10.63751251  en_diff:   8.887888E-10  dq_diff:   6.319011E-09
+
+YES convergence in 2 iters, energy -10.637512508706898 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.954753 seconds (6.20 M allocations: 612.763 MiB, 17.38% gc time)
+
+FCALL 26 en:  -0.7818424646191234 (Ryd)  fsum:  2.9067891955581305e-9  ssum:  4.256416002329762e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751251
+SCF CALC 0002 energy  -10.63751251  en_diff:   4.465673E-10  dq_diff:   3.265916E-09
+
+YES convergence in 2 iters, energy -10.637512509253966 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.948108 seconds (6.20 M allocations: 612.765 MiB, 15.28% gc time)
+
+FCALL 27 en:  -0.7818424646593323 (Ryd)  fsum:  2.906772660230886e-9  ssum:  4.2564155715963786e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751251
+SCF CALC 0002 energy  -10.63751251  en_diff:   2.241892E-10  dq_diff:   1.683904E-09
+
+YES convergence in 2 iters, energy -10.637512509529007 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.942369 seconds (6.20 M allocations: 612.761 MiB, 14.52% gc time)
+
+FCALL 28 en:  -0.7818424646795473 (Ryd)  fsum:  2.9067636642139577e-9  ssum:  4.256415356278298e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751251
+SCF CALC 0002 energy  -10.63751251  en_diff:   1.124458E-10  dq_diff:   8.663549E-10
+
+YES convergence in 2 iters, energy -10.63751250966711 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.946647 seconds (6.20 M allocations: 612.757 MiB, 14.99% gc time)
+
+FCALL 29 en:  -0.7818424646896978 (Ryd)  fsum:  2.906760726538812e-9  ssum:  4.256415248641751e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751251
+SCF CALC 0002 energy  -10.63751251  en_diff:   5.638529E-11  dq_diff:   4.448742E-10
+
+YES convergence in 2 iters, energy -10.63751250973651 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  1.250607 seconds (6.20 M allocations: 612.767 MiB, 40.32% gc time)
+
+FCALL 30 en:  -0.7818424646947986 (Ryd)  fsum:  2.90675725238948e-9  ssum:  4.256415194827883e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751251
+SCF CALC 0002 energy  -10.63751251  en_diff:   2.824400E-11  dq_diff:   2.280389E-10
+
+YES convergence in 2 iters, energy -10.63751250977121 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.829031 seconds (6.20 M allocations: 612.759 MiB, 13.91% gc time)
+
+FCALL 31 en:  -0.7818424646973489 (Ryd)  fsum:  2.9067582047036995e-9  ssum:  4.256415167929038e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751251
+SCF CALC 0002 energy  -10.63751251  en_diff:   1.414315E-11  dq_diff:   1.167050E-10
+
+YES convergence in 2 iters, energy -10.637512509788628 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.837090 seconds (6.20 M allocations: 612.761 MiB, 14.64% gc time)
+
+FCALL 32 en:  -0.7818424646986292 (Ryd)  fsum:  2.9067556558113424e-9  ssum:  4.256415154478517e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751251
+SCF CALC 0002 energy  -10.63751251  en_diff:   7.093477E-12  dq_diff:   5.964326E-11
+
+YES convergence in 2 iters, energy -10.637512509797318 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.835753 seconds (6.20 M allocations: 612.759 MiB, 13.65% gc time)
+
+FCALL 33 en:  -0.7818424646992679 (Ryd)  fsum:  2.906758039995163e-9  ssum:  4.256415147755537e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751251
+SCF CALC 0002 energy  -10.63751251  en_diff:   3.537675E-12  dq_diff:   3.043557E-11
+
+YES convergence in 2 iters, energy -10.637512509801681 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.870775 seconds (6.20 M allocations: 612.758 MiB, 14.70% gc time)
+
+FCALL 34 en:  -0.7818424646995885 (Ryd)  fsum:  2.906754290168932e-9  ssum:  4.256415144393355e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751251
+SCF CALC 0002 energy  -10.63751251  en_diff:   1.768838E-12  dq_diff:   1.551684E-11
+
+YES convergence in 2 iters, energy -10.637512509803916 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  1.277371 seconds (6.20 M allocations: 612.763 MiB, 40.20% gc time)
+
+FCALL 35 en:  -0.7818424646997528 (Ryd)  fsum:  2.906753481027894e-9  ssum:  4.256415142713177e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.878443 seconds (6.20 M allocations: 612.763 MiB, 16.90% gc time)
+
+FCALL 36 en:  -0.7818424646997528 (Ryd)  fsum:  2.906753481027894e-9  ssum:  4.256415142713177e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.63751251
+SCF CALC 0002 energy  -10.63751251  en_diff:   9.742957E-13  dq_diff:   8.179180E-12
+
+YES convergence in 2 iters, energy -10.637512509804976 eV   dq = [-0.927, 0.927]
+END SCF ------------------
+
+  0.880769 seconds (6.20 M allocations: 612.757 MiB, 15.06% gc time)
+
+FCALL 37 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.960956 seconds (6.20 M allocations: 612.757 MiB, 16.61% gc time)
+
+FCALL 38 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.966015 seconds (6.20 M allocations: 612.757 MiB, 17.68% gc time)
+
+FCALL 39 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.932815 seconds (6.20 M allocations: 612.757 MiB, 14.41% gc time)
+
+FCALL 40 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.955189 seconds (6.20 M allocations: 612.757 MiB, 15.11% gc time)
+
+FCALL 41 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.968104 seconds (6.20 M allocations: 612.757 MiB, 15.48% gc time)
+
+FCALL 42 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.943087 seconds (6.20 M allocations: 612.757 MiB, 13.97% gc time)
+
+FCALL 43 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  1.314109 seconds (6.20 M allocations: 612.757 MiB, 39.37% gc time)
+
+FCALL 44 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.832303 seconds (6.20 M allocations: 612.757 MiB, 15.44% gc time)
+
+FCALL 45 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.843204 seconds (6.20 M allocations: 612.757 MiB, 14.36% gc time)
+
+FCALL 46 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.845453 seconds (6.20 M allocations: 612.757 MiB, 15.27% gc time)
+
+FCALL 47 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.842914 seconds (6.20 M allocations: 612.757 MiB, 13.97% gc time)
+
+FCALL 48 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.835060 seconds (6.20 M allocations: 612.757 MiB, 12.82% gc time)
+
+FCALL 49 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  1.266923 seconds (6.20 M allocations: 612.757 MiB, 39.91% gc time)
+
+FCALL 50 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.819628 seconds (6.20 M allocations: 612.757 MiB, 15.39% gc time)
+
+FCALL 51 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.842748 seconds (6.20 M allocations: 612.757 MiB, 13.49% gc time)
+
+FCALL 52 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.845390 seconds (6.20 M allocations: 612.757 MiB, 14.42% gc time)
+
+FCALL 53 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.828366 seconds (6.20 M allocations: 612.757 MiB, 13.05% gc time)
+
+FCALL 54 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  1.283450 seconds (6.20 M allocations: 612.757 MiB, 40.01% gc time)
+
+FCALL 55 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.868553 seconds (6.20 M allocations: 612.757 MiB, 16.82% gc time)
+
+FCALL 56 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.831571 seconds (6.20 M allocations: 612.757 MiB, 13.11% gc time)
+
+FCALL 57 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.827528 seconds (6.20 M allocations: 612.757 MiB, 13.65% gc time)
+
+FCALL 58 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+
+  0.824708 seconds (6.20 M allocations: 612.757 MiB, 12.54% gc time)
+
+FCALL 59 en:  -0.7818424646998308 (Ryd)  fsum:  2.9067554355486867e-9  ssum:  4.256415141432071e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
+
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
 
 
 res
  * Status: success
 
  * Candidate solution
-    Final objective value:     -7.818581e-01
+    Final objective value:     -7.818425e-01
 
  * Found with
-    Algorithm:     BFGS
+    Algorithm:     Conjugate Gradient
 
  * Convergence measures
-    |x - x&#39;|               = 1.10e-11 ≤ 2.0e-04
-    |x - x&#39;|/|x&#39;|          = 4.41e-11 ≰ 0.0e+00
-    |f(x) - f(x&#39;)|         = 1.16e-07 ≰ 0.0e+00
-    |f(x) - f(x&#39;)|/|f(x&#39;)| = 1.48e-07 ≤ 2.0e-04
-    |g(x)|                 = 4.49e-04 ≰ 2.0e-04
+    |x - x&#39;|               = 1.72e-04 ≤ 2.0e-04
+    |x - x&#39;|/|x&#39;|          = 6.88e-04 ≰ 0.0e+00
+    |f(x) - f(x&#39;)|         = 4.00e-06 ≰ 0.0e+00
+    |f(x) - f(x&#39;)|/|f(x&#39;)| = 5.12e-06 ≤ 2.0e-04
+    |g(x)|                 = 7.14e-03 ≰ 2.0e-04
 
  * Work counters
-    Seconds run:   34  (vs limit Inf)
-    Iterations:    5
-    f(x) calls:    31
-    ∇f(x) calls:   31
-
-Final crystal
-Units: Å
-
-A1=     2.78681  2.78681  0.00000
-A2=     2.78681  0.00000  2.78681
-A3=     0.00000  2.78681  2.78681
-
-Al   -0.00001  -0.00001  -0.00001
-P    0.25001  0.25001  0.25001
-
+    Seconds run:   96  (vs limit Inf)
+    Iterations:    6
+    f(x) calls:    64
+    ∇f(x) calls:   59
 
 Relax done
-Final Energy -10.637724823522731
+Final Energy -10.637512509804976
+A1=     +2.78247  +2.78247  -0.00000  |  +0.00226  -0.00000  -0.00000
+A2=     +2.78247  -0.00000  +2.78247  |  -0.00000  +0.00226  -0.00000
+A3=     -0.00000  +2.78247  +2.78247  |  -0.00000  -0.00000  +0.00226
 
-Final Forces
-Al   0.00089  0.00089  0.00089
-P    -0.00089  -0.00089  -0.00089
+Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
 
-Final Stress
--0.00014  -0.00001  -0.00001
--0.00001  -0.00014  -0.00001
--0.00001  -0.00001  -0.00014
 
-Energy new -10.637724823522731
+Energy new -144.73078338064062
 
 Force
 2×3 Array{Float64,2}:
-  0.000892288   0.000892288   0.000892288
- -0.000892288  -0.000892288  -0.000892288
+  3.05107e-8   3.05107e-8   3.05107e-8
+ -3.05107e-8  -3.05107e-8  -3.05107e-8
 Stress
 3×3 Array{Float64,2}:
- -0.000141239  -1.16521e-5   -1.16521e-5
- -1.16521e-5   -0.000141239  -1.16521e-5
- -1.16521e-5   -1.16521e-5   -0.000141239</pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p><p>Force/Stress defaults are eV/Ang and eV/Ang^3.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Friday 19 March 2021 21:26">Friday 19 March 2021</span>. Using Julia version 1.5.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+  0.00225632  -3.37163e-8  -3.37163e-8
+ -3.37163e-8   0.00225632  -3.37163e-8
+ -3.37163e-8  -3.37163e-8   0.00225632</pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p><p>Force/Stress defaults are eV/Ang and eV/Ang^3.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 21 March 2021 14:57">Sunday 21 March 2021</span>. Using Julia version 1.5.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
