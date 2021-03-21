@@ -1189,7 +1189,14 @@ function distances_etc_3bdy_parallel(crys, cutoff=missing, cutoff2=missing; var_
 #                        r2 = Rind[c2, :]
 #                        r3 = r1 - r2
 #                        c12 = R_reverse[r3]
-                        c12 = R_reverse[ @view(Rind[c1, :]) .- @view (Rind[c2, :]) ]
+
+                        
+                        Rdiff = @view(Rind[c1, :]) .- @view (Rind[c2, :])
+                        if Rdiff in keys(R_reverse)
+                            c12 = R_reverse[ Rdiff ]
+                        else
+                            continue
+                        end
                             
 #                        temp = ( d_ab .- dmat[a,c,c2, :])
                         
@@ -1608,7 +1615,7 @@ electron density and Fermi level will be wrong.
 - `verbose=true` - set to false for less output.
 - `var_type=missing` - variable type of `tb_crys`. Default is `Float64`.
 """
-function calc_tb_fast(crys::crystal, database=missing; reference_tbc=missing, verbose=true, var_type=missing, use_threebody=true, use_threebody_onsite=true, gamma=missing, screening=1.0, set_maxmin=false, check_frontier=true)
+function calc_tb_fast(crys::crystal, database=missing; reference_tbc=missing, verbose=true, var_type=missing, use_threebody=true, use_threebody_onsite=true, gamma=missing, screening=1.0, set_maxmin=false, check_frontier=true, check_only=false)
 
 #    use_threebody= false
 #    use_threebody_onsite=false
@@ -1714,7 +1721,9 @@ function calc_tb_fast(crys::crystal, database=missing; reference_tbc=missing, ve
             within_fit = false
         end
     end
-
+    if check_only==true
+        return within_fit
+    end
     
     nwan = length(keys(ind2orb))
 
@@ -2077,7 +2086,7 @@ function calc_frontier(crys::crystal, frontier; var_type=Float64, test_frontier=
     if ismissing(diststuff)
 #        println("distances")
         #        R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy(crys,cutoff2X, cutoff3bX,var_type=var_type)
-        R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy_parallel(crys,cutoff2X, cutoff3bX,var_type=Float64)
+        R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = distances_etc_3bdy_parallel(crys,cutoff2X, cutoff3bX,var_type=var_type)
     else
         R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = diststuff
     end

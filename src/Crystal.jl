@@ -9,6 +9,8 @@ using GZip
 
 using ..TightlyBound:global_length_units
 using ..TightlyBound:convert_length
+using ..TightlyBound:convert_force
+using ..TightlyBound:convert_stress
 using ..TightlyBound:Ang
 
 
@@ -88,6 +90,35 @@ Base.show(io::IO, c::crystal) = begin
     @printf(io, "\n")
     for i in 1:c.nat
         @printf(io, "%-3s  %.5f  %.5f  %.5f\n", c.types[i], c.coords[i,1], c.coords[i,2], c.coords[i,3])        
+    end
+    
+end   
+
+"""
+    function print_with_force_stress(c::crystal, force, stress)
+
+pretty io function
+"""
+function print_with_force_stress(c::crystal, force, stress)
+
+#    println(io, "Units: "* global_length_units)
+    #    println(io)
+
+    force = convert_force(force)
+    stress = convert_stress(stress)
+    
+    if global_length_units == "Å"
+        At = c.A * Ang
+    else
+        At = c.A
+    end
+        
+    for i in 1:3
+            @printf( "A%.1i=     %+.5f  %+.5f  %+.5f  |  %+.5f  %+.5f  %+.5f\n", i, At[i,1], At[i,2], At[i,3], stress[i,1],stress[i,2], stress[i,3] )
+    end
+    @printf( "\n")
+    for i in 1:c.nat
+        @printf( "%-3s  %+.5f  %+.5f  %+.5f |  %+.5f  %+.5f  %+.5f\n", c.types[i], c.coords[i,1], c.coords[i,2], c.coords[i,3], force[i,1],force[i,2],force[i,3])        
     end
     
 end   
@@ -276,20 +307,27 @@ end
 Read filename, return crystal object.
 File can be POSCAR, or simple quantum espresso inputfile
 
-
+The entire file can be in the string instead of the filename. The code decides which is which by looking for newlines"
 """
 function makecrys(filename::String)
 
-    if !isfile(filename)
-        println("error - tried to open $filename to load crystal, file does not exist")
-    end
+    if !occursin("\n", filename)
+        if !isfile(filename)
+            println("tried to open $filename to load crystal, file does not exist")
+            throw(error("noFile"))
+        end
 
-    f = gzopen(filename, "r")
-    lines = readlines(f)
-    close(f)
+        f = gzopen(filename, "r")
+        lines = readlines(f)
+        close(f)
     
-    c = makecrys(lines)
-    return c
+        c = makecrys(lines)
+        return c
+    else
+        println("newlines found, interpret as string containing file instead of filename")
+        lines = String.(split(filename, "\n"))
+        c = makecrys(lines)
+    end
     
 end
 
@@ -532,11 +570,11 @@ function generate_supercell(crys, cell)
 end
 
 """
-    function generate_random(crys, amag, strain_mag)
+    function generate_random_distortion(crys, amag, strain_mag)
 
 Randomly distort a crystal. `amag` is the atom distance, `strain_mag` is the strain magnitude
 """
-function generate_random(crys, amag, strain_mag)
+function generate_random_distortion(crys, amag, strain_mag)
 
     amag = convert_length(amag)
     
@@ -587,7 +625,99 @@ function write_poscar(crys, filename)
     
 end
 
+"""
+    function write_xsf(c::crystal, filename="t.xsf", force=missing)
 
+Write file for xcrysden. Forces optional
+"""
+function write_xsf(c::crystal; filename="t.xsf", force=missing)
+
+    outstr = " INFO
+nunit      1    1    1
+unit   cell
+celltype   primcell
+shape   parapipedal
+ END_INFO
+ DIM-GROUP
+           3           1
+ PRIMVEC
+"
+    As = string.(c.A * Ang)
+    for i = 1:3
+        outstr *= As[i,1] * "   " *  As[i,2] * "   " * As[i,3]* "\n"
+    end
+
+    outstr *= " CONVVEC
+"
+    for i = 1:3
+        outstr *= As[i,1] * "   " *  As[i,2] * "   " * As[i,3]* "\n"
+    end
+
+    outstr *= " PRIMCOORD
+"                       
+    nat = c.nat
+    outstr *= "          $nat       1\n"
+
+    pos = string.(c.coords * c.A * Ang)
+    if !ismissing(force)
+        fstring = string.(forces)
+    else
+        fstring = string.(zeros(size(c.coords)))
+    end
+    
+    for i = 1:nat
+#        println(atoms[c.types[i]].Z)
+        outstr *= string(atoms[c.types[i]].Z)*"   "* pos[i,1] * "   " *  pos[i,2] * "   " * pos[i,3]*"   " * fstring[i,1]*"   " * fstring[i,2]*"   " * fstring[i,3]*"\n"
+    end
+
+    write(filename, outstr)
+    
+end
+
+"""
+    function write_axsf(CRYSTAL; filename="t.axsf", FORCES=missing)
+
+write animated axsf file for xcrysden
+Takes in array of crystal and optionally forces
+"""
+function write_axsf(CRYSTAL; filename="t.axsf", FORCES=missing)
+
+    if typeof(CRYSTAL) == crystal
+        write_xsf(CRYSTAL, filename=filename, force=FORCES)
+    end
+        
+    nstep = length(CRYSTAL)
+    outstr= "ANIMSTEPS  $nstep
+CRYSTAL
+"
+    for i in 1:nstep
+        c = CRYSTAL[i]
+        nat = c.nat
+        if !ismissing(FORCES)
+            f = FORCES[i]
+        else
+            f = zeros(size(c.coords))
+        end
+        outstr *= "PRIMVEC $i\n"
+
+        As = string.(c.A * Ang)
+        for i = 1:3
+            outstr *= As[i,1] * "   " *  As[i,2] * "   " * As[i,3]* "\n"
+        end
+        outstr *= "PRIMCOORD $i\n"
+        outstr *= "$nat        1\n"
+        pos = string.(c.coords * c.A * Ang)
+        fstring = string.(f)
+        
+        for i = 1:nat
+            outstr *= string(atoms[c.types[i]].Z)*"   "* pos[i,1] * "   " *  pos[i,2] * "   " * pos[i,3]*"   " * fstring[i,1]*"   " * fstring[i,2]*"   " * fstring[i,3]*"\n"
+        end
+    end
+     
+    write(filename, outstr)
+
+end
+    
 """
     function function write_efs(crys, energy, forces, stress, filename)
 
@@ -806,6 +936,8 @@ function orbital_index(c::crystal)
     return ind2orb, orb2ind, etotal, nval
     
 end
+
+
 
 end #end module
 

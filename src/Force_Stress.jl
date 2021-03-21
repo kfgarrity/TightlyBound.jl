@@ -877,10 +877,10 @@ Relaxation can accidently lead to very small atom-atom distances during the rela
 function at short range to make sure the relaxtion doesn't get stuck at very short distances
 where the fitting doesn't apply.
 """
-function safe_mode_energy(crys::crystal, database; var_type=Float64)
+function safe_mode_energy(crys::crystal, database; var_type=Float64, check=true)
 
     diststuff = distances_etc_3bdy_parallel(crys,10.0, 0.0, var_type=var_type)
-    R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types = diststuff
+    R_keep, R_keep_ab, array_ind3, array_floats3, dist_arr, c_zero, dmin_types, dmin_types3 = diststuff
     nkeep = size(R_keep_ab)[1]
     
     energy = 1.0
@@ -913,13 +913,18 @@ function safe_mode_energy(crys::crystal, database; var_type=Float64)
     if tooshort
         println("WARNING, safe mode activated, minimum distances < fitting data * 0.98")
         return tooshort, energy
-    else
-        violation_list, vio_bool = calc_frontier(crys, database, test_frontier=true, diststuff=diststuff, verbose=false)
+    elseif check==true
+        #violation_list, vio_bool = calc_frontier(crys, database, test_frontier=true, diststuff=diststuff, verbose=false)
+        violation_list, vio_bool = calc_frontier(crys, database, test_frontier=true, verbose=false)
+        println("vio_vool $vio_bool")
         if vio_bool == false
+            println("ACTIVATE SAFE MODE")
             return true, energy
         else
             return false, energy
         end
+    else
+        return tooshort, energy
     end
 
         
@@ -955,7 +960,7 @@ function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smear
             A = ct.A * (I(3) + x_r_strain)
             crys_dual = makecrys( A , ct.coords + x_r, ct.types, units="Bohr")
             
-            tooshort, energy_short = safe_mode_energy(crys_dual, database, var_type=T)
+            tooshort, energy_short = safe_mode_energy(crys_dual, database, var_type=T, check=false)
             return energy_short
         end
         garr = ForwardDiff.gradient(f, zeros(3*ct.nat + 6) )

@@ -5,8 +5,11 @@ using ..Force_Stress:get_energy_force_stress_fft
 using ..Force_Stress:safe_mode_energy
 using ..CrystalMod:get_grid
 using ..CrystalMod:crystal
+using ..CrystalMod:print_with_force_stress
 using ..CrystalMod:makecrys
+using ..CrystalMod:write_axsf
 using ..CalcTB:calc_tb_fast
+using ..Atomdata:atom_radius
 
 using LinearAlgebra
 using ..Force_Stress:inv_reshape_vec
@@ -14,7 +17,8 @@ using ..Force_Stress:reshape_vec
 
 using Optim
 using LineSearches
-
+using ..ManageDatabase:prepare_database
+using ..ManageDatabase:database_cached
 export relax_structure
 
 """
@@ -22,7 +26,7 @@ export relax_structure
 
 Relax structure. Primary user function is relax_structure in TightlyBound.jl, which calls this one.
 """
-function relax_structure(crys::crystal, database; smearing = 0.01, grid = missing, mode="vc-relax", nsteps=100, update_grid=true, conv_thr = 2e-4)
+function relax_structure(crys::crystal, database; smearing = 0.01, grid = missing, mode="vc-relax", nsteps=100, update_grid=true, conv_thr = 2e-4, filename="t.axsf")
 
     if update_grid==false
         grid = get_grid(crys)
@@ -52,6 +56,9 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
     nat = crys.nat
 
     energy_global = -99.0
+
+    CRYSTAL = []
+    FORCES = []
     
     function fn(x)
 #        println("CALL FN", x)
@@ -135,7 +142,7 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 #        println(crys_working)
 
         tooshort, energy_short = safe_mode_energy(crys_working, database)
-        
+
 #        println("too short ", tooshort)
 
         if crys_working != tbc.crys && !tooshort
@@ -151,13 +158,21 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 #            println(crys_working)
 #            println(tbc.crys)
 #            println("__")
+        elseif tooshort
+            energy_tot=energy_short
         end
-
+        
         energy_global=energy_tot
 
         energy_tmp,  f_cart, stress =  get_energy_force_stress_fft(tbc, database; do_scf = false, smearing = smearing, grid = grid, vv=[VECTS, VALS, efermi] )
+
+        
+
         #energy_tmp,  f_cart, stress =  get_energy_force_stress_fft(tbc, database; do_scf = true, smearing = smearing, grid = grid )
 
+
+        push!(CRYSTAL, deepcopy(tbc.crys))
+        push!(FORCES, f_cart)
         
         f_cart_global = f_cart
         stress_global = stress
@@ -171,7 +186,9 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
         println()
         println("FCALL $fcall en:  $energy_tot (Ryd)  fsum:  $fsum  ssum:  $ssum    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         println()
-        
+
+        print_with_force_stress(crys_working, f_cart_global, stress_global)
+        println()
 #        println("grad stress: ", stress)
         
 #        stress_units = cell_force( crys_working.A, stress)
@@ -181,7 +198,8 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 #        println("grad stress units: ", -stress_units)
 
         #        f_crys = f_cart * inv(crys_working.A)
-        f_crys = f_cart * crys_working.A
+
+        f_crys = f_cart * crys_working.A'
 
         g = inv_reshape_vec(-f_crys, -stress* abs(det(crys_working.A))  , crys_working.nat, strain_mode=true)
 
@@ -195,8 +213,8 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 
         neaten(storage)
 
-        #        println("ret storage $fcall")
-#        println(storage)
+        println("ret storage $fcall")
+        println(storage)
     end
 
 
@@ -259,25 +277,64 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
     end
 
 
-    res = missing
+    #preconditioner, guess for inv Hess is based on the  metric. see qe bfgs_module.f90
+    function init(x)
+        num = 3*nat + 6
+
+#        factor=0.1
+        factor = 1.0
+        
+        P = zeros(eltype(x), num, num)
+
+        A = crys.A
+        g = A'*A
+        ginv = inv(g)
+        
+        for a = 1:nat
+            aa = (a-1)*3
+            for i = 1:3
+                for j = 1:3
+                    P[aa+i ,aa+j] = g[i,j] * factor
+                end
+            end
+        end
+
+        vol = abs(det(A))
+        
+#        if mode == "vc-relax"
+        for b = 1:2
+            bb = 3 * nat + (b - 1)*3
+            for i = 1:3
+                for j = 1:3
+                    P[bb+i,bb+j] = 0.04 * vol * ginv[i,j] * factor
+                end
+            end
+        end
+#    end
+        
+        return inv(P)
+    end
+
     
-    try    
+    res = missing
+
               #        res = optimize(fn,grad, x0, BFGS(  initial_invH = init, linesearch=LineSearches.MoreThuente() ), opts)
               #res = optimize(fn,grad, x0, BFGS(initial_invH = init ), opts)
+        #        res = optimize(fn,grad, x0, BFGS(initial_invH = init, linesearch=LineSearches.MoreThuente() ), opts)
 
-        res = optimize(fn,grad, x0, BFGS(linesearch=LineSearches.MoreThuente() ), opts)
-        
-    catch e
-        if e isa InterruptException
-            println("user interrupt")
-
-            return tbc.crys
-        else
-            println("unknown error")
-            return tbc.crys
-            
-        end
-    end
+    
+#    try    
+    #res = optimize(fn,grad, x0, BFGS( linesearch=LineSearches.MoreThuente() ), opts)
+    res = optimize(fn,grad, x0, ConjugateGradient() , opts)
+#    catch e
+#        if e isa InterruptException
+#            println("user interrupt")
+#            return tbc.crys
+#        else
+#            println("unknown error")
+#            return tbc.crys
+#        end
+#    end
     
     #res = optimize(fn,grad, x0, BFGS(  initial_invH = init, linesearch=LineSearches.HagerZhang() ), opts)    
 
@@ -304,6 +361,12 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
     A = A0 *( I(3) + strain)
 
     cfinal = makecrys(A, coords, crys.types, units="Bohr")
+
+
+    if !ismissing(filename)
+        write_axsf(CRYSTAL, filename=filename, FORCES=FORCES)
+    end
+    
     return cfinal, tbc, energy, f_cart_global, stress_global
 
 #    return res
@@ -349,4 +412,86 @@ function neaten(storage)
     end
 #    println("n after ", storage)
 end
+
+
+#=
+function finite_diff_grad(fn, x0, step)
+    x = deepcopy(x0)
+    g = zeros(size(x))
+    for i in 1:length(x)
+        x[:] = x0[:]
+        x[i] += step
+        a = fn(x)
+
+        x[:] = x0[:]
+        x[i] -= step
+        b = fn(x)
+
+        g[i] = (a-b)/(2*step)
+    end
+    
+    return g
+
+end
+=#
+
+
+"
+    function make_random_crystal(types)
+
+Make a random crystal with types t
+"
+function make_random_crystal(types)
+
+    nat = length(types)
+
+    prepare_database(types)
+
+    total_vol = 0.0
+    for t in types
+        total_vol += 4 * pi / 3 * (atom_radius[t]/100 / 0.529177)^3 * 1.0
+    end
+    println("total_vol $total_vol")
+    
+    for i = 1:30
+
+        A = zeros(3,3)
+        c = rand(nat, 3)
+        c[1,:] = [0.0 0.0 0.0]
+        
+        A[1,1] = 1.0
+        
+        l2 = 1.0 + (rand(1)[1] - 0.5)
+        th2 =  pi*(1.0 + 0.5*(rand(1)[1] - 0.5))
+        
+        l3 = 1.0 + (rand(1)[1] - 0.5)
+        th3 =  pi*(1.0 + 0.5*(rand(1)[1] - 0.5))
+
+        phi = pi*(0.25*(rand(1)[1] - 0.5))
+        
+        A[2,:] = [l2 * sin(th2)  l2 * cos(th2) 0.0]
+        A[3,:] = [sin(phi)  l3 * sin(th3) *cos(phi)  l3 * cos(th3)* cos(phi)]
+        
+#        println("A before ", det(A), "  ", total_vol^(1/3) * 1.5 )
+        A = A / (abs(det(A)))^(1/3) * total_vol^(1/3) * 1.2
+#        println("A after ", det(A))
+        
+        A = A * det(A) / abs(det(A))
+        
+        crys = makecrys(A, c, types, units="Bohr")
+        
+        within_fit = calc_tb_fast(crys, database_cached, check_only=true)
+        if within_fit
+            return crys * 1.05
+        end
+
+        total_vol = total_vol * 1.05
+        
+    end
+    println("failed to generate crystal")
+    return missing
+        
+end
+
+
 end #end module
