@@ -916,7 +916,7 @@ function safe_mode_energy(crys::crystal, database; var_type=Float64, check=true)
     elseif check==true
         #violation_list, vio_bool = calc_frontier(crys, database, test_frontier=true, diststuff=diststuff, verbose=false)
         violation_list, vio_bool = calc_frontier(crys, database, test_frontier=true, verbose=false)
-        println("vio_vool $vio_bool")
+#        println("vio_vool $vio_bool")
         if vio_bool == false
             println("ACTIVATE SAFE MODE")
             return true, energy

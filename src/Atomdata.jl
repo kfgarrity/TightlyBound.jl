@@ -154,8 +154,8 @@ atom_radius[ "X" ] =  200
 atom_radius[ "Xa" ] =  200
 atom_radius[ "T" ] =  200
 
-atom_radius[ "H" ] =  50
-atom_radius[ "He" ] =  50
+atom_radius[ "H" ] =  60
+atom_radius[ "He" ] =  60
 atom_radius[ "Li" ] =  152
 atom_radius[ "Be" ] =  112
 atom_radius[ "B" ] =   82

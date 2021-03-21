@@ -106,7 +106,7 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
         end
 #        println("fn $energy_tot fnffnfnfnffnfnfnfnfnfnfnfnfnfnfffffff")
 
-        println("ENERGY $energy_tot $energy_global")
+#        println("ENERGY $energy_tot $energy_global")
         
         energy_global=energy_tot
 
@@ -213,8 +213,8 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 
         neaten(storage)
 
-        println("ret storage $fcall")
-        println(storage)
+#        println("ret storage $fcall")
+#        println(storage)
     end
 
 

@@ -73,12 +73,14 @@ include("SCF.jl")
 include("FitTB_laguerre.jl")
 include("Force_Stress.jl")
 
-include("Relax.jl")
-using .CrystalMod:print_with_force_stress
 
 
 
 include("ManageDatabase.jl")
+
+include("Relax.jl")
+using .CrystalMod:print_with_force_stress
+
 
 export scf_energy
 export scf_energy_force_stress
