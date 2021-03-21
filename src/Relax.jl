@@ -238,45 +238,8 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
     #res = optimize(fn,grad, x0, ConjugateGradient(), opts)
 
 
-    #preconditioner, guess for inv Hess is based on the  metric. see qe bfgs_module.f90
-    function init(x)
-        num = 3*nat + 9
 
-#        factor=0.1
-        factor = 1.0
-        
-        P = zeros(eltype(x), num, num)
-
-        A = crys.A
-        g = A'*A
-        ginv = inv(g)
-        
-        for a = 1:nat
-            aa = (a-1)*3
-            for i = 1:3
-                for j = 1:3
-                    P[aa+i ,aa+j] = g[i,j] * factor
-                end
-            end
-        end
-
-        vol = abs(det(A))
-        
-#        if mode == "vc-relax"
-        for b = 1:3
-            bb = 3 * nat + (b - 1)*3
-            for i = 1:3
-                for j = 1:3
-                    P[bb+i,bb+j] = 0.04 * vol * ginv[i,j] * factor
-                end
-            end
-        end
-#    end
-        
-        return inv(P)
-    end
-
-
+    #=
     #preconditioner, guess for inv Hess is based on the  metric. see qe bfgs_module.f90
     function init(x)
         num = 3*nat + 6
@@ -314,7 +277,7 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
         
         return inv(P)
     end
-
+=#
     
     res = missing
 
