@@ -346,6 +346,9 @@ function makecrys(lines::Array{String,1})
         if size(sp)[1] >= 1 && sp[1] == "&control"
             intype="QE"
         end
+        if  size(sp)[1] >= 1 && sp[1] == "A1="
+            intype="MYFORMAT"
+        end
     end
 
     if intype == "POSCAR"
@@ -355,6 +358,10 @@ function makecrys(lines::Array{String,1})
     elseif intype == "QE"
 
         A, coords, types = parseQEinput(lines)
+
+    elseif intype == "MYFORMAT"
+
+        A, coords, types = parseMYFORMATinput(lines)
         
     end
 
@@ -376,6 +383,36 @@ end
 function parseARRint(sp)
 
     return map(x->parse(Int64,x),sp)
+
+end
+
+function parseMYFORMATinput(lines)
+
+    A = zeros(3,3)
+
+    coords = zeros(1000, 3)
+    types = []
+    nat = 0 
+    for line in lines
+        sp = split(line)
+        if length(sp) >= 1
+            if sp[1] == "A1="
+                A[1,:] = parseARRfloat(sp[2:4])
+            elseif sp[1] == "A2="
+                A[2,:] = parseARRfloat(sp[2:4])
+            elseif sp[1] == "A3="
+                A[3,:] = parseARRfloat(sp[2:4])
+            elseif length(sp) >= 4
+                push!(types, String(sp[1]))
+                nat += 1
+                coords[nat,:] = parseARRfloat(sp[2:4])
+            end
+        end
+    end
+
+    coords = coords[1:nat, :]
+    
+    return A, coords, types
 
 end
 
