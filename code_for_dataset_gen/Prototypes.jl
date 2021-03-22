@@ -141,9 +141,11 @@ function setup_proto_data()
     CalcD["hex"] = ["$STRUCTDIR/hex.in.up", "vc-relax", "2Dxy", "2D-mid", "nscf"]
     CalcD["hex_short"] = ["$STRUCTDIR/hex.in.up", "vc-relax", "2Dxy", "2D-short", "nscf"]
     CalcD["square"] = ["$STRUCTDIR/square.in.up", "vc-relax", "2Dxy", "2D", "nscf"]
+
+
     CalcD["dimer"] =       ["$STRUCTDIR/dimer.in", "relax", "2Dxy", "coords", "nscf"]
     CalcD["dimer_short"] = ["$STRUCTDIR/dimer.in", "relax", "2Dxy", "coords-short", "nscf"]
-    CalcD["dimer_small"] = ["$STRUCTDIR/dimer_small.in", "relax", "2Dxy", "coords", "nscf"]
+    CalcD["dimer_small"] = ["$STRUCTDIR/dimer_small.in", "relax", "2Dxy", "scf_small", "nscf"]
     CalcD["dimer_super"] = ["$STRUCTDIR/dimer.in", "relax", "2Dxy", "coords_super", "nscf"]
     CalcD["dimer2_super"] = ["$STRUCTDIR/binary/dimer.in", "scf", "2Dxy", "coords_super", "nscf"]
     CalcD["hcp_shape"] = ["$STRUCTDIR/hcp.in.up", "vc-relax", "all", "shape", "nscf"]
@@ -576,6 +578,8 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
             ncalc = length( [-0.06 -0.03 0.03 0.06])
         elseif newst == "coords"
             ncalc = length( [-0.20 -0.17 -0.14 -0.10 -0.07 -0.03 0.0 0.03 0.07 0.10 0.15 0.2 0.25 0.35 0.5])
+        elseif newst == "coords-scf"
+            ncalc = 1
         elseif newst == "coords_min"
             ncalc = 2
         elseif newst == "coords_min_tri"
@@ -599,6 +603,8 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
         elseif newst == "flyaway"
             ncalc = length( [-0.05, 0.0, 0.01, 0.05, 0.2, 0.5, 1.0, 2.0, 3.0, 4.0])
         elseif newst == "scf"
+            ncalc = 1
+        elseif newst == "scf_small"
             ncalc = 1
         elseif (newst == "coords_trimer"  ||  newst == "coords_trimer2" || newst == "coords_trimer_ab" || newst == "coords_trimer_ab_big" )
 #            ncalc = length([1.05, 1.1, 1.15, 1.2, 1.25, 1.3])
@@ -1028,6 +1034,8 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                 
             elseif newst == "scf"
                 push!(torun, deepcopy(cnew))
+            elseif newst == "scf_small"
+                push!(torun, deepcopy(cnew*0.99))
             elseif newst == "trimer_tern"
                 println("trimer_tern")
                 counter = 0
@@ -1236,7 +1244,7 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                         continue
                     end
 
-                    dft = TightlyBound.DFT.runSCF(c, nprocs=procs, prefix="qe", directory="$d", tmpdir="$d", wannier=false, code="QE", skip=true, cleanup=true)
+                    dft = TightlyBound.DFT.runSCF(c, nprocs=procs, prefix="qe", directory="$d", tmpdir="$d", wannier=false, code="QE", skip=false, cleanup=true)
                     if calc_mode == "nscf"
 
                         try
