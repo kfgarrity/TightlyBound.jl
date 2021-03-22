@@ -55,6 +55,17 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 
     nat = crys.nat
 
+
+    function fixstrain(s)
+        for i = 1:3
+            for j = 1:3
+                s[i,j] = min(s[i,j], 1.0)
+                s[i,j] = max(s[i,j], -0.75)
+            end
+        end
+        return 0.5*(s'+s)
+    end
+
     energy_global = -99.0
 
     CRYSTAL = []
@@ -63,6 +74,8 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
     function fn(x)
 #        println("CALL FN", x)
         coords, strain = reshape_vec(x, nat, strain_mode=true)
+
+        strain=fix_strain(strain)
 
         A = A0 * (I(3) + strain)
         
@@ -125,6 +138,8 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
         fcall += 1
 
         coords, strain = reshape_vec(x, nat, strain_mode=true)
+
+        strain=fix_strain(strain)
 
         A = A0 * (I(3) + strain)
 
