@@ -288,8 +288,13 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
     
 #    try    
     #res = optimize(fn,grad, x0, BFGS( linesearch=LineSearches.MoreThuente() ), opts)
-    res = optimize(fn,grad, x0, ConjugateGradient() , opts)
-#    catch e
+
+    #res = optimize(fn,grad, x0, ConjugateGradient() , opts)
+
+    res = optimize(fn,grad, x0, LBFGS(m=8, linesearch=LineSearches.MoreThuente() ) , opts)
+    
+
+    #    catch e
 #        if e isa InterruptException
 #            println("user interrupt")
 #            return tbc.crys
