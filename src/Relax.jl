@@ -162,7 +162,8 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 
         tbc = calc_tb_fast(deepcopy(crys_working), database, verbose=false)
 
-        if crys_working != tbc.crys && !tooshort
+        #        if crys_working != tbc.crys && !tooshort
+        if !tooshort        
 #            println("yes calc forces -----------------------------------------------------------------------------------------")
 #            println(crys_working)
 
