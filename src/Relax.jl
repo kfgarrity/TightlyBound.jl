@@ -56,7 +56,7 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
     nat = crys.nat
 
 
-    function fixstrain(s)
+    function fix_strain(s)
         for i = 1:3
             for j = 1:3
                 s[i,j] = min(s[i,j], 1.0)
@@ -160,10 +160,12 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 
 #        println("too short ", tooshort)
 
+        tbc = calc_tb_fast(deepcopy(crys_working), database, verbose=false)
+
         if crys_working != tbc.crys && !tooshort
 #            println("yes calc forces -----------------------------------------------------------------------------------------")
 #            println(crys_working)
-            tbc = calc_tb_fast(deepcopy(crys_working), database, verbose=false)
+
             energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=eden, verbose=false, conv_thr=1e-6)
 
             eden = deepcopy(tbcx.eden)
@@ -304,9 +306,43 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 #    try    
     #res = optimize(fn,grad, x0, BFGS( linesearch=LineSearches.MoreThuente() ), opts)
 
-    #res = optimize(fn,grad, x0, ConjugateGradient() , opts)
+#    res = optimize(fn,grad, x0, ConjugateGradient( linesearch=LineSearches.MoreThuente() ) , opts)
 
-    res = optimize(fn,grad, x0, LBFGS(m=8, linesearch=LineSearches.MoreThuente() ) , opts)
+    res = optimize(fn,grad, x0, ConjugateGradient( linesearch=LineSearches.BackTracking() ) , opts)
+
+
+    minvec = Optim.minimizer(res)    
+
+    coords, strain = reshape_vec(minvec, nat, strain_mode=true)
+
+    A = A0 *( I(3) + strain)
+
+    crys = makecrys(A, coords, crys.types, units="Bohr")
+
+    tbc = calc_tb_fast(deepcopy(crys), database)
+    energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=eden, conv_thr=1e-7)
+
+    eden = deepcopy(tbc.eden)
+
+    A0 = deepcopy(crys.A)
+    strain = zeros(3,3)
+    
+    x0 = inv_reshape_vec(crys.coords, strain, crys.nat, strain_mode=true)
+    crys_working = deepcopy(crys)
+
+    fcall = 200
+    firstiter = true
+
+    println("RELAX Round 2")
+    res = optimize(fn,grad, x0, ConjugateGradient(  ) , opts)
+
+
+    nat = crys.nat
+
+
+#    res = optimize(fn,grad, x0, ConjugateGradient(  ) , opts)
+
+    #res = optimize(fn,grad, x0, LBFGS(m=8 ) , opts)
     
 
     #    catch e

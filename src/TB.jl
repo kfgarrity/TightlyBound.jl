@@ -1649,10 +1649,13 @@ function calc_energy_fft_band(hk3, sk3, nelec; smearing=0.01, return_more_info=f
                         rethrow(InterruptException)
                     end
 
-                    println("error calc_energy_fft $k1 $k2 $k3")
+                    println("error calc_energy_fft $k1 $k2 $k3 usually due to negative overlap eigenvalue")
                     sk[:,:] = 0.5*(sk3[:,:,k1,k2,k3] + sk3[:,:,k1,k2,k3]')
                     valsS, vectsS = eigen(sk)
                     println(valsS)
+
+                    rethrow(error("BadOverlap"))
+
                 end
             end
         end
@@ -1733,12 +1736,15 @@ function calc_energy_charge_fft_band(hk3, sk3, nelec; smearing=0.01, h1 = missin
                     end
                         
                     if error_flag == false
-                        println("error calc_energy_fft $k1 $k2 $k3")
+                        println("error calc_energy_fft $k1 $k2 $k3 usually negative overlap eig")
                         sk[:,:] = 0.5*(sk3[:,:,k1,k2,k3] + sk3[:,:,k1,k2,k3]')
                         valsS, vectsS = eigen(sk)
                         println(valsS)
+                        error_flag=true
+                        rethrow(error("BadOverlap"))
                     end
                     error_flag=true
+
                 end
             end
         end

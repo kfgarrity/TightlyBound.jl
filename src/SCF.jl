@@ -203,6 +203,11 @@ Solve for scf energy, also stores the updated electron density and h1 inside the
         nreduce = 0
         e_den_NEW = deepcopy(e_denA)
 
+        energy_band = 0.0
+        efermi = 0.0
+
+        error_flag = false
+
         for iter = 1:ITERS
 
             dq_old = dq
@@ -212,7 +217,19 @@ Solve for scf energy, also stores the updated electron density and h1 inside the
 #            println("O ", e_denA)
                 
 #            println("DQ ", dq)
-            energy_band , efermi, e_den_NEW, VECTS, VALS, error_flag = calc_energy_charge_fft_band(hk3, sk3, tbc.nelec, smearing=smearingA, h1=h1)
+
+            try
+                energy_band , efermi, e_den_NEW, VECTS, VALS, error_flag = calc_energy_charge_fft_band(hk3, sk3, tbc.nelec, smearing=smearingA, h1=h1)
+            catch BadOverlap
+                println("caught bad overlap")
+                energy_tot = -999.0
+                error_flag=true
+                break
+            end
+            if error_flag == true
+                println("error_flag $error_flag")
+                break
+            end
 
 #            println("N ", e_den_NEW)
 

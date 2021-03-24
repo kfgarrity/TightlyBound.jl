@@ -940,6 +940,8 @@ Calculate energy/force/stress using fft algorithm. Users should use `scf_energy_
 """
 function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smearing = 0.01, grid = missing, e_den0=missing, vv = missing)
 
+    println("get_energy_force_stress_fft")
+
     if ismissing(grid)
         grid = get_grid(tbc.crys)
     end
@@ -949,9 +951,9 @@ function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smear
 
     ct = deepcopy(tbc.crys)
     
-    
+    println("test safe get_energy_force_stress_fft")
     tooshort, energy_tot = safe_mode_energy(tbc.crys, database)
-
+    
     if tooshort ##########################
         println("safemode")
         function f(x :: Vector)
