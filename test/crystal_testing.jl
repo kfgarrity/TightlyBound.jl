@@ -62,7 +62,7 @@ end
 #        println(c)
         c2 = c * [2,2,2]
      
-        TightlyBound.CrystalMod.generate_random(c2,0.01,0.01)
+        TightlyBound.CrystalMod.generate_random_distortion(c2,0.01,0.01)
         TightlyBound.CrystalMod.write_poscar(c2,"$TESTDIR/POSCAR_tmp")
         rm("$TESTDIR/POSCAR_tmp")
 

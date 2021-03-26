@@ -46,7 +46,7 @@ using ..CalcTB:calc_tb_fast
 using ..CalcTB:make_coefs
 using ..CalcTB:coefs
 using ..TB:tb_indexes
-using ..CalcTB:get_data_info
+
 
 #using ..CrystalMod:orbital_index
 
@@ -2487,14 +2487,40 @@ function do_fitting_recursive_main(list_of_tbcs, prepare_data; weights_list=miss
 
 #        nlam = 0
 
-        NEWX = zeros(ncalc*nk_max*NWAN_MAX + ncalc + nlam, ncols)
-        NEWY = zeros(ncalc*nk_max*NWAN_MAX + ncalc + nlam)
+#        NEWX = zeros(ncalc*nk_max*NWAN_MAX + ncalc + nlam, ncols)
+#        NEWY = zeros(ncalc*nk_max*NWAN_MAX + ncalc + nlam)
 
         counter = 0
 
         temp = 0.0+0.0*im
         
         nonzero_ind = Int64[]
+        #count nonzero ahead of time
+        for calc = 1:ncalc
+            if calc == leave_out #skip this one
+                continue
+            end
+            if ERROR[calc] == 1
+                continue
+            end
+            row1, rowN, nw = ind_BIG[calc, 1:3]
+            N = hermetian_indpt(nw)
+            vals = ones(nw) * 100.0
+            nk = size(KPOINTS[calc])[1]
+            for k = 1:nk
+                for i = 1:nw
+                    counter += 1
+                    push!(nonzero_ind, counter)
+                end
+            end
+            counter += 1
+            push!(nonzero_ind, counter)
+        end
+
+        NEWX = zeros(counter + nlam, ncols)
+        NEWY = zeros(counter + nlam)
+        
+        counter = 0
 
         for calc = 1:ncalc
 
@@ -2637,12 +2663,12 @@ function do_fitting_recursive_main(list_of_tbcs, prepare_data; weights_list=miss
             end
         end
 
-        println("len nonzero_ind ", length(nonzero_ind))
-        println("size NEWX old ", size(NEWX))
-        NEWX = NEWX[nonzero_ind,:]
-        NEWY = NEWY[nonzero_ind]
-        println("size NEWX new ", size(NEWX))
-        println("size NEWY new ", size(NEWY))
+#        println("len nonzero_ind ", length(nonzero_ind))
+#        println("size NEWX old ", size(NEWX))
+#        NEWX = NEWX[nonzero_ind,:]
+#        NEWY = NEWY[nonzero_ind]
+#        println("size NEWX new ", size(NEWX))
+#        println("size NEWY new ", size(NEWY))
 
         return NEWX, NEWY
 

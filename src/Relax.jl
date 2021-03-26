@@ -59,8 +59,8 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
     function fix_strain(s)
         for i = 1:3
             for j = 1:3
-                s[i,j] = min(s[i,j], 1.0)
-                s[i,j] = max(s[i,j], -0.75)
+                s[i,j] = min(s[i,j], 0.5)
+                s[i,j] = max(s[i,j], -0.5)
             end
         end
         return 0.5*(s'+s)
@@ -76,6 +76,7 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
         coords, strain = reshape_vec(x, nat, strain_mode=true)
 
         strain=fix_strain(strain)
+        coords = coords * 1.0
 
         A = A0 * (I(3) + strain)
         
@@ -140,6 +141,7 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
         coords, strain = reshape_vec(x, nat, strain_mode=true)
 
         strain=fix_strain(strain)
+        coords = coords .% 1.0
 
         A = A0 * (I(3) + strain)
 
@@ -309,12 +311,16 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 
 #    res = optimize(fn,grad, x0, ConjugateGradient( linesearch=LineSearches.MoreThuente() ) , opts)
 
-    res = optimize(fn,grad, x0, ConjugateGradient( linesearch=LineSearches.BackTracking() ) , opts)
+    res = optimize(fn,grad, x0, ConjugateGradient( linesearch=LineSearches.BackTracking( maxstep=0.05  ) ) , opts)
+
+#    res = optimize(fn,grad, x0, ConjugateGradient( linesearch=LineSearches.BackTracking( maxstep=0.05) ) , opts)
+#    res = optimize(fn,grad, x0, ConjugateGradient( linesearch=LineSearches.MoreThuente(alphamax=0.05) ) , opts)
 
 
     minvec = Optim.minimizer(res)    
 
     coords, strain = reshape_vec(minvec, nat, strain_mode=true)
+    coords= coords .% 1.0
 
     A = A0 *( I(3) + strain)
 
@@ -331,10 +337,11 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
     x0 = inv_reshape_vec(crys.coords, strain, crys.nat, strain_mode=true)
     crys_working = deepcopy(crys)
 
-    fcall = 200
+    fcall = 1000
     firstiter = true
 
     println("RELAX Round 2")
+#    res = optimize(fn,grad, x0, ConjugateGradient( linesearch=LineSearches.MoreThuente(alphamax=0.05) ) , opts)
     res = optimize(fn,grad, x0, ConjugateGradient(  ) , opts)
 
 
@@ -377,6 +384,7 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 #    println(minvec)
 
     coords, strain = reshape_vec(minvec, nat, strain_mode=true)
+    coords = coords .% 1.0
 
     A = A0 *( I(3) + strain)
 

@@ -17,7 +17,7 @@ using ..TightlyBound:Ang
 export crystal
 export makecrys
 export generate_supercell
-export generate_random
+export generate_random_distortion
 export write_poscar
 export write_efs
 
