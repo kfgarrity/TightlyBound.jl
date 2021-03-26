@@ -26,19 +26,25 @@ Begin scf_energy-------------
 Load TB parameters from file
 prepare atoms [&quot;Al&quot;, &quot;P&quot;]
 add_to_database Set([:P])
-found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.2bdy.P.xml.gz
+found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.1/coef.el.2bdy.P.xml.gz
+version 1
 added to cache (:P, :P)
-found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.3bdy.P.xml.gz
+found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.1/coef.el.3bdy.P.xml.gz
+version 1
 added to cache (:P, :P, :P)
 add_to_database Set([:P, :Al])
 found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.2bdy.Al.P.xml.gz
+version 1
 added to cache (:P, :Al) twobody
 found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.3bdy.Al.P.xml.gz
+version 1
 added to cache (:P, :Al) threebody
 add_to_database Set([:Al])
-found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.2bdy.Al.xml.gz
+found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.1/coef.el.2bdy.Al.xml.gz
+version 1
 added to cache (:Al, :Al)
-found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.0/coef.el.3bdy.Al.xml.gz
+found /home/runner/work/TightlyBound.jl/TightlyBound.jl/src/../dats/pbesol/v1.1/coef.el.3bdy.Al.xml.gz
+version 1
 added to cache (:Al, :Al, :Al)
 
 construct
@@ -53,7 +59,7 @@ CHECK FRONTIER - everything fine
 onsite
 -----
 
-  9.981988 seconds (20.01 M allocations: 983.039 MiB, 3.87% gc time)
+  8.705099 seconds (20.10 M allocations: 985.857 MiB, 3.78% gc time)
 ------
 Do SCF
 Mixing mode: pulay
@@ -64,21 +70,21 @@ Parameters:
 smearing = 0.01 conv_thr = 1.0e-5, iters = 75, mix = 0.8, grid = missing
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.34720676
-SCF CALC 0002 energy  -10.31848081  en_diff:   2.872595E-02  dq_diff:   9.782338E-01
-SCF CALC 0003 energy  -10.30011532  en_diff:   1.836549E-02  dq_diff:   7.800602E-01
-SCF CALC 0004 energy  -10.22416018  en_diff:   7.595514E-02  dq_diff:   1.566167E-01
-SCF CALC 0005 energy  -10.20386412  en_diff:   2.029606E-02  dq_diff:   3.127848E-02
-SCF CALC 0006 energy  -10.19968802  en_diff:   4.176101E-03  dq_diff:   6.258844E-03
-SCF CALC 0007 energy  -10.19884140  en_diff:   8.466124E-04  dq_diff:   1.251561E-03
-SCF CALC 0008 energy  -10.19867209  en_diff:   1.693094E-04  dq_diff:   2.503266E-04
+SCF CALC 0001 energy  -10.59664115
+SCF CALC 0002 energy  -10.56552382  en_diff:   3.111733E-02  dq_diff:   1.009074E+00
+SCF CALC 0003 energy  -10.54563218  en_diff:   1.989163E-02  dq_diff:   8.047900E-01
+SCF CALC 0004 energy  -10.46340657  en_diff:   8.222561E-02  dq_diff:   1.615424E-01
+SCF CALC 0005 energy  -10.44143562  en_diff:   2.197095E-02  dq_diff:   3.226287E-02
+SCF CALC 0006 energy  -10.43691652  en_diff:   4.519103E-03  dq_diff:   6.455653E-03
+SCF CALC 0007 energy  -10.43600030  en_diff:   9.162187E-04  dq_diff:   1.290921E-03
+SCF CALC 0008 energy  -10.43581708  en_diff:   1.832203E-04  dq_diff:   2.581985E-04
 
-YES convergence in 8 iters, energy -10.198672094306113 eV   dq = [-1.113, 1.113]
+YES convergence in 8 iters, energy -10.435817082570471 eV   dq = [-1.158, 1.158]
 END SCF ------------------
 
 scf_energy success, done
 
-The energy is -10.198672094306113 eV</pre><p>This returns the (non-magnetic) atomization energy, and a tight-binding object with the TB matrix elements and SCF electron density calculated for post-processing.</p><h2 id="**Plot-the-band-structure.**"><a class="docs-heading-anchor" href="#**Plot-the-band-structure.**"><strong>Plot the band structure.</strong></a><a id="**Plot-the-band-structure.**-1"></a><a class="docs-heading-anchor-permalink" href="#**Plot-the-band-structure.**" title="Permalink"></a></h2><p>Using the tight-binding object <code>tbc_alp</code> from above. Note: SCF must be done first.</p><pre><code class="language-julia">plot_bandstr(tbc_alp, do_display=false);</code></pre><pre class="documenter-example-output">plot_bandstr
+The energy is -10.435817082570471 eV</pre><p>This returns the (non-magnetic) atomization energy, and a tight-binding object with the TB matrix elements and SCF electron density calculated for post-processing.</p><h2 id="**Plot-the-band-structure.**"><a class="docs-heading-anchor" href="#**Plot-the-band-structure.**"><strong>Plot the band structure.</strong></a><a id="**Plot-the-band-structure.**-1"></a><a class="docs-heading-anchor-permalink" href="#**Plot-the-band-structure.**" title="Permalink"></a></h2><p>Using the tight-binding object <code>tbc_alp</code> from above. Note: SCF must be done first.</p><pre><code class="language-julia">plot_bandstr(tbc_alp, do_display=false);</code></pre><pre class="documenter-example-output">plot_bandstr
 align vbm
 color = blue markersize = 0</pre><p><img src="../alp.png" alt="AlP plot"/></p><p>Use <code>do_display=true</code> to produce an interactive plot. Here is is <code>false</code> because we are saving a static figure with <code>savefig</code> for the docs.</p><p>The default <code>plot_bandstr</code> just picks some random kpoints, but you can add your own kpath. We also project onto the <em>s</em> orbital of Al.</p><pre><code class="language-julia">kpath=[0.0 0.0 0.0; 0.5 0.5 0.5; 0.0 0.5 0.5];
 knames=[&quot;Γ&quot;, &quot;X&quot;, &quot;V&quot;];
@@ -101,20 +107,20 @@ show(stdout, &quot;text/plain&quot;, stress)</code></pre><pre class="documenter-
 Calculate Force, Stress (no scf)
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
- 22.616577 seconds (53.13 M allocations: 2.722 GiB, 5.22% gc time)
+ 19.703039 seconds (53.13 M allocations: 2.721 GiB, 5.15% gc time)
 done
 ----
-energy -10.198638200937783
+energy -10.435780403797827
 
 Forces
 2×3 Array{Float64,2}:
- -1.255e-11  -1.25503e-11  -1.255e-11
-  0.0         0.0           0.0
+ -1.3584e-11  -1.35842e-11  -1.35838e-11
+  0.0          0.0           0.0
 Stress
 3×3 Array{Float64,2}:
- 0.131944  0.0       0.0
- 0.0       0.131944  0.0
- 0.0       0.0       0.131944</pre><p>Can also be called directly on a new crystal structure instead of a <code>tb_crys</code> object.</p><h2 id="**Relax-structure**"><a class="docs-heading-anchor" href="#**Relax-structure**"><strong>Relax structure</strong></a><a id="**Relax-structure**-1"></a><a class="docs-heading-anchor-permalink" href="#**Relax-structure**" title="Permalink"></a></h2><pre><code class="language-julia">crys_new, tbc_updated, energy, force, stress = relax_structure(alp);
+ 0.128043  0.0       0.0
+ 0.0       0.128043  0.0
+ 0.0       0.0       0.128043</pre><p>Can also be called directly on a new crystal structure instead of a <code>tb_crys</code> object.</p><h2 id="**Relax-structure**"><a class="docs-heading-anchor" href="#**Relax-structure**"><strong>Relax structure</strong></a><a id="**Relax-structure**-1"></a><a class="docs-heading-anchor-permalink" href="#**Relax-structure**" title="Permalink"></a></h2><pre><code class="language-julia">crys_new, tbc_updated, energy, force, stress = relax_structure(alp);
 
 println(&quot;Energy new $energy&quot;)
 println()
@@ -144,19 +150,19 @@ Parameters:
 smearing = 0.01 conv_thr = 1.0e-7, iters = 75, mix = 0.8, grid = missing
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.34720676
-SCF CALC 0002 energy  -10.31848081  en_diff:   2.872595E-02  dq_diff:   9.782338E-01
-SCF CALC 0003 energy  -10.30011532  en_diff:   1.836549E-02  dq_diff:   7.800602E-01
-SCF CALC 0004 energy  -10.22416018  en_diff:   7.595514E-02  dq_diff:   1.566167E-01
-SCF CALC 0005 energy  -10.20386412  en_diff:   2.029606E-02  dq_diff:   3.127848E-02
-SCF CALC 0006 energy  -10.19968802  en_diff:   4.176101E-03  dq_diff:   6.258844E-03
-SCF CALC 0007 energy  -10.19884140  en_diff:   8.466124E-04  dq_diff:   1.251561E-03
-SCF CALC 0008 energy  -10.19867209  en_diff:   1.693094E-04  dq_diff:   2.503266E-04
-SCF CALC 0009 energy  -10.19863820  en_diff:   3.389337E-05  dq_diff:   5.006435E-05
-SCF CALC 0010 energy  -10.19863142  en_diff:   6.777756E-06  dq_diff:   1.001294E-05
-SCF CALC 0011 energy  -10.19863007  en_diff:   1.355663E-06  dq_diff:   2.002583E-06
+SCF CALC 0001 energy  -10.59664115
+SCF CALC 0002 energy  -10.56552382  en_diff:   3.111733E-02  dq_diff:   1.009074E+00
+SCF CALC 0003 energy  -10.54563218  en_diff:   1.989163E-02  dq_diff:   8.047900E-01
+SCF CALC 0004 energy  -10.46340657  en_diff:   8.222561E-02  dq_diff:   1.615424E-01
+SCF CALC 0005 energy  -10.44143562  en_diff:   2.197095E-02  dq_diff:   3.226287E-02
+SCF CALC 0006 energy  -10.43691652  en_diff:   4.519103E-03  dq_diff:   6.455653E-03
+SCF CALC 0007 energy  -10.43600030  en_diff:   9.162187E-04  dq_diff:   1.290921E-03
+SCF CALC 0008 energy  -10.43581708  en_diff:   1.832203E-04  dq_diff:   2.581985E-04
+SCF CALC 0009 energy  -10.43578040  en_diff:   3.667877E-05  dq_diff:   5.163873E-05
+SCF CALC 0010 energy  -10.43577307  en_diff:   7.334705E-06  dq_diff:   1.032781E-05
+SCF CALC 0011 energy  -10.43577160  en_diff:   1.467066E-06  dq_diff:   2.065558E-06
 
-YES convergence in 11 iters, energy -10.198630067519009 eV   dq = [-1.113, 1.113]
+YES convergence in 11 iters, energy -10.435771602026854 eV   dq = [-1.158, 1.158]
 END SCF ------------------
 
 starting vec
@@ -164,283 +170,282 @@ starting vec
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.19862980
-SCF CALC 0002 energy  -10.19862977  en_diff:   2.986489E-08  dq_diff:   2.382332E-07
+SCF CALC 0001 energy  -10.43577131
+SCF CALC 0002 energy  -10.43577128  en_diff:   3.233190E-08  dq_diff:   2.458327E-07
 
-YES convergence in 2 iters, energy -10.198629766527235 eV   dq = [-1.113, 1.113]
+YES convergence in 2 iters, energy -10.435771276288241 eV   dq = [-1.158, 1.158]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  1.209602 seconds (8.07 M allocations: 760.596 MiB, 17.13% gc time)
+  1.283387 seconds (8.07 M allocations: 760.596 MiB, 14.16% gc time)
 
-FCALL 1 en:  -0.7495851897587004 (Ryd)  fsum:  8.454978963670947e-13  ssum:  0.002489037680108185    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1 en:  -0.7670147629134476 (Ryd)  fsum:  9.151555591139638e-13  ssum:  0.0024154458928289852    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.60000  +2.60000  +0.00000  |  +0.13194  +0.00000  +0.00000
-A2=     +2.60000  +0.00000  +2.60000  |  +0.00000  +0.13194  +0.00000
-A3=     +0.00000  +2.60000  +2.60000  |  +0.00000  +0.00000  +0.13194
+A1=     +2.60000  +2.60000  +0.00000  |  +0.12804  +0.00000  +0.00000
+A2=     +2.60000  +0.00000  +2.60000  |  +0.00000  +0.12804  +0.00000
+A3=     +0.00000  +2.60000  +2.60000  |  +0.00000  +0.00000  +0.12804
 
 Al   +0.00000  +0.00000  +0.00000 |  -0.00000  -0.00000  -0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.49868725
-SCF CALC 0002 energy  -10.51182409  en_diff:   1.313684E-02  dq_diff:   5.238804E-02
-SCF CALC 0003 energy  -10.51533754  en_diff:   3.513459E-03  dq_diff:   4.073143E-02
-SCF CALC 0004 energy  -10.52467370  en_diff:   9.336151E-03  dq_diff:   8.416852E-03
-SCF CALC 0005 energy  -10.52660756  en_diff:   1.933865E-03  dq_diff:   1.665908E-03
-SCF CALC 0006 energy  -10.52698678  en_diff:   3.792179E-04  dq_diff:   3.342972E-04
-SCF CALC 0007 energy  -10.52706297  en_diff:   7.618941E-05  dq_diff:   6.678852E-05
-SCF CALC 0008 energy  -10.52707818  en_diff:   1.521052E-05  dq_diff:   1.336225E-05
+SCF CALC 0001 energy  -10.70956162
+SCF CALC 0002 energy  -10.72270590  en_diff:   1.314428E-02  dq_diff:   5.025136E-02
+SCF CALC 0003 energy  -10.72622850  en_diff:   3.522601E-03  dq_diff:   3.887766E-02
+SCF CALC 0004 energy  -10.73561047  en_diff:   9.381964E-03  dq_diff:   8.070873E-03
+SCF CALC 0005 energy  -10.73755286  en_diff:   1.942396E-03  dq_diff:   1.595573E-03
+SCF CALC 0006 energy  -10.73793420  en_diff:   3.813386E-04  dq_diff:   3.202758E-04
+SCF CALC 0007 energy  -10.73801079  en_diff:   7.658837E-05  dq_diff:   6.398314E-05
+SCF CALC 0008 energy  -10.73802608  en_diff:   1.529287E-05  dq_diff:   1.280113E-05
 
-YES convergence in 8 iters, energy -10.5270781787376 eV   dq = [-1.029, 1.029]
+YES convergence in 8 iters, energy -10.738026081862676 eV   dq = [-1.077, 1.077]
 END SCF ------------------
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.52708122
-SCF CALC 0002 energy  -10.52708157  en_diff:   3.445060E-07  dq_diff:   1.483289E-06
+SCF CALC 0001 energy  -10.73802914
+SCF CALC 0002 energy  -10.73802949  en_diff:   3.461768E-07  dq_diff:   1.401332E-06
 
-YES convergence in 2 iters, energy -10.527081566882396 eV   dq = [-1.029, 1.029]
+YES convergence in 2 iters, energy -10.738029487966443 eV   dq = [-1.077, 1.077]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.898800 seconds (6.25 M allocations: 618.708 MiB, 16.98% gc time)
+  1.017052 seconds (6.25 M allocations: 618.708 MiB, 13.74% gc time)
 
-FCALL 2 en:  -0.7737259430492913 (Ryd)  fsum:  1.3438250997598712e-13  ssum:  0.0009839900000659014    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 2 en:  -0.7892303236450026 (Ryd)  fsum:  1.568625613319529e-13  ssum:  0.0008891044366149076    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.68863  +2.68863  +0.00000  |  +0.05216  +0.00000  +0.00000
-A2=     +2.68863  +0.00000  +2.68863  |  +0.00000  +0.05216  +0.00000
-A3=     +0.00000  +2.68863  +2.68863  |  +0.00000  +0.00000  +0.05216
+A1=     +2.68601  +2.68601  +0.00000  |  +0.04713  +0.00000  +0.00000
+A2=     +2.68601  +0.00000  +2.68601  |  +0.00000  +0.04713  +0.00000
+A3=     +0.00000  +2.68601  +2.68601  |  +0.00000  +0.00000  +0.04713
 
 Al   +0.00000  +0.00000  +0.00000 |  -0.00000  -0.00000  -0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.54107431
-SCF CALC 0002 energy  -10.54233668  en_diff:   1.262370E-03  dq_diff:   5.286794E-03
-SCF CALC 0003 energy  -10.54268047  en_diff:   3.437975E-04  dq_diff:   4.109107E-03
-SCF CALC 0004 energy  -10.54360663  en_diff:   9.261589E-04  dq_diff:   8.472321E-04
-SCF CALC 0005 energy  -10.54380070  en_diff:   1.940658E-04  dq_diff:   1.678739E-04
-SCF CALC 0006 energy  -10.54383893  en_diff:   3.823559E-05  dq_diff:   3.366826E-05
-SCF CALC 0007 energy  -10.54384661  en_diff:   7.680155E-06  dq_diff:   6.728032E-06
+SCF CALC 0001 energy  -10.74905067
+SCF CALC 0002 energy  -10.75024024  en_diff:   1.189565E-03  dq_diff:   4.713724E-03
+SCF CALC 0003 energy  -10.75056452  en_diff:   3.242829E-04  dq_diff:   3.644509E-03
+SCF CALC 0004 energy  -10.75143959  en_diff:   8.750724E-04  dq_diff:   7.545460E-04
+SCF CALC 0005 energy  -10.75162257  en_diff:   1.829793E-04  dq_diff:   1.493785E-04
+SCF CALC 0006 energy  -10.75165867  en_diff:   3.609570E-05  dq_diff:   2.996352E-05
+SCF CALC 0007 energy  -10.75166591  en_diff:   7.246796E-06  dq_diff:   5.987612E-06
 
-YES convergence in 7 iters, energy -10.543846612985167 eV   dq = [-1.021, 1.021]
+YES convergence in 7 iters, energy -10.751665912488848 eV   dq = [-1.069, 1.069]
 END SCF ------------------
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.59405769
-SCF CALC 0002 energy  -10.60215102  en_diff:   8.093335E-03  dq_diff:   3.047542E-02
-SCF CALC 0003 energy  -10.60430193  en_diff:   2.150907E-03  dq_diff:   2.360479E-02
-SCF CALC 0004 energy  -10.60991514  en_diff:   5.613206E-03  dq_diff:   4.911803E-03
-SCF CALC 0005 energy  -10.61110070  en_diff:   1.185560E-03  dq_diff:   9.685671E-04
-SCF CALC 0006 energy  -10.61133203  en_diff:   2.313360E-04  dq_diff:   1.946705E-04
-SCF CALC 0007 energy  -10.61137865  en_diff:   4.661636E-05  dq_diff:   3.886684E-05
-SCF CALC 0008 energy  -10.61138794  en_diff:   9.296691E-06  dq_diff:   7.778081E-06
+SCF CALC 0001 energy  -10.79076557
+SCF CALC 0002 energy  -10.79853042  en_diff:   7.764852E-03  dq_diff:   2.750473E-02
+SCF CALC 0003 energy  -10.80060064  en_diff:   2.070220E-03  dq_diff:   2.129642E-02
+SCF CALC 0004 energy  -10.80602713  en_diff:   5.426491E-03  dq_diff:   4.425860E-03
+SCF CALC 0005 energy  -10.80717013  en_diff:   1.143001E-03  dq_diff:   8.736232E-04
+SCF CALC 0006 energy  -10.80739370  en_diff:   2.235695E-04  dq_diff:   1.754960E-04
+SCF CALC 0007 energy  -10.80743871  en_diff:   4.500669E-05  dq_diff:   3.504719E-05
+SCF CALC 0008 energy  -10.80744769  en_diff:   8.979884E-06  dq_diff:   7.012942E-06
 
-YES convergence in 8 iters, energy -10.611387944881244 eV   dq = [-0.973, 0.973]
+YES convergence in 8 iters, energy -10.807447690236879 eV   dq = [-1.025, 1.025]
 END SCF ------------------
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.61138981
-SCF CALC 0002 energy  -10.61139002  en_diff:   2.144109E-07  dq_diff:   8.541416E-07
+SCF CALC 0001 energy  -10.80744949
+SCF CALC 0002 energy  -10.80744969  en_diff:   2.066810E-07  dq_diff:   7.693992E-07
 
-YES convergence in 2 iters, energy -10.611390020410482 eV   dq = [-0.973, 0.973]
+YES convergence in 2 iters, energy -10.807449694271074 eV   dq = [-1.025, 1.025]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.928532 seconds (6.22 M allocations: 615.130 MiB, 16.28% gc time)
+  1.031981 seconds (6.22 M allocations: 615.134 MiB, 14.60% gc time)
 
-FCALL 3 en:  -0.779922497839772 (Ryd)  fsum:  9.636930994813726e-15  ssum:  0.00045139686004302997    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 3 en:  -0.7943326128453354 (Ryd)  fsum:  2.287457391341185e-14  ssum:  0.0003765562226799631    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.74026  +2.74026  +0.00000  |  +0.02393  +0.00000  +0.00000
-A2=     +2.74026  +0.00000  +2.74026  |  +0.00000  +0.02393  +0.00000
-A3=     +0.00000  +2.74026  +2.74026  |  +0.00000  +0.00000  +0.02393
+A1=     +2.73379  +2.73379  +0.00000  |  +0.01996  +0.00000  +0.00000
+A2=     +2.73379  +0.00000  +2.73379  |  +0.00000  +0.01996  +0.00000
+A3=     +0.00000  +2.73379  +2.73379  |  +0.00000  +0.00000  +0.01996
 
 Al   +0.00000  +0.00000  +0.00000 |  -0.00000  -0.00000  -0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.61456602
-SCF CALC 0002 energy  -10.61548564  en_diff:   9.196214E-04  dq_diff:   3.582838E-03
-SCF CALC 0003 energy  -10.61573270  en_diff:   2.470557E-04  dq_diff:   2.774936E-03
-SCF CALC 0004 energy  -10.61638186  en_diff:   6.491648E-04  dq_diff:   5.780027E-04
-SCF CALC 0005 energy  -10.61652048  en_diff:   1.386233E-04  dq_diff:   1.138716E-04
-SCF CALC 0006 energy  -10.61654753  en_diff:   2.704950E-05  dq_diff:   2.289712E-05
+SCF CALC 0001 energy  -10.80933365
+SCF CALC 0002 energy  -10.81014134  en_diff:   8.076958E-04  dq_diff:   2.961944E-03
+SCF CALC 0003 energy  -10.81035881  en_diff:   2.174666E-04  dq_diff:   2.293601E-03
+SCF CALC 0004 energy  -10.81093242  en_diff:   5.736166E-04  dq_diff:   4.770756E-04
+SCF CALC 0005 energy  -10.81105446  en_diff:   1.220378E-04  dq_diff:   9.408934E-05
+SCF CALC 0006 energy  -10.81107833  en_diff:   2.386902E-05  dq_diff:   1.890856E-05
 
-YES convergence in 6 iters, energy -10.61654753292425 eV   dq = [-0.968, 0.968]
+YES convergence in 6 iters, energy -10.8110783316176 eV   dq = [-1.02, 1.02]
 END SCF ------------------
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.62373181
-SCF CALC 0002 energy  -10.62794295  en_diff:   4.211144E-03  dq_diff:   1.557045E-02
-SCF CALC 0003 energy  -10.62906023  en_diff:   1.117281E-03  dq_diff:   1.203689E-02
-SCF CALC 0004 energy  -10.63194931  en_diff:   2.889078E-03  dq_diff:   2.518642E-03
-SCF CALC 0005 energy  -10.63256881  en_diff:   6.195016E-04  dq_diff:   4.948903E-04
-SCF CALC 0006 energy  -10.63268907  en_diff:   1.202533E-04  dq_diff:   9.964053E-05
-SCF CALC 0007 energy  -10.63271338  en_diff:   2.430978E-05  dq_diff:   1.987731E-05
+SCF CALC 0001 energy  -10.81449538
+SCF CALC 0002 energy  -10.81809945  en_diff:   3.604064E-03  dq_diff:   1.267099E-02
+SCF CALC 0003 energy  -10.81906008  en_diff:   9.606347E-04  dq_diff:   9.797107E-03
+SCF CALC 0004 energy  -10.82156099  en_diff:   2.500904E-03  dq_diff:   2.045445E-03
+SCF CALC 0005 energy  -10.82209492  en_diff:   5.339354E-04  dq_diff:   4.025600E-04
+SCF CALC 0006 energy  -10.82219892  en_diff:   1.040011E-04  dq_diff:   8.098105E-05
+SCF CALC 0007 energy  -10.82221992  en_diff:   2.099086E-05  dq_diff:   1.616183E-05
 
-YES convergence in 7 iters, energy -10.632713376771221 eV   dq = [-0.944, 0.944]
+YES convergence in 7 iters, energy -10.822219915554255 eV   dq = [-1.0, 1.0]
 END SCF ------------------
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63271822
-SCF CALC 0002 energy  -10.63271878  en_diff:   5.641612E-07  dq_diff:   2.173376E-06
+SCF CALC 0001 energy  -10.82222410
+SCF CALC 0002 energy  -10.82222459  en_diff:   4.856409E-07  dq_diff:   1.767646E-06
 
-YES convergence in 2 iters, energy -10.6327187824535 eV   dq = [-0.944, 0.944]
+YES convergence in 2 iters, energy -10.8222245850157 eV   dq = [-1.0, 1.0]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.882804 seconds (6.21 M allocations: 614.448 MiB, 16.43% gc time)
+  1.026082 seconds (6.21 M allocations: 614.448 MiB, 14.11% gc time)
 
-FCALL 4 en:  -0.7814901323661086 (Ryd)  fsum:  3.257330735466903e-14  ssum:  0.00020684315661295675    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 4 en:  -0.7954185468909877 (Ryd)  fsum:  1.7394199959031014e-14  ssum:  0.00017498419433325114    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.76680  +2.76680  +0.00000  |  +0.01096  +0.00000  +0.00000
-A2=     +2.76680  +0.00000  +2.76680  |  +0.00000  +0.01096  +0.00000
-A3=     +0.00000  +2.76680  +2.76680  |  +0.00000  +0.00000  +0.01096
+A1=     +2.75604  +2.75604  +0.00000  |  +0.00928  +0.00000  +0.00000
+A2=     +2.75604  +0.00000  +2.75604  |  +0.00000  +0.00928  +0.00000
+A3=     +0.00000  +2.75604  +2.75604  |  +0.00000  +0.00000  +0.00928
 
 Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63286229
-SCF CALC 0002 energy  -10.63334751  en_diff:   4.852175E-04  dq_diff:   1.825661E-03
-SCF CALC 0003 energy  -10.63347698  en_diff:   1.294759E-04  dq_diff:   1.411291E-03
-SCF CALC 0004 energy  -10.63381300  en_diff:   3.360130E-04  dq_diff:   2.953853E-04
-SCF CALC 0005 energy  -10.63388542  en_diff:   7.242953E-05  dq_diff:   5.802119E-05
-SCF CALC 0006 energy  -10.63389949  en_diff:   1.406261E-05  dq_diff:   1.168388E-05
+SCF CALC 0001 energy  -10.82215802
+SCF CALC 0002 energy  -10.82258103  en_diff:   4.230124E-04  dq_diff:   1.510269E-03
+SCF CALC 0003 energy  -10.82269429  en_diff:   1.132598E-04  dq_diff:   1.167755E-03
+SCF CALC 0004 energy  -10.82298997  en_diff:   2.956789E-04  dq_diff:   2.438808E-04
+SCF CALC 0005 energy  -10.82305338  en_diff:   6.340734E-05  dq_diff:   4.798063E-05
+SCF CALC 0006 energy  -10.82306573  en_diff:   1.235058E-05  dq_diff:   9.653745E-06
 
-YES convergence in 6 iters, energy -10.633899487297281 eV   dq = [-0.942, 0.942]
+YES convergence in 6 iters, energy -10.82306572985509 eV   dq = [-0.998, 0.998]
 END SCF ------------------
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63319179
-SCF CALC 0002 energy  -10.63483245  en_diff:   1.640667E-03  dq_diff:   6.055724E-03
-SCF CALC 0003 energy  -10.63526818  en_diff:   4.357236E-04  dq_diff:   4.677829E-03
-SCF CALC 0004 energy  -10.63639203  en_diff:   1.123854E-03  dq_diff:   9.807730E-04
-SCF CALC 0005 energy  -10.63663470  en_diff:   2.426732E-04  dq_diff:   1.924482E-04
-SCF CALC 0006 energy  -10.63668172  en_diff:   4.701969E-05  dq_diff:   3.877428E-05
-SCF CALC 0007 energy  -10.63669124  en_diff:   9.518229E-06  dq_diff:   7.732407E-06
+SCF CALC 0001 energy  -10.82189589
+SCF CALC 0002 energy  -10.82344691  en_diff:   1.551019E-03  dq_diff:   5.441918E-03
+SCF CALC 0003 energy  -10.82386042  en_diff:   4.135087E-04  dq_diff:   4.205008E-03
+SCF CALC 0004 energy  -10.82493395  en_diff:   1.073531E-03  dq_diff:   8.795789E-04
+SCF CALC 0005 energy  -10.82516452  en_diff:   2.305738E-04  dq_diff:   1.728883E-04
+SCF CALC 0006 energy  -10.82520935  en_diff:   4.483086E-05  dq_diff:   3.480099E-05
+SCF CALC 0007 energy  -10.82521841  en_diff:   9.059196E-06  dq_diff:   6.943325E-06
 
-YES convergence in 7 iters, energy -10.636691241854193 eV   dq = [-0.932, 0.932]
+YES convergence in 7 iters, energy -10.825218411463503 eV   dq = [-0.99, 0.99]
 END SCF ------------------
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63669314
-SCF CALC 0002 energy  -10.63669336  en_diff:   2.217061E-07  dq_diff:   8.437182E-07
+SCF CALC 0001 energy  -10.82522022
+SCF CALC 0002 energy  -10.82522043  en_diff:   2.102800E-07  dq_diff:   7.581359E-07
 
-YES convergence in 2 iters, energy -10.636693358109483 eV   dq = [-0.932, 0.932]
+YES convergence in 2 iters, energy -10.825220426486158 eV   dq = [-0.99, 0.99]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.880368 seconds (6.20 M allocations: 612.743 MiB, 15.39% gc time)
+  1.012634 seconds (6.21 M allocations: 614.445 MiB, 14.66% gc time)
 
-FCALL 5 en:  -0.7817822581825667 (Ryd)  fsum:  1.2062656139430365e-8  ssum:  9.409197441520607e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 5 en:  -0.7956387370977634 (Ryd)  fsum:  3.39070071900384e-14  ssum:  7.849676452687798e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.77759  +2.77759  +0.00000  |  +0.00499  -0.00000  -0.00000
-A2=     +2.77759  +0.00000  +2.77759  |  -0.00000  +0.00499  -0.00000
-A3=     +0.00000  +2.77759  +2.77759  |  -0.00000  -0.00000  +0.00499
+A1=     +2.76575  +2.76575  +0.00000  |  +0.00416  +0.00000  +0.00000
+A2=     +2.76575  +0.00000  +2.76575  |  +0.00000  +0.00416  +0.00000
+A3=     +0.00000  +2.76575  +2.76575  |  +0.00000  +0.00000  +0.00416
 
-Al   +0.00000  +0.00000  +0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63649177
-SCF CALC 0002 energy  -10.63668742  en_diff:   1.956530E-04  dq_diff:   7.271338E-04
-SCF CALC 0003 energy  -10.63673950  en_diff:   5.207829E-05  dq_diff:   5.616765E-04
-SCF CALC 0004 energy  -10.63687402  en_diff:   1.345140E-04  dq_diff:   1.177710E-04
-SCF CALC 0005 energy  -10.63690312  en_diff:   2.910287E-05  dq_diff:   2.310680E-05
-SCF CALC 0006 energy  -10.63690876  en_diff:   5.639613E-06  dq_diff:   4.655776E-06
+SCF CALC 0001 energy  -10.82499426
+SCF CALC 0002 energy  -10.82517360  en_diff:   1.793400E-04  dq_diff:   6.333811E-04
+SCF CALC 0003 energy  -10.82522151  en_diff:   4.790732E-05  dq_diff:   4.894219E-04
+SCF CALC 0004 energy  -10.82534604  en_diff:   1.245276E-04  dq_diff:   1.023821E-04
+SCF CALC 0005 energy  -10.82537283  en_diff:   2.679448E-05  dq_diff:   2.012176E-05
 
-YES convergence in 6 iters, energy -10.636908757702113 eV   dq = [-0.931, 0.931]
+YES convergence in 5 iters, energy -10.825372833419074 eV   dq = [-0.989, 0.989]
 END SCF ------------------
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63600526
-SCF CALC 0002 energy  -10.63668837  en_diff:   6.831144E-04  dq_diff:   2.518635E-03
-SCF CALC 0003 energy  -10.63686983  en_diff:   1.814644E-04  dq_diff:   1.944930E-03
-SCF CALC 0004 energy  -10.63733733  en_diff:   4.674981E-04  dq_diff:   4.081042E-04
-SCF CALC 0005 energy  -10.63743855  en_diff:   1.012194E-04  dq_diff:   8.003504E-05
-SCF CALC 0006 energy  -10.63745815  en_diff:   1.959730E-05  dq_diff:   1.612988E-05
+SCF CALC 0001 energy  -10.82468290
+SCF CALC 0002 energy  -10.82515980  en_diff:   4.768935E-04  dq_diff:   1.675778E-03
+SCF CALC 0003 energy  -10.82528703  en_diff:   1.272350E-04  dq_diff:   1.294639E-03
+SCF CALC 0004 energy  -10.82561721  en_diff:   3.301805E-04  dq_diff:   2.709546E-04
+SCF CALC 0005 energy  -10.82568829  en_diff:   7.108225E-05  dq_diff:   5.323718E-05
+SCF CALC 0006 energy  -10.82570211  en_diff:   1.381392E-05  dq_diff:   1.071833E-05
 
-YES convergence in 6 iters, energy -10.637458149441967 eV   dq = [-0.928, 0.928]
+YES convergence in 6 iters, energy -10.825702108036666 eV   dq = [-0.986, 0.986]
 END SCF ------------------
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63746212
-SCF CALC 0002 energy  -10.63746258  en_diff:   4.623053E-07  dq_diff:   1.751104E-06
+SCF CALC 0001 energy  -10.82570490
+SCF CALC 0002 energy  -10.82570522  en_diff:   3.240879E-07  dq_diff:   1.165690E-06
 
-YES convergence in 2 iters, energy -10.637462581011237 eV   dq = [-0.928, 0.928]
+YES convergence in 2 iters, energy -10.825705224707523 eV   dq = [-0.986, 0.986]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.894811 seconds (6.20 M allocations: 612.764 MiB, 14.66% gc time)
+  1.028939 seconds (6.21 M allocations: 614.448 MiB, 14.28% gc time)
 
-FCALL 6 en:  -0.78183879500251 (Ryd)  fsum:  2.0635548608163494e-8  ssum:  4.726526120686132e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 6 en:  -0.7956743690968726 (Ryd)  fsum:  3.936471628644269e-14  ssum:  4.55799572723061e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78202  +2.78202  -0.00000  |  +0.00251  -0.00000  -0.00000
-A2=     +2.78202  -0.00000  +2.78202  |  -0.00000  +0.00251  -0.00000
-A3=     -0.00000  +2.78202  +2.78202  |  -0.00000  -0.00000  +0.00251
+A1=     +2.76896  +2.76896  +0.00000  |  +0.00242  +0.00000  +0.00000
+A2=     +2.76896  +0.00000  +2.76896  |  +0.00000  +0.00242  +0.00000
+A3=     +0.00000  +2.76896  +2.76896  |  +0.00000  +0.00000  +0.00242
 
-Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
-P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63732282
-SCF CALC 0002 energy  -10.63741167  en_diff:   8.884208E-05  dq_diff:   3.285108E-04
-SCF CALC 0003 energy  -10.63743529  en_diff:   2.362200E-05  dq_diff:   2.536800E-04
+SCF CALC 0001 energy  -10.82558104
+SCF CALC 0002 energy  -10.82565765  en_diff:   7.660120E-05  dq_diff:   2.696588E-04
+SCF CALC 0003 energy  -10.82567809  en_diff:   2.044825E-05  dq_diff:   2.083265E-04
 
-YES convergence in 3 iters, energy -10.637435288511297 eV   dq = [-0.927, 0.927]
+YES convergence in 3 iters, energy -10.825678093647989 eV   dq = [-0.986, 0.986]
 END SCF ------------------
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63758696
-SCF CALC 0002 energy  -10.63753748  en_diff:   4.948633E-05  dq_diff:   1.826069E-04
-SCF CALC 0003 energy  -10.63752431  en_diff:   1.316235E-05  dq_diff:   1.409987E-04
+SCF CALC 0001 energy  -10.82581547
+SCF CALC 0002 energy  -10.82577046  en_diff:   4.501028E-05  dq_diff:   1.581710E-04
+SCF CALC 0003 energy  -10.82575844  en_diff:   1.201865E-05  dq_diff:   1.221870E-04
 
-YES convergence in 3 iters, energy -10.63752431372334 eV   dq = [-0.927, 0.927]
+YES convergence in 3 iters, energy -10.825758444147946 eV   dq = [-0.986, 0.986]
 END SCF ------------------
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63749036
-SCF CALC 0002 energy  -10.63748609  en_diff:   4.273851E-06  dq_diff:   1.608781E-05
+SCF CALC 0001 energy  -10.82572723
+SCF CALC 0002 energy  -10.82572334  en_diff:   3.891806E-06  dq_diff:   1.392554E-05
 
-YES convergence in 2 iters, energy -10.637486090582149 eV   dq = [-0.927, 0.927]
+YES convergence in 2 iters, energy -10.825723337696394 eV   dq = [-0.986, 0.986]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.890858 seconds (6.20 M allocations: 612.755 MiB, 14.65% gc time)
+  1.031744 seconds (6.21 M allocations: 614.448 MiB, 12.20% gc time)
 
-FCALL 7 en:  -0.7818405229234735 (Ryd)  fsum:  1.4345291160370398e-8  ssum:  4.559766632125458e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 7 en:  -0.7956757003765161 (Ryd)  fsum:  3.957696567599925e-14  ssum:  4.4330780144287513e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78218  +2.78218  -0.00000  |  +0.00242  -0.00000  -0.00000
-A2=     +2.78218  -0.00000  +2.78218  |  -0.00000  +0.00242  -0.00000
-A3=     -0.00000  +2.78218  +2.78218  |  -0.00000  -0.00000  +0.00242
+A1=     +2.76908  +2.76908  +0.00000  |  +0.00235  +0.00000  +0.00000
+A2=     +2.76908  +0.00000  +2.76908  |  +0.00000  +0.00235  +0.00000
+A3=     +0.00000  +2.76908  +2.76908  |  +0.00000  +0.00000  +0.00235
 
-Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
-P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
+P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 -----
@@ -462,1187 +467,1145 @@ Parameters:
 smearing = 0.01 conv_thr = 1.0e-7, iters = 75, mix = 0.8, grid = missing
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63748495
-SCF CALC 0002 energy  -10.63748321  en_diff:   1.741275E-06  dq_diff:   7.147112E-06
+SCF CALC 0001 energy  -10.82572230
+SCF CALC 0002 energy  -10.82572070  en_diff:   1.594015E-06  dq_diff:   6.129004E-06
 
-YES convergence in 2 iters, energy -10.637483212643854 eV   dq = [-0.927, 0.927]
+YES convergence in 2 iters, energy -10.825720704562473 eV   dq = [-0.986, 0.986]
 END SCF ------------------
 
 RELAX Round 2
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63748275
-SCF CALC 0002 energy  -10.63748204  en_diff:   7.094343E-07  dq_diff:   3.329506E-06
+SCF CALC 0001 energy  -10.82572028
+SCF CALC 0002 energy  -10.82571963  en_diff:   6.528762E-07  dq_diff:   2.859569E-06
 
-YES convergence in 2 iters, energy -10.637482040106285 eV   dq = [-0.927, 0.927]
+YES convergence in 2 iters, energy -10.825719626083131 eV   dq = [-0.986, 0.986]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.878831 seconds (6.20 M allocations: 612.755 MiB, 13.67% gc time)
+  1.017748 seconds (6.21 M allocations: 614.448 MiB, 13.05% gc time)
 
-FCALL 201 en:  -0.7818402252190967 (Ryd)  fsum:  1.4345132347648797e-8  ssum:  4.5596215392995806e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1001 en:  -0.7956754275780721 (Ryd)  fsum:  3.957486206906954e-14  ssum:  4.432930891874823e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78218  +2.78218  -0.00000  |  +0.00242  -0.00000  -0.00000
-A2=     +2.78218  -0.00000  +2.78218  |  -0.00000  +0.00242  -0.00000
-A3=     -0.00000  +2.78218  +2.78218  |  -0.00000  -0.00000  +0.00242
+A1=     +2.76908  +2.76908  +0.00000  |  +0.00235  +0.00000  +0.00000
+A2=     +2.76908  +0.00000  +2.76908  |  +0.00000  +0.00235  +0.00000
+A3=     +0.00000  +2.76908  +2.76908  |  +0.00000  +0.00000  +0.00235
 
-Al   -0.00000  -0.00000  -0.00000 |  +0.00000  +0.00000  +0.00000
-P    +0.25000  +0.25000  +0.25000 |  -0.00000  -0.00000  -0.00000
-
-
-START SCF ----------------
-SCF CALC 0001 energy  -10.63675802
-SCF CALC 0002 energy  -10.63718167  en_diff:   4.236489E-04  dq_diff:   1.558892E-03
-SCF CALC 0003 energy  -10.63729417  en_diff:   1.125064E-04  dq_diff:   1.203583E-03
-SCF CALC 0004 energy  -10.63758375  en_diff:   2.895775E-04  dq_diff:   2.526514E-04
-SCF CALC 0005 energy  -10.63764652  en_diff:   6.276589E-05  dq_diff:   4.953512E-05
-SCF CALC 0006 energy  -10.63765866  en_diff:   1.214717E-05  dq_diff:   9.984455E-06
-
-YES convergence in 6 iters, energy -10.637658664029601 eV   dq = [-0.925, 0.925]
-END SCF ------------------
-
-
-START SCF ----------------
-SCF CALC 0001 energy  -10.63766112
-SCF CALC 0002 energy  -10.63766141  en_diff:   2.868444E-07  dq_diff:   1.083304E-06
-
-YES convergence in 2 iters, energy -10.637661411811795 eV   dq = [-0.925, 0.925]
-END SCF ------------------
-
-get_energy_force_stress_fft
-test safe get_energy_force_stress_fft
-  0.905599 seconds (6.20 M allocations: 612.759 MiB, 16.79% gc time)
-
-FCALL 202 en:  -0.7818534087914971 (Ryd)  fsum:  4.489382928241517e-8  ssum:  2.326532792392256e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-A1=     +2.78431  +2.78431  -0.00000  |  +0.00123  -0.00000  -0.00000
-A2=     +2.78431  -0.00000  +2.78431  |  -0.00000  +0.00123  -0.00000
-A3=     -0.00000  +2.78431  +2.78431  |  -0.00000  -0.00000  +0.00123
-
-Al   +0.00000  +0.00000  +0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63758097
-SCF CALC 0002 energy  -10.63762438  en_diff:   4.340775E-05  dq_diff:   1.600698E-04
-SCF CALC 0003 energy  -10.63763592  en_diff:   1.153465E-05  dq_diff:   1.235873E-04
+SCF CALC 0001 energy  -10.82499206
+SCF CALC 0002 energy  -10.82540944  en_diff:   4.173811E-04  dq_diff:   1.462456E-03
+SCF CALC 0003 energy  -10.82552073  en_diff:   1.112905E-04  dq_diff:   1.129643E-03
+SCF CALC 0004 energy  -10.82580921  en_diff:   2.884852E-04  dq_diff:   2.365147E-04
+SCF CALC 0005 energy  -10.82587137  en_diff:   6.215538E-05  dq_diff:   4.645919E-05
+SCF CALC 0006 energy  -10.82588344  en_diff:   1.207418E-05  dq_diff:   9.354825E-06
 
-YES convergence in 3 iters, energy -10.637635915351693 eV   dq = [-0.925, 0.925]
+YES convergence in 6 iters, energy -10.825883443551854 eV   dq = [-0.984, 0.984]
 END SCF ------------------
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63766562
-SCF CALC 0002 energy  -10.63766936  en_diff:   3.749629E-06  dq_diff:   1.411391E-05
+SCF CALC 0001 energy  -10.82588588
+SCF CALC 0002 energy  -10.82588617  en_diff:   2.835322E-07  dq_diff:   1.016851E-06
 
-YES convergence in 2 iters, energy -10.637669364825538 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825886168476668 eV   dq = [-0.984, 0.984]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.910692 seconds (6.20 M allocations: 612.759 MiB, 15.90% gc time)
+  1.035563 seconds (6.21 M allocations: 614.448 MiB, 13.23% gc time)
 
-FCALL 203 en:  -0.7818539933270133 (Ryd)  fsum:  1.3180261948746108e-8  ssum:  2.098980377652055e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1002 en:  -0.795687668213777 (Ryd)  fsum:  4.3051040780858655e-14  ssum:  2.3285688889805743e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77111  +2.77111  +0.00000  |  +0.00123  +0.00000  +0.00000
+A2=     +2.77111  +0.00000  +2.77111  |  +0.00000  +0.00123  +0.00000
+A3=     +0.00000  +2.77111  +2.77111  |  +0.00000  +0.00000  +0.00123
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63771075
-SCF CALC 0002 energy  -10.63769065  en_diff:   2.010851E-05  dq_diff:   7.385512E-05
+SCF CALC 0001 energy  -10.82580364
+SCF CALC 0002 energy  -10.82584769  en_diff:   4.404408E-05  dq_diff:   1.546396E-04
+SCF CALC 0003 energy  -10.82585944  en_diff:   1.175036E-05  dq_diff:   1.194495E-04
 
-YES convergence in 2 iters, energy -10.637690645802312 eV   dq = [-0.925, 0.925]
+YES convergence in 3 iters, energy -10.825859439289045 eV   dq = [-0.983, 0.983]
+END SCF ------------------
+
+
+START SCF ----------------
+SCF CALC 0001 energy  -10.82588991
+SCF CALC 0002 energy  -10.82589372  en_diff:   3.808855E-06  dq_diff:   1.362470E-05
+
+YES convergence in 2 iters, energy -10.825893717329397 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.889462 seconds (6.20 M allocations: 612.761 MiB, 15.36% gc time)
+  1.001775 seconds (6.21 M allocations: 614.445 MiB, 15.26% gc time)
 
-FCALL 204 en:  -0.7818555574493885 (Ryd)  fsum:  2.903173972308715e-8  ssum:  2.2136256939103653e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1003 en:  -0.7956882230440174 (Ryd)  fsum:  4.340935821990074e-14  ssum:  2.1061595184888778e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78442  +2.78442  -0.00000  |  +0.00117  -0.00000  -0.00000
-A2=     +2.78442  -0.00000  +2.78442  |  -0.00000  +0.00117  -0.00000
-A3=     -0.00000  +2.78442  +2.78442  |  -0.00000  -0.00000  +0.00117
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63766514
-SCF CALC 0002 energy  -10.63766778  en_diff:   2.633253E-06  dq_diff:   9.058984E-06
+SCF CALC 0001 energy  -10.82593616
+SCF CALC 0002 energy  -10.82591577  en_diff:   2.039520E-05  dq_diff:   7.135414E-05
 
-YES convergence in 2 iters, energy -10.637667775137094 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825915766877252 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.885416 seconds (6.20 M allocations: 612.759 MiB, 15.12% gc time)
+  0.998359 seconds (6.21 M allocations: 614.448 MiB, 12.97% gc time)
 
-FCALL 205 en:  -0.7818538764871104 (Ryd)  fsum:  2.1105439104278174e-8  ssum:  2.1558588425532088e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1004 en:  -0.7956898436553046 (Ryd)  fsum:  4.3221583493638367e-14  ssum:  2.2183919787922744e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78447  +2.78447  -0.00000  |  +0.00114  -0.00000  -0.00000
-A2=     +2.78447  -0.00000  +2.78447  |  -0.00000  +0.00114  -0.00000
-A3=     -0.00000  +2.78447  +2.78447  |  -0.00000  -0.00000  +0.00114
+A1=     +2.77122  +2.77122  +0.00000  |  +0.00118  +0.00000  +0.00000
+A2=     +2.77122  +0.00000  +2.77122  |  +0.00000  +0.00118  +0.00000
+A3=     +0.00000  +2.77122  +2.77122  |  +0.00000  +0.00000  +0.00118
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63765836
-SCF CALC 0002 energy  -10.63766485  en_diff:   6.481864E-06  dq_diff:   2.362965E-05
+SCF CALC 0001 energy  -10.82588965
+SCF CALC 0002 energy  -10.82589228  en_diff:   2.631489E-06  dq_diff:   8.866569E-06
 
-YES convergence in 2 iters, energy -10.637664846673662 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825892277378196 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.904975 seconds (6.20 M allocations: 612.764 MiB, 15.23% gc time)
+  1.009392 seconds (6.21 M allocations: 614.448 MiB, 12.52% gc time)
 
-FCALL 206 en:  -0.7818536612490962 (Ryd)  fsum:  1.7142730528700406e-8  ssum:  2.1272848279479448e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1005 en:  -0.7956881172095948 (Ryd)  fsum:  4.332300554470849e-14  ssum:  2.1617861632121744e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78450  +2.78450  -0.00000  |  +0.00113  -0.00000  -0.00000
-A2=     +2.78450  -0.00000  +2.78450  |  -0.00000  +0.00113  -0.00000
-A3=     -0.00000  +2.78450  +2.78450  |  -0.00000  -0.00000  +0.00113
+A1=     +2.77127  +2.77127  +0.00000  |  +0.00115  +0.00000  +0.00000
+A2=     +2.77127  +0.00000  +2.77127  |  +0.00000  +0.00115  +0.00000
+A3=     +0.00000  +2.77127  +2.77127  |  +0.00000  +0.00000  +0.00115
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63766151
-SCF CALC 0002 energy  -10.63766685  en_diff:   5.343231E-06  dq_diff:   1.989569E-05
+SCF CALC 0001 energy  -10.82588261
+SCF CALC 0002 energy  -10.82588918  en_diff:   6.566691E-06  dq_diff:   2.282087E-05
 
-YES convergence in 2 iters, energy -10.637666850072204 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825889177558944 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.905843 seconds (6.20 M allocations: 612.757 MiB, 15.52% gc time)
+  0.993722 seconds (6.21 M allocations: 614.450 MiB, 11.26% gc time)
 
-FCALL 207 en:  -0.7818538084961196 (Ryd)  fsum:  1.5161438789796042e-8  ssum:  2.113122984846554e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1006 en:  -0.7956878893771647 (Ryd)  fsum:  4.3364927239630075e-14  ssum:  2.1338227044355218e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78451  +2.78451  -0.00000  |  +0.00112  -0.00000  -0.00000
-A2=     +2.78451  -0.00000  +2.78451  |  -0.00000  +0.00112  -0.00000
-A3=     -0.00000  +2.78451  +2.78451  |  -0.00000  -0.00000  +0.00112
+A1=     +2.77130  +2.77130  +0.00000  |  +0.00113  +0.00000  +0.00000
+A2=     +2.77130  +0.00000  +2.77130  |  +0.00000  +0.00113  +0.00000
+A3=     +0.00000  +2.77130  +2.77130  |  +0.00000  +0.00000  +0.00113
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63766574
-SCF CALC 0002 energy  -10.63766926  en_diff:   3.527220E-06  dq_diff:   1.336529E-05
+SCF CALC 0001 energy  -10.82588574
+SCF CALC 0002 energy  -10.82589117  en_diff:   5.432017E-06  dq_diff:   1.923666E-05
 
-YES convergence in 2 iters, energy -10.637669264276841 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825891170274593 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  1.250176 seconds (6.20 M allocations: 612.760 MiB, 41.08% gc time)
+  1.332952 seconds (6.21 M allocations: 614.448 MiB, 36.75% gc time)
 
-FCALL 208 en:  -0.7818539859368232 (Ryd)  fsum:  1.4170790029341345e-8  ssum:  2.106092808006102e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1007 en:  -0.7956880358390103 (Ryd)  fsum:  4.3386749230440334e-14  ssum:  2.1199803160027907e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78452  +2.78452  -0.00000  |  +0.00112  -0.00000  -0.00000
-A2=     +2.78452  -0.00000  +2.78452  |  -0.00000  +0.00112  -0.00000
-A3=     -0.00000  +2.78452  +2.78452  |  -0.00000  -0.00000  +0.00112
+A1=     +2.77131  +2.77131  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77131  +0.00000  +2.77131  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77131  +2.77131  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63766893
-SCF CALC 0002 energy  -10.63767105  en_diff:   2.111828E-06  dq_diff:   8.383750E-06
+SCF CALC 0001 energy  -10.82589002
+SCF CALC 0002 energy  -10.82589362  en_diff:   3.595184E-06  dq_diff:   1.293123E-05
 
-YES convergence in 2 iters, energy -10.637671046538106 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825893617377304 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.820796 seconds (6.20 M allocations: 612.759 MiB, 13.99% gc time)
+  0.951056 seconds (6.21 M allocations: 614.450 MiB, 14.18% gc time)
 
-FCALL 209 en:  -0.7818541169305624 (Ryd)  fsum:  1.367545377261167e-8  ssum:  2.102598322714891e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1008 en:  -0.7956882156976768 (Ryd)  fsum:  4.3398754084054695e-14  ssum:  2.113116244174867e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78452  +2.78452  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78452  -0.00000  +2.78452  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78452  +2.78452  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77132  +2.77132  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77132  +0.00000  +2.77132  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77132  +2.77132  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767097
-SCF CALC 0002 energy  -10.63767217  en_diff:   1.197634E-06  dq_diff:   5.035137E-06
+SCF CALC 0001 energy  -10.82589328
+SCF CALC 0002 energy  -10.82589543  en_diff:   2.157323E-06  dq_diff:   8.016903E-06
 
-YES convergence in 2 iters, energy -10.637672171821045 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825895434813075 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.828577 seconds (6.20 M allocations: 612.757 MiB, 14.65% gc time)
+  0.946761 seconds (6.21 M allocations: 614.448 MiB, 11.69% gc time)
 
-FCALL 210 en:  -0.7818541996373028 (Ryd)  fsum:  1.3427784600835997e-8  ssum:  2.1008594529570583e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1009 en:  -0.7956883492766936 (Ryd)  fsum:  4.340148712817315e-14  ssum:  2.1097076078247077e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78452  +2.78452  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78452  -0.00000  +2.78452  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78452  +2.78452  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77132  +2.77132  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77132  +0.00000  +2.77132  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77132  +2.77132  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767217
-SCF CALC 0002 energy  -10.63767283  en_diff:   6.564955E-07  dq_diff:   2.914074E-06
+SCF CALC 0001 energy  -10.82589536
+SCF CALC 0002 energy  -10.82589659  en_diff:   1.225853E-06  dq_diff:   4.817960E-06
 
-YES convergence in 2 iters, energy -10.637672829777076 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.82589658659962 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.835735 seconds (6.20 M allocations: 612.757 MiB, 13.54% gc time)
+  0.950204 seconds (6.21 M allocations: 614.448 MiB, 12.46% gc time)
 
-FCALL 211 en:  -0.7818542479961617 (Ryd)  fsum:  1.3303941477209858e-8  ssum:  2.0999934226820765e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1010 en:  -0.7956884339314125 (Ryd)  fsum:  4.3412874679403755e-14  ssum:  2.1080128707736815e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78452  +2.78452  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78452  -0.00000  +2.78452  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78452  +2.78452  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767285
-SCF CALC 0002 energy  -10.63767320  en_diff:   3.517224E-07  dq_diff:   1.643998E-06
+SCF CALC 0001 energy  -10.82589659
+SCF CALC 0002 energy  -10.82589726  en_diff:   6.731534E-07  dq_diff:   2.789911E-06
 
-YES convergence in 2 iters, energy -10.637673197551504 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825897261966585 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.821114 seconds (6.20 M allocations: 612.757 MiB, 15.09% gc time)
+  0.962480 seconds (6.21 M allocations: 614.445 MiB, 12.94% gc time)
 
-FCALL 212 en:  -0.7818542750270737 (Ryd)  fsum:  1.324202073909531e-8  ssum:  2.099561792423205e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1011 en:  -0.7956884835699508 (Ryd)  fsum:  4.3413664340498643e-14  ssum:  2.1071694242883476e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767321
-SCF CALC 0002 energy  -10.63767340  en_diff:   1.854153E-07  dq_diff:   9.103721E-07
+SCF CALC 0001 energy  -10.82589728
+SCF CALC 0002 energy  -10.82589764  en_diff:   3.612201E-07  dq_diff:   1.574679E-06
 
-YES convergence in 2 iters, energy -10.637673397229527 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825897640356242 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  1.229154 seconds (6.20 M allocations: 612.760 MiB, 41.57% gc time)
+  1.369943 seconds (6.21 M allocations: 614.448 MiB, 36.69% gc time)
 
-FCALL 213 en:  -0.7818542897031324 (Ryd)  fsum:  1.3211059612707818e-8  ssum:  2.099346540737639e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1012 en:  -0.7956885113810677 (Ryd)  fsum:  4.340414522945278e-14  ssum:  2.1067493062575052e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767341
-SCF CALC 0002 energy  -10.63767350  en_diff:   9.659610E-08  dq_diff:   4.970483E-07
+SCF CALC 0001 energy  -10.82589766
+SCF CALC 0002 energy  -10.82589785  en_diff:   1.906935E-07  dq_diff:   8.723289E-07
 
-YES convergence in 2 iters, energy -10.637673503495632 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825897846208086 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.851194 seconds (6.20 M allocations: 612.759 MiB, 16.68% gc time)
+  0.926796 seconds (6.21 M allocations: 614.448 MiB, 12.12% gc time)
 
-FCALL 214 en:  -0.7818542975135442 (Ryd)  fsum:  1.3195580477066167e-8  ssum:  2.099239144163473e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1013 en:  -0.7956885265108936 (Ryd)  fsum:  4.340687380432363e-14  ssum:  2.1065399041630142e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767351
-SCF CALC 0002 energy  -10.63767356  en_diff:   4.988061E-08  dq_diff:   2.683914E-07
+SCF CALC 0001 energy  -10.82589786
+SCF CALC 0002 energy  -10.82589796  en_diff:   9.947266E-08  dq_diff:   4.764365E-07
 
-YES convergence in 2 iters, energy -10.637673559244476 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.82589795594978 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.819205 seconds (6.20 M allocations: 612.763 MiB, 14.71% gc time)
+  0.920911 seconds (6.21 M allocations: 614.448 MiB, 12.85% gc time)
 
-FCALL 215 en:  -0.7818543016110072 (Ryd)  fsum:  1.31878377727741e-8  ssum:  2.099185539176302e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1014 en:  -0.7956885345767564 (Ryd)  fsum:  4.341420822537798e-14  ssum:  2.1064354719431722e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767356
-SCF CALC 0002 energy  -10.63767359  en_diff:   2.558439E-08  dq_diff:   1.436398E-07
+SCF CALC 0001 energy  -10.82589796
+SCF CALC 0002 energy  -10.82589801  en_diff:   5.142454E-08  dq_diff:   2.573348E-07
 
-YES convergence in 2 iters, energy -10.637673588183533 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898013609693 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.823816 seconds (6.20 M allocations: 612.766 MiB, 15.53% gc time)
+  0.928893 seconds (6.21 M allocations: 614.448 MiB, 11.29% gc time)
 
-FCALL 216 en:  -0.7818543037379879 (Ryd)  fsum:  1.3183969964891458e-8  ssum:  2.0991587746505483e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1015 en:  -0.7956885388146804 (Ryd)  fsum:  4.340560038566165e-14  ssum:  2.1063833658392767e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767359
-SCF CALC 0002 energy  -10.63767360  en_diff:   1.305434E-08  dq_diff:   7.631548E-08
+SCF CALC 0001 energy  -10.82589802
+SCF CALC 0002 energy  -10.82589804  en_diff:   2.640308E-08  dq_diff:   1.377558E-07
 
-YES convergence in 2 iters, energy -10.637673603086393 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898043580777 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.823492 seconds (6.20 M allocations: 612.759 MiB, 14.68% gc time)
+  0.945362 seconds (6.21 M allocations: 614.450 MiB, 12.09% gc time)
 
-FCALL 217 en:  -0.7818543048333275 (Ryd)  fsum:  1.3182035990027646e-8  ssum:  2.099145407841235e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1016 en:  -0.7956885410175135 (Ryd)  fsum:  4.340312209759732e-14  ssum:  2.1063573577960144e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767360
-SCF CALC 0002 energy  -10.63767361  en_diff:   6.633867E-09  dq_diff:   4.030035E-08
+SCF CALC 0001 energy  -10.82589805
+SCF CALC 0002 energy  -10.82589806  en_diff:   1.348417E-08  dq_diff:   7.320452E-08
 
-YES convergence in 2 iters, energy -10.637673610714149 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898059033198 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.818030 seconds (6.20 M allocations: 612.759 MiB, 13.16% gc time)
+  0.943724 seconds (6.21 M allocations: 614.452 MiB, 11.02% gc time)
 
-FCALL 218 en:  -0.7818543053939571 (Ryd)  fsum:  1.3181064730886583e-8  ssum:  2.0991387307273715e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1017 en:  -0.7956885421532451 (Ryd)  fsum:  4.3400281017458006e-14  ssum:  2.106344372194401e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767361
-SCF CALC 0002 energy  -10.63767361  en_diff:   3.360340E-09  dq_diff:   2.117241E-08
+SCF CALC 0001 energy  -10.82589806
+SCF CALC 0002 energy  -10.82589807  en_diff:   6.857747E-09  dq_diff:   3.866439E-08
 
-YES convergence in 2 iters, energy -10.637673614599795 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898066950574 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.840029 seconds (6.20 M allocations: 612.757 MiB, 13.34% gc time)
+  1.349057 seconds (6.21 M allocations: 614.448 MiB, 36.36% gc time)
 
-FCALL 219 en:  -0.7818543056795466 (Ryd)  fsum:  1.3180581636173129e-8  ssum:  2.0991353947281775e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1018 en:  -0.7956885427351613 (Ryd)  fsum:  4.340959415615259e-14  ssum:  2.1063378869328178e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767361
-SCF CALC 0002 energy  -10.63767362  en_diff:   1.697845E-09  dq_diff:   1.107435E-08
+SCF CALC 0001 energy  -10.82589807
+SCF CALC 0002 energy  -10.82589807  en_diff:   3.476178E-09  dq_diff:   2.031601E-08
 
-YES convergence in 2 iters, energy -10.637673616571803 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898070987447 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  1.189377 seconds (6.20 M allocations: 612.759 MiB, 39.13% gc time)
+  0.884922 seconds (6.21 M allocations: 614.448 MiB, 12.71% gc time)
 
-FCALL 220 en:  -0.7818543058244865 (Ryd)  fsum:  1.3180340418053303e-8  ssum:  2.099133727770049e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1019 en:  -0.795688543031866 (Ryd)  fsum:  4.340024821521382e-14  ssum:  2.1063346473873583e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   8.561204E-10  dq_diff:   5.770452E-09
+SCF CALC 0001 energy  -10.82589807
+SCF CALC 0002 energy  -10.82589807  en_diff:   1.757451E-09  dq_diff:   1.062778E-08
 
-YES convergence in 2 iters, energy -10.637673617569716 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898073037754 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.817884 seconds (6.20 M allocations: 612.764 MiB, 14.67% gc time)
+  0.908953 seconds (6.21 M allocations: 614.445 MiB, 12.27% gc time)
 
-FCALL 221 en:  -0.7818543058978317 (Ryd)  fsum:  1.318021950609834e-8  ssum:  2.0991328947181403e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1020 en:  -0.7956885431825607 (Ryd)  fsum:  4.3423035211496956e-14  ssum:  2.1063330288739208e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   4.309755E-10  dq_diff:   2.996781E-09
+SCF CALC 0001 energy  -10.82589807
+SCF CALC 0002 energy  -10.82589807  en_diff:   8.866393E-10  dq_diff:   5.538381E-09
 
-YES convergence in 2 iters, energy -10.637673618073498 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898074076118 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.825866 seconds (6.20 M allocations: 612.766 MiB, 14.41% gc time)
+  0.928906 seconds (6.21 M allocations: 614.445 MiB, 11.33% gc time)
 
-FCALL 222 en:  -0.7818543059348589 (Ryd)  fsum:  1.318015852080095e-8  ssum:  2.099132478364265e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1021 en:  -0.7956885432588789 (Ryd)  fsum:  4.339809863090228e-14  ssum:  2.1063322201299588e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   2.166985E-10  dq_diff:   1.551765E-09
+SCF CALC 0001 energy  -10.82589807
+SCF CALC 0002 energy  -10.82589807  en_diff:   4.465764E-10  dq_diff:   2.876540E-09
 
-YES convergence in 2 iters, energy -10.637673618327396 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898074600662 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.927118 seconds (6.20 M allocations: 612.759 MiB, 16.45% gc time)
+  0.917193 seconds (6.21 M allocations: 614.448 MiB, 12.00% gc time)
 
-FCALL 223 en:  -0.7818543059535201 (Ryd)  fsum:  1.3180128067527317e-8  ssum:  2.099132270254844e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1022 en:  -0.7956885432974322 (Ryd)  fsum:  4.3400726697145953e-14  ssum:  2.1063318159702405e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   1.088553E-10  dq_diff:   8.014358E-10
+SCF CALC 0001 energy  -10.82589807
+SCF CALC 0002 energy  -10.82589807  en_diff:   2.246016E-10  dq_diff:   1.489622E-09
 
-YES convergence in 2 iters, energy -10.637673618455144 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898074865137 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.909409 seconds (6.20 M allocations: 612.759 MiB, 16.29% gc time)
+  0.925995 seconds (6.21 M allocations: 614.445 MiB, 10.80% gc time)
 
-FCALL 224 en:  -0.7818543059629095 (Ryd)  fsum:  1.318011375862374e-8  ssum:  2.0991321662326426e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1023 en:  -0.7956885433168708 (Ryd)  fsum:  4.3396587271048996e-14  ssum:  2.106331613977632e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   5.460134E-11  dq_diff:   4.129532E-10
+SCF CALC 0001 energy  -10.82589807
+SCF CALC 0002 energy  -10.82589807  en_diff:   1.128703E-10  dq_diff:   7.693977E-10
 
-YES convergence in 2 iters, energy -10.63767361851932 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898074998248 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.893561 seconds (6.20 M allocations: 612.758 MiB, 16.93% gc time)
+  1.357781 seconds (6.21 M allocations: 614.445 MiB, 36.23% gc time)
 
-FCALL 225 en:  -0.7818543059676263 (Ryd)  fsum:  1.3180106809627311e-8  ssum:  2.0991321142297023e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1024 en:  -0.7956885433266542 (Ryd)  fsum:  4.339997610172338e-14  ssum:  2.1063315130178037e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   2.738148E-11  dq_diff:   2.123391E-10
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   5.661942E-11  dq_diff:   3.964692E-10
 
-YES convergence in 2 iters, energy -10.637673618551545 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075065052 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.920186 seconds (6.20 M allocations: 612.765 MiB, 14.80% gc time)
+  0.879917 seconds (6.21 M allocations: 614.448 MiB, 12.74% gc time)
 
-FCALL 226 en:  -0.7818543059699948 (Ryd)  fsum:  1.3180100710068175e-8  ssum:  2.099132088234417e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1025 en:  -0.7956885433315641 (Ryd)  fsum:  4.341329969160882e-14  ssum:  2.106331462552877e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   1.372473E-11  dq_diff:   1.089789E-10
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   2.840412E-11  dq_diff:   2.038693E-10
 
-YES convergence in 2 iters, energy -10.637673618567737 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.82589807509881 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.904281 seconds (6.20 M allocations: 612.757 MiB, 15.50% gc time)
+  0.901594 seconds (6.21 M allocations: 614.450 MiB, 12.21% gc time)
 
-FCALL 227 en:  -0.7818543059711849 (Ryd)  fsum:  1.3180099646731153e-8  ssum:  2.0991320752365263e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1026 en:  -0.7956885433340454 (Ryd)  fsum:  4.3405973286027945e-14  ssum:  2.1063314373219248e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   6.862365E-12  dq_diff:   5.583650E-11
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   1.425946E-11  dq_diff:   1.046393E-10
 
-YES convergence in 2 iters, energy -10.63767361857585 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075115575 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  1.196109 seconds (6.20 M allocations: 612.757 MiB, 39.61% gc time)
+  0.922587 seconds (6.21 M allocations: 614.445 MiB, 11.30% gc time)
 
-FCALL 228 en:  -0.7818543059717811 (Ryd)  fsum:  1.3180099814864704e-8  ssum:  2.0991320687391097e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1027 en:  -0.7956885433352776 (Ryd)  fsum:  4.3410433682643743e-14  ssum:  2.1063314247144143e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   3.434959E-12  dq_diff:   2.856509E-11
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   7.123687E-12  dq_diff:   5.361711E-11
 
-YES convergence in 2 iters, energy -10.637673618579916 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075124062 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.848376 seconds (6.20 M allocations: 612.759 MiB, 17.00% gc time)
+  0.898827 seconds (6.21 M allocations: 614.448 MiB, 12.04% gc time)
 
-FCALL 229 en:  -0.7818543059720799 (Ryd)  fsum:  1.3180097943614981e-8  ssum:  2.0991320654909234e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1028 en:  -0.7956885433359014 (Ryd)  fsum:  4.3415423994400933e-14  ssum:  2.1063314184075486e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   1.725032E-12  dq_diff:   1.458791E-11
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   3.560333E-12  dq_diff:   2.742714E-11
 
-YES convergence in 2 iters, energy -10.63767361858192 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075128292 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.811122 seconds (6.20 M allocations: 612.761 MiB, 14.18% gc time)
+  0.915919 seconds (6.21 M allocations: 614.445 MiB, 10.96% gc time)
 
-FCALL 230 en:  -0.7818543059722273 (Ryd)  fsum:  1.3180099953534236e-8  ssum:  2.099132063863114e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1029 en:  -0.7956885433362122 (Ryd)  fsum:  4.342076487628623e-14  ssum:  2.106331415259671e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   8.685582E-13  dq_diff:   7.444850E-12
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   1.789985E-12  dq_diff:   1.401315E-11
 
-YES convergence in 2 iters, energy -10.637673618582966 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075130475 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.815337 seconds (6.20 M allocations: 612.761 MiB, 15.25% gc time)
+  1.328531 seconds (6.21 M allocations: 614.448 MiB, 36.18% gc time)
 
-FCALL 231 en:  -0.7818543059723041 (Ryd)  fsum:  1.3180097047403953e-8  ssum:  2.0991320630580035e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1030 en:  -0.7956885433363727 (Ryd)  fsum:  4.3391621378329515e-14  ssum:  2.1063314136830624e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   4.305027E-13  dq_diff:   3.792966E-12
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   8.791319E-13  dq_diff:   7.148837E-12
 
-YES convergence in 2 iters, energy -10.637673618583452 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075131484 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.828133 seconds (6.20 M allocations: 612.761 MiB, 14.21% gc time)
+  0.910296 seconds (6.21 M allocations: 614.450 MiB, 12.56% gc time)
 
-FCALL 232 en:  -0.78185430597234 (Ryd)  fsum:  1.3180096725427741e-8  ssum:  2.099132062650658e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1031 en:  -0.7956885433364469 (Ryd)  fsum:  4.340790421147364e-14  ssum:  2.1063314128960692e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   2.084540E-13  dq_diff:   1.929984E-12
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   4.697767E-13  dq_diff:   3.642808E-12
 
-YES convergence in 2 iters, energy -10.637673618583722 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132129 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.802856 seconds (6.20 M allocations: 612.759 MiB, 12.54% gc time)
+  0.916861 seconds (6.21 M allocations: 614.445 MiB, 12.30% gc time)
 
-FCALL 233 en:  -0.7818543059723597 (Ryd)  fsum:  1.3180097539189696e-8  ssum:  2.09913206244529e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1032 en:  -0.7956885433364942 (Ryd)  fsum:  4.3411606496434556e-14  ssum:  2.1063314124989703e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   1.057375E-13  dq_diff:   9.823253E-13
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   2.144961E-13  dq_diff:   1.855904E-12
 
-YES convergence in 2 iters, energy -10.637673618583802 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132327 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.815031 seconds (6.20 M allocations: 612.766 MiB, 12.83% gc time)
+  0.915839 seconds (6.21 M allocations: 614.454 MiB, 11.52% gc time)
 
-FCALL 234 en:  -0.7818543059723656 (Ryd)  fsum:  1.3180097399883842e-8  ssum:  2.099132062348494e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1033 en:  -0.7956885433365088 (Ryd)  fsum:  4.3399866799393134e-14  ssum:  2.1063314123009943e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   5.740037E-14  dq_diff:   4.991285E-13
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   1.223534E-13  dq_diff:   9.411361E-13
 
-YES convergence in 2 iters, energy -10.63767361858389 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132415 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.814905 seconds (6.20 M allocations: 612.757 MiB, 12.78% gc time)
+  0.911126 seconds (6.21 M allocations: 614.445 MiB, 11.90% gc time)
 
-FCALL 235 en:  -0.781854305972372 (Ryd)  fsum:  1.3180096897797837e-8  ssum:  2.0991320622955258e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1034 en:  -0.7956885433365153 (Ryd)  fsum:  4.339821032013195e-14  ssum:  2.106331412206682e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   3.474233E-14  dq_diff:   2.538247E-13
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   7.099519E-14  dq_diff:   4.784506E-13
 
-YES convergence in 2 iters, energy -10.637673618583937 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132502 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  1.045083 seconds (6.20 M allocations: 612.757 MiB, 30.05% gc time)
+  0.909827 seconds (6.21 M allocations: 614.448 MiB, 10.74% gc time)
 
-FCALL 236 en:  -0.7818543059723756 (Ryd)  fsum:  1.3180100013458986e-8  ssum:  2.0991320622692888e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1035 en:  -0.7956885433365216 (Ryd)  fsum:  4.340876237880218e-14  ssum:  2.106331412157201e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   2.416857E-14  dq_diff:   1.272593E-13
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   2.416857E-14  dq_diff:   2.405021E-13
 
-YES convergence in 2 iters, energy -10.637673618583943 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132551 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.811074 seconds (6.20 M allocations: 612.759 MiB, 16.18% gc time)
+  1.334186 seconds (6.21 M allocations: 614.448 MiB, 36.54% gc time)
 
-FCALL 237 en:  -0.7818543059723759 (Ryd)  fsum:  1.3180098612342249e-8  ssum:  2.099132062256333e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1036 en:  -0.7956885433365254 (Ryd)  fsum:  4.341011917701319e-14  ssum:  2.1063314121296653e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   6.042144E-15  dq_diff:   6.467049E-14
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   2.265804E-14  dq_diff:   1.233180E-13
 
-YES convergence in 2 iters, energy -10.637673618583948 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.82589807513253 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.828352 seconds (6.20 M allocations: 612.759 MiB, 13.95% gc time)
+  0.927603 seconds (6.21 M allocations: 614.448 MiB, 12.93% gc time)
 
-FCALL 238 en:  -0.7818543059723764 (Ryd)  fsum:  1.318009831253241e-8  ssum:  2.0991320622510173e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1037 en:  -0.7956885433365237 (Ryd)  fsum:  4.3404682257973955e-14  ssum:  2.106331412117607e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   3.021072E-15  dq_diff:   3.289036E-14
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   4.531608E-15  dq_diff:   6.253331E-14
 
-YES convergence in 2 iters, energy -10.637673618583987 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132546 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.822354 seconds (6.20 M allocations: 612.764 MiB, 14.56% gc time)
+  0.903968 seconds (6.21 M allocations: 614.445 MiB, 12.29% gc time)
 
-FCALL 239 en:  -0.7818543059723793 (Ryd)  fsum:  1.3180097397912754e-8  ssum:  2.0991320622445605e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1038 en:  -0.795688543336525 (Ryd)  fsum:  4.341336441739492e-14  ssum:  2.10633141211068e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   1.359482E-14  dq_diff:   1.706968E-14
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   1.963697E-14  dq_diff:   3.180789E-14
 
-YES convergence in 2 iters, energy -10.637673618583987 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.82589807513261 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  1.245037 seconds (6.20 M allocations: 612.759 MiB, 41.08% gc time)
+  0.915081 seconds (6.21 M allocations: 614.448 MiB, 11.34% gc time)
 
-FCALL 240 en:  -0.7818543059723793 (Ryd)  fsum:  1.318009809140257e-8  ssum:  2.0991320622456996e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1039 en:  -0.7956885433365296 (Ryd)  fsum:  4.340036384355791e-14  ssum:  2.1063314121076076e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   2.265804E-14  dq_diff:   8.909540E-15
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   3.474233E-14  dq_diff:   1.479372E-14
 
-YES convergence in 2 iters, energy -10.637673618583918 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132551 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.788091 seconds (6.20 M allocations: 612.757 MiB, 14.88% gc time)
+  0.905649 seconds (6.21 M allocations: 614.445 MiB, 11.85% gc time)
 
-FCALL 241 en:  -0.7818543059723742 (Ryd)  fsum:  1.3180097576649132e-8  ssum:  2.0991320622482817e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1040 en:  -0.7956885433365254 (Ryd)  fsum:  4.3426669873581447e-14  ssum:  2.1063314121076143e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   0.000000E+00  dq_diff:   5.467848E-15
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   0.000000E+00  dq_diff:   9.131584E-15
 
-YES convergence in 2 iters, energy -10.637673618583928 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132516 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.787931 seconds (6.20 M allocations: 612.759 MiB, 13.97% gc time)
+  0.924561 seconds (6.21 M allocations: 614.445 MiB, 10.80% gc time)
 
-FCALL 242 en:  -0.7818543059723749 (Ryd)  fsum:  1.3180097507479095e-8  ssum:  2.0991320622449898e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1041 en:  -0.7956885433365227 (Ryd)  fsum:  4.3408820190951285e-14  ssum:  2.106331412108492e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   1.208429E-14  dq_diff:   3.191891E-15
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   0.000000E+00  dq_diff:   4.246603E-15
 
-YES convergence in 2 iters, energy -10.637673618583928 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132578 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.763674 seconds (6.20 M allocations: 612.759 MiB, 12.68% gc time)
+  1.322331 seconds (6.21 M allocations: 614.445 MiB, 36.63% gc time)
 
-FCALL 243 en:  -0.7818543059723749 (Ryd)  fsum:  1.3180097488735904e-8  ssum:  2.0991320622449698e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1042 en:  -0.7956885433365273 (Ryd)  fsum:  4.341064458804893e-14  ssum:  2.106331412105029e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   0.000000E+00  dq_diff:   1.471046E-15
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   2.265804E-14  dq_diff:   2.026157E-15
 
-YES convergence in 2 iters, energy -10.637673618583928 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132555 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.793853 seconds (6.20 M allocations: 612.759 MiB, 12.87% gc time)
+  0.893988 seconds (6.21 M allocations: 614.445 MiB, 12.76% gc time)
 
-FCALL 244 en:  -0.7818543059723749 (Ryd)  fsum:  1.3180097487990812e-8  ssum:  2.09913206224498e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1043 en:  -0.7956885433365256 (Ryd)  fsum:  4.3401237207832443e-14  ssum:  2.106331412105062e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   0.000000E+00  dq_diff:   5.273559E-16
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   1.510536E-15  dq_diff:   2.581269E-15
 
-YES convergence in 2 iters, energy -10.637673618583928 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132542 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  1.255666 seconds (6.20 M allocations: 612.759 MiB, 40.30% gc time)
+  0.913954 seconds (6.21 M allocations: 614.445 MiB, 12.30% gc time)
 
-FCALL 245 en:  -0.7818543059723749 (Ryd)  fsum:  1.3180097489331851e-8  ssum:  2.0991320622449576e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1044 en:  -0.7956885433365246 (Ryd)  fsum:  4.341146459649775e-14  ssum:  2.1063314121081778e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   0.000000E+00  dq_diff:   3.053113E-16
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   1.208429E-14  dq_diff:   1.387779E-15
 
-YES convergence in 2 iters, energy -10.637673618583928 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132542 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.834592 seconds (6.20 M allocations: 612.759 MiB, 16.32% gc time)
+  0.931098 seconds (6.21 M allocations: 614.445 MiB, 11.57% gc time)
 
-FCALL 246 en:  -0.7818543059723749 (Ryd)  fsum:  1.3180097505976014e-8  ssum:  2.0991320622449583e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1045 en:  -0.7956885433365246 (Ryd)  fsum:  4.341602624959819e-14  ssum:  2.106331412108113e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   0.000000E+00  dq_diff:   2.498002E-16
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   1.208429E-14  dq_diff:   9.992007E-16
 
-YES convergence in 2 iters, energy -10.637673618583928 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132542 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.823746 seconds (6.20 M allocations: 612.759 MiB, 14.81% gc time)
+  0.998856 seconds (6.21 M allocations: 614.445 MiB, 12.32% gc time)
 
-FCALL 247 en:  -0.7818543059723749 (Ryd)  fsum:  1.3180097505976014e-8  ssum:  2.0991320622449583e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1046 en:  -0.7956885433365246 (Ryd)  fsum:  4.34150004462895e-14  ssum:  2.1063314121081588e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   1.359482E-14  dq_diff:   4.163336E-16
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   0.000000E+00  dq_diff:   4.163336E-16
 
-YES convergence in 2 iters, energy -10.637673618583943 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132553 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.901799 seconds (6.20 M allocations: 612.759 MiB, 16.69% gc time)
+  0.906824 seconds (6.21 M allocations: 614.445 MiB, 10.70% gc time)
 
-FCALL 248 en:  -0.7818543059723759 (Ryd)  fsum:  1.3180097501061952e-8  ssum:  2.099132062244983e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1047 en:  -0.7956885433365255 (Ryd)  fsum:  4.341423143445034e-14  ssum:  2.106331412108135e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   0.000000E+00  dq_diff:   4.440892E-16
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   1.208429E-14  dq_diff:   5.828671E-16
 
-YES convergence in 2 iters, energy -10.637673618583928 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132553 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.901223 seconds (6.20 M allocations: 612.759 MiB, 16.17% gc time)
+  1.341108 seconds (6.21 M allocations: 614.445 MiB, 36.51% gc time)
 
-FCALL 249 en:  -0.7818543059723749 (Ryd)  fsum:  1.3180097489245172e-8  ssum:  2.0991320622449556e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1048 en:  -0.7956885433365255 (Ryd)  fsum:  4.3423368214643365e-14  ssum:  2.106331412108113e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   0.000000E+00  dq_diff:   4.440892E-16
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   1.208429E-14  dq_diff:   5.828671E-16
 
-YES convergence in 2 iters, energy -10.637673618583928 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132553 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.888855 seconds (6.20 M allocations: 612.759 MiB, 16.00% gc time)
+  0.883249 seconds (6.21 M allocations: 614.445 MiB, 12.90% gc time)
 
-FCALL 250 en:  -0.7818543059723749 (Ryd)  fsum:  1.3180097489245172e-8  ssum:  2.0991320622449556e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1049 en:  -0.7956885433365255 (Ryd)  fsum:  4.3423368214643365e-14  ssum:  2.106331412108113e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   0.000000E+00  dq_diff:   4.440892E-16
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   1.208429E-14  dq_diff:   5.828671E-16
 
-YES convergence in 2 iters, energy -10.637673618583928 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132553 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.884880 seconds (6.20 M allocations: 612.759 MiB, 14.96% gc time)
+  0.921413 seconds (6.21 M allocations: 614.445 MiB, 12.39% gc time)
 
-FCALL 251 en:  -0.7818543059723749 (Ryd)  fsum:  1.3180097489245172e-8  ssum:  2.0991320622449556e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1050 en:  -0.7956885433365255 (Ryd)  fsum:  4.3423368214643365e-14  ssum:  2.106331412108113e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   0.000000E+00  dq_diff:   4.440892E-16
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   1.208429E-14  dq_diff:   5.828671E-16
 
-YES convergence in 2 iters, energy -10.637673618583928 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132553 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.922924 seconds (6.20 M allocations: 612.759 MiB, 15.57% gc time)
+  0.960580 seconds (6.21 M allocations: 614.445 MiB, 11.62% gc time)
 
-FCALL 252 en:  -0.7818543059723749 (Ryd)  fsum:  1.3180097489245172e-8  ssum:  2.0991320622449556e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1051 en:  -0.7956885433365255 (Ryd)  fsum:  4.3423368214643365e-14  ssum:  2.106331412108113e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   0.000000E+00  dq_diff:   4.440892E-16
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   1.208429E-14  dq_diff:   5.828671E-16
 
-YES convergence in 2 iters, energy -10.637673618583928 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132553 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  1.177298 seconds (6.20 M allocations: 612.759 MiB, 38.88% gc time)
+  0.919238 seconds (6.21 M allocations: 614.445 MiB, 11.88% gc time)
 
-FCALL 253 en:  -0.7818543059723749 (Ryd)  fsum:  1.3180097489245172e-8  ssum:  2.0991320622449556e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1052 en:  -0.7956885433365255 (Ryd)  fsum:  4.3423368214643365e-14  ssum:  2.106331412108113e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
 START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   0.000000E+00  dq_diff:   4.440892E-16
+SCF CALC 0001 energy  -10.82589808
+SCF CALC 0002 energy  -10.82589808  en_diff:   1.208429E-14  dq_diff:   5.828671E-16
 
-YES convergence in 2 iters, energy -10.637673618583928 eV   dq = [-0.925, 0.925]
+YES convergence in 2 iters, energy -10.825898075132553 eV   dq = [-0.983, 0.983]
 END SCF ------------------
 
 get_energy_force_stress_fft
 test safe get_energy_force_stress_fft
-  0.809192 seconds (6.20 M allocations: 612.759 MiB, 14.63% gc time)
+  0.909962 seconds (6.21 M allocations: 614.445 MiB, 10.73% gc time)
 
-FCALL 254 en:  -0.7818543059723749 (Ryd)  fsum:  1.3180097489245172e-8  ssum:  2.0991320622449556e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FCALL 1053 en:  -0.7956885433365255 (Ryd)  fsum:  4.3423368214643365e-14  ssum:  2.106331412108113e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
-P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
-
-
-START SCF ----------------
-SCF CALC 0001 energy  -10.63767362
-SCF CALC 0002 energy  -10.63767362  en_diff:   0.000000E+00  dq_diff:   4.440892E-16
-
-YES convergence in 2 iters, energy -10.637673618583928 eV   dq = [-0.925, 0.925]
-END SCF ------------------
-
-get_energy_force_stress_fft
-test safe get_energy_force_stress_fft
-  0.819380 seconds (6.20 M allocations: 612.759 MiB, 14.79% gc time)
-
-FCALL 255 en:  -0.7818543059723749 (Ryd)  fsum:  1.3180097489245172e-8  ssum:  2.0991320622449556e-5    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
-
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
@@ -1650,42 +1613,42 @@ res
  * Status: success
 
  * Candidate solution
-    Final objective value:     -7.818543e-01
+    Final objective value:     -7.956885e-01
 
  * Found with
     Algorithm:     Conjugate Gradient
 
  * Convergence measures
-    |x - x&#39;|               = 7.83e-05 ≤ 2.0e-04
-    |x - x&#39;|/|x&#39;|          = 3.13e-04 ≰ 0.0e+00
-    |f(x) - f(x&#39;)|         = 1.10e-06 ≰ 0.0e+00
-    |f(x) - f(x&#39;)|/|f(x&#39;)| = 1.41e-06 ≤ 2.0e-04
-    |g(x)|                 = 3.53e-03 ≰ 2.0e-04
+    |x - x&#39;|               = 7.72e-05 ≤ 2.0e-04
+    |x - x&#39;|/|x&#39;|          = 3.09e-04 ≰ 0.0e+00
+    |f(x) - f(x&#39;)|         = 1.08e-06 ≰ 0.0e+00
+    |f(x) - f(x&#39;)|/|f(x&#39;)| = 1.35e-06 ≤ 2.0e-04
+    |g(x)|                 = 3.49e-03 ≰ 2.0e-04
 
  * Work counters
-    Seconds run:   90  (vs limit Inf)
+    Seconds run:   89  (vs limit Inf)
     Iterations:    2
-    f(x) calls:    56
-    ∇f(x) calls:   55
+    f(x) calls:    54
+    ∇f(x) calls:   53
 
 Relax done
-Final Energy -10.637673618583928
-A1=     +2.78453  +2.78453  -0.00000  |  +0.00111  -0.00000  -0.00000
-A2=     +2.78453  -0.00000  +2.78453  |  -0.00000  +0.00111  -0.00000
-A3=     -0.00000  +2.78453  +2.78453  |  -0.00000  -0.00000  +0.00111
+Final Energy -10.825898075132553
+A1=     +2.77133  +2.77133  +0.00000  |  +0.00112  +0.00000  +0.00000
+A2=     +2.77133  +0.00000  +2.77133  |  +0.00000  +0.00112  +0.00000
+A3=     +0.00000  +2.77133  +2.77133  |  +0.00000  +0.00000  +0.00112
 
-Al   -0.00000  -0.00000  -0.00000 |  -0.00000  -0.00000  -0.00000
+Al   +0.00000  +0.00000  +0.00000 |  +0.00000  +0.00000  +0.00000
 P    +0.25000  +0.25000  +0.25000 |  +0.00000  +0.00000  +0.00000
 
 
-Energy new -144.73297537804282
+Energy new -147.29390050246153
 
 Force
 2×3 Array{Float64,2}:
- -1.38345e-7  -1.38345e-7  -1.38345e-7
-  1.38345e-7   1.38345e-7   1.38345e-7
+ 6.44484e-13  6.44732e-13  6.44549e-13
+ 0.0          0.0          0.0
 Stress
 3×3 Array{Float64,2}:
-  0.00111275  -1.96475e-8  -1.96475e-8
- -1.96475e-8   0.00111275  -1.96475e-8
- -1.96475e-8  -1.96475e-8   0.00111275</pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p><p>Force/Stress defaults are eV/Ang and eV/Ang^3.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 24 March 2021 01:47">Wednesday 24 March 2021</span>. Using Julia version 1.5.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ 0.00111656  0.0         0.0
+ 0.0         0.00111656  0.0
+ 0.0         0.0         0.00111656</pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p><p>Force/Stress defaults are eV/Ang and eV/Ang^3.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Friday 26 March 2021 12:53">Friday 26 March 2021</span>. Using Julia version 1.5.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
