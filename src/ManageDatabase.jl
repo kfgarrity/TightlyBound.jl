@@ -29,9 +29,9 @@ database_cached["scf"] = true
 
 Get ready database of precalculated `coefs` for `crystal`
 """
-function prepare_database(c::crystal)
+function prepare_database(c::crystal; directory = missing)
 #    println("prepare c ", c.types)
-    prepare_database(c.types)
+    prepare_database(c.types, directory = directory)
 end
 
 """
@@ -60,7 +60,7 @@ end
 """
     function prepare_database(at_list)
 """
-function prepare_database(at_list)
+function prepare_database(at_list; directory = missing)
     
     println("prepare atoms ", at_list)
     at_list = Symbol.(at_list)
@@ -70,7 +70,7 @@ function prepare_database(at_list)
         for s2 in s
             for s3 in s
                 if ! ( Set([s1,s2,s3]) in database_list)
-                    add_to_database(Set([s1,s2,s3]))
+                    add_to_database(Set([s1,s2,s3]), directory = directory)
                 end
             end
         end
@@ -82,63 +82,89 @@ end
 
 Load elements or twobody terms from precalcuated `coefs` from files.
 """
-function add_to_database(s::Set)#
+function add_to_database(s::Set; directory = missing)#
 
     println("add_to_database $s")
+
+    dirlist = []
+    if !ismissing(directory)
+        push!(dirlist, directory)
+    end
+    push!(dirlist, datdir1)
+    push!(dirlist, datdir2)
+    
 
     at_arr = collect(s)
     if length(s) == 1
         a1 = Symbol(at_arr[1])
         if !haskey(database_cached , (a1, a1))
-#            f = "$defaultdatdir/v0.1_dat_2body_scf_pbesol_el.$a1.xml"
-            f =  "$datdir1/coef.el.2bdy.$a1.xml.gz"
-            f2 = "$datdir2/coef.el.2bdy.$a1.xml.gz"
-            if isfile(f) || isfile(f*".gz")
-                try
-                    dat = read_coefs(f)
-                    database_cached[(a1, a1)] = dat
-                    println("added to cache ", (a1, a1))
-                catch
-                    println("WARNING - error loading $f")
+            loaded = false
+            for d in dirlist
+                f =  "$d/coef.el.2bdy.$a1.xml.gz"
+
+                if isfile(f) || isfile(f*".gz")
+                    try
+                        dat = read_coefs(f)
+                        database_cached[(a1, a1)] = dat
+                        println("added to cache ", (a1, a1))
+                        loaded=true
+                    catch
+                        println("WARNING - error loading $f")
+                    end
                 end
-            elseif isfile(f2) || isfile(f2*".gz")
-                try
-                    dat = read_coefs(f2)
-                    database_cached[(a1, a1)] = dat
-                    println("added to cache ", (a1, a1))
-                catch
-                    println("WARNING - error loading $f2")
+                if loaded == true
+                    break
                 end
-            else
-                println("WARNING - no file for database $a1 ")
+
             end
+            if loaded==false
+                println("WARNING, FAILED TO LOAD 2bdy ", a1)
+            end
+
         end
 
         if !haskey(database_cached , (a1, a1, a1))
 #            f = "$defaultdatdir/v0.1_dat_3body_scf_pbesol_el.$a1.xml"
-            f =  "$datdir1/coef.el.3bdy.$a1.xml.gz"
-            f2 = "$datdir2/coef.el.3bdy.$a1.xml.gz"
-            if isfile(f) || isfile(f*".gz")
-                try
-#                    jldopen(f)                    
-                    dat = read_coefs(f)
-                    database_cached[(a1, a1, a1)] = dat
-                    println("added to cache ", (a1, a1, a1))
-                catch
-                    println("WARNING - error loading $f")
+#            f =  "$datdir1/coef.el.3bdy.$a1.xml.gz"
+#            f2 = "$datdir2/coef.el.3bdy.$a1.xml.gz"
+
+            loaded = false
+            for d in dirlist
+                f = "$d/coef.el.3bdy.$a1.xml.gz"
+
+                if isfile(f) || isfile(f*".gz")
+                    try
+                        #                    jldopen(f)                    
+                        dat = read_coefs(f)
+                        database_cached[(a1, a1, a1)] = dat
+                        println("added to cache ", (a1, a1, a1))
+                        loaded == true
+                    catch
+                        println("WARNING - error loading $f")
+                    end
+                    loaded=true
                 end
-            elseif isfile(f2) || isfile(f2*".gz")
-                try
-#                    jldopen(f)                    
-                    dat = read_coefs(f2)
-                    database_cached[(a1, a1, a1)] = dat
-                    println("added to cache ", (a1, a1, a1))
-                catch
-                    println("WARNING - error loading $f2")
+                if loaded == true
+                    break
                 end
-            else
-                println("WARNING, no file for 3bdy database $a1")
+
             end
+            if loaded == false
+                println("WARNING, FAILED LOADING 3bdy ", a1)
+            end
+
+#                elseif isfile(f2) || isfile(f2*".gz")
+#                try
+#                    jldopen(f)                    
+#                    dat = read_coefs(f2)
+#                    database_cached[(a1, a1, a1)] = dat
+#                    println("added to cache ", (a1, a1, a1))
+#                catch
+#                    println("WARNING - error loading $f2")
+#                end
+#            else
+#                println("WARNING, no file for 3bdy database $a1")
+#            end
         end
            
  
@@ -151,81 +177,111 @@ function add_to_database(s::Set)#
 #            fab = "$defaultdatdir/v0.1_dat_2body_scf_pbesol_binary.$a1.$a2.xml"
 #            fba = "$defaultdatdir/v0.1_dat_2body_scf_pbesol_binary.$a2.$a1.xml"
 
-            fab =  "$datdir1/coef.el.2bdy.$a1.$a2.xml.gz"
-            fba =  "$datdir1/coef.el.2bdy.$a2.$a1.xml.gz"
+#            fab =  "$datdir1/coef.el.2bdy.$a1.$a2.xml.gz"
+#            fba =  "$datdir1/coef.el.2bdy.$a2.$a1.xml.gz"
 
-            fab2 = "$datdir2/coef.el.2bdy.$a1.$a2.xml.gz"
-            fba2 = "$datdir2/coef.el.2bdy.$a2.$a1.xml.gz"
+#            fab2 = "$datdir2/coef.el.2bdy.$a1.$a2.xml.gz"
+#            fba2 = "$datdir2/coef.el.2bdy.$a2.$a1.xml.gz"
 
-            
-            if isfile(fab) || isfile(fab*".gz")
-                f = fab
-            elseif isfile(fba) || isfile(fba*".gz")
-                f = fba
-            elseif isfile(fab2) || isfile(fab2*".gz")
-                f = fab2
-            elseif isfile(fba2) || isfile(fba2*".gz")
-                f = fba2
-            else
-                f = missing
-                println("WARNING - binary file missing ")
-            end
+            loaded = false
+            for d in dirlist
 
-            if !ismissing(f)
-                try
+                fab =  "$d/coef.el.2bdy.$a1.$a2.xml.gz"
+                fba =  "$d/coef.el.2bdy.$a2.$a1.xml.gz"
 
-                    dat = read_coefs(f)
+                f=missing
+                if isfile(fab) || isfile(fab*".gz")
+                    f = fab
+                elseif isfile(fba) || isfile(fba*".gz")
+                    f = fba
+                end
+#            elseif isfile(fab2) || isfile(fab2*".gz")
+#                f = fab2
+#            elseif isfile(fba2) || isfile(fba2*".gz")
+#                f = fba2
+#            else
+#                f = missing
+#                println("WARNING - binary file missing ")
+#            end
 
-
-                    database_cached[(a1, a2)] = dat
-                    database_cached[(a2, a1)] = dat
-                    println("added to cache ", (a1, a2), " twobody ")
-                    
-                catch
-                    println("WARNING - error loading binary file $f")
+                if !ismissing(f)
+                    try
+                        dat = read_coefs(f)
+                        
+                        
+                        database_cached[(a1, a2)] = dat
+                        database_cached[(a2, a1)] = dat
+                        println("added to cache ", (a1, a2), " twobody ")
+                        loaded = true
+                    catch
+                        println("WARNING - error loading binary file $f")
+                    end
+                end
+                if loaded == true
+                    break
                 end
             end
+            if loaded == false
+                println("WARNING, FAILED LOAD 2BDY ", a1, " ", a2)
+            end
+
 #################
 
 #            fab = "$defaultdatdir/v0.1_dat_3body_scf_pbesol_binary.$a1.$a2.xml"
 #            fba = "$defaultdatdir/v0.1_dat_3body_scf_pbesol_binary.$a2.$a1.xml"
 
-            fab =  "$datdir1/coef.el.3bdy.$a1.$a2.xml.gz"
-            fba =  "$datdir1/coef.el.3bdy.$a2.$a1.xml.gz"
+#            fab =  "$datdir1/coef.el.3bdy.$a1.$a2.xml.gz"
+#            fba =  "$datdir1/coef.el.3bdy.$a2.$a1.xml.gz"
 
-            fab2 = "$datdir2/coef.el.3bdy.$a1.$a2.xml.gz"
-            fba2 = "$datdir2/coef.el.3bdy.$a2.$a1.xml.gz"
-            
-            if isfile(fab) || isfile(fab*".gz")
-                f = fab
-            elseif isfile(fba) || isfile(fba*".gz")
-                f = fba
-            elseif isfile(fab2) || isfile(fab2*".gz")
-                f = fab2
-            elseif isfile(fba2) || isfile(fba2*".gz")
-                f = fba2
+#            fab2 = "$datdir2/coef.el.3bdy.$a1.$a2.xml.gz"
+#            fba2 = "$datdir2/coef.el.3bdy.$a2.$a1.xml.gz"
 
-            else
-                f = missing
-                println("WARNING - binary file missing ")
-            end
+            loaded = false
+            for d in dirlist
+                fab =  "$d/coef.el.3bdy.$a1.$a2.xml.gz"
+                fba =  "$d/coef.el.3bdy.$a2.$a1.xml.gz"
 
-            if !ismissing(f)
-                try
-#                    jldopen(f)
-                    dat = read_coefs(f)
-
-                    database_cached[(a1,a1,a2)] = dat
-                    database_cached[(a1,a2,a1)] = dat
-                    database_cached[(a2,a1,a1)] = dat
-                    
-                    database_cached[(a1,a2,a2)] = dat
-                    database_cached[(a2,a1,a2)] = dat
-                    database_cached[(a2,a2,a1)] = dat
-                    println("added to cache ", (a1, a2), " threebody ")
-                catch
-                    println(" MISSING FILE - WARNING loading binary 3body $f ")
+                f=missing
+                if isfile(fab) || isfile(fab*".gz")
+                    f = fab
+                elseif isfile(fba) || isfile(fba*".gz")
+                    f = fba
                 end
+#                elseif isfile(fab2) || isfile(fab2*".gz")
+#                    f = fab2
+#                elseif isfile(fba2) || isfile(fba2*".gz")
+#                f = fba2
+
+#            else
+#                f = missing
+ #               println("WARNING - binary file missing ")
+ #           end
+                
+                if !ismissing(f)
+                    try
+#                    jldopen(f)
+                        dat = read_coefs(f)
+                        
+                        database_cached[(a1,a1,a2)] = dat
+                        database_cached[(a1,a2,a1)] = dat
+                        database_cached[(a2,a1,a1)] = dat
+                        
+                        database_cached[(a1,a2,a2)] = dat
+                        database_cached[(a2,a1,a2)] = dat
+                        database_cached[(a2,a2,a1)] = dat
+                        println("added to cache ", (a1, a2), " threebody ")
+                        loaded=true
+                    catch
+                        println(" MISSING FILE - WARNING loading binary 3body $f ")
+                    end
+                end
+                if loaded == true
+                    break
+                end
+
+            end
+            if loaded==false
+                println("WARNING, FAILED TO LOAD 3bdy ", a1, " " , a2)
             end
             
         end
@@ -243,20 +299,32 @@ function add_to_database(s::Set)#
         a3 = ats[3]
 
         if !haskey(database_cached , Tuple(ats))
+
+            loaded = false
+            for d in dirlist
             
-            f =  "$datdir1/tern_$a1/coef.el.3bdy.$a1.$a2.$a3.xml.gz"
-            if ! isfile(f) && ! isfile(f*".gz")
-                println("MISSING FILE - WARNING loading ternary ", ats, "  ", f)
-            else
-                dat = read_coefs(f)
-                database_cached[(a1,a2,a3)] = dat
-                database_cached[(a1,a3,a2)] = dat
-                database_cached[(a2,a1,a3)] = dat
-                database_cached[(a2,a3,a1)] = dat
-                database_cached[(a3,a1,a2)] = dat
-                database_cached[(a3,a2,a1)] = dat
-                println("added to cache ", (a1, a2, a3), " threebody ")
-                
+                f =  "$d/tern_$a1/coef.el.3bdy.$a1.$a2.$a3.xml.gz"
+                if  isfile(f) || isfile(f*".gz")
+                    try
+                        dat = read_coefs(f)
+                        database_cached[(a1,a2,a3)] = dat
+                        database_cached[(a1,a3,a2)] = dat
+                        database_cached[(a2,a1,a3)] = dat
+                        database_cached[(a2,a3,a1)] = dat
+                        database_cached[(a3,a1,a2)] = dat
+                        database_cached[(a3,a2,a1)] = dat
+                        println("added to cache ", (a1, a2, a3), " threebody ")
+                        loaded=true
+                    catch
+                        println("failed to load $f")
+                    end
+                end
+                if loaded == true
+                    break
+                end
+            end
+            if loaded == false
+                println("WARNING, FAILED TO LOAD ", [a1, a2, a3])
             end
         end
 

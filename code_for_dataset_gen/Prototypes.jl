@@ -218,6 +218,9 @@ function setup_proto_data()
     CalcD["distort_ab2"] = ["$STRUCTDIR/binary/POSCAR_distort_ab2", "vc-relax", "all", "vol", "nscf"]
     CalcD["distort_ba2"] = ["$STRUCTDIR/binary/POSCAR_distort_ba2", "vc-relax", "all", "vol", "nscf"]
 
+    CalcD["h2_atom"] = ["$STRUCTDIR/binary/h2_atom.in", "vc-relax", "all", "vol", "nscf"]
+    CalcD["h1_atom"] = ["$STRUCTDIR/binary/h1_atom.in", "vc-relax", "all", "vol", "nscf"]
+
 ##    CalcD["227_BA"] = ["$STRUCTDIR/binary/POSCAR_227_BA", "vc-relax", "all", "vol-mid", "nscf"]
 
 
@@ -1896,6 +1899,13 @@ function oxidation_guess(atom1, atom2)
         push!(keep, [atom1, atom1, "fcc_verydense"])
         push!(keep, [atom1, atom1, "bcc_verydense"])
         push!(keep, [atom1, atom1, "diamond_verydense"])
+    end
+
+    if atom1 in metals && atom2 in ["H", "N", "O"]
+        push!(keep, [atom2, atom1, "h2_atom"])
+    end
+    if atom2 in metals && atom1 in ["H", "N", "O"]
+        push!(keep, [atom1, atom2, "h2_atom"])
     end
         
 

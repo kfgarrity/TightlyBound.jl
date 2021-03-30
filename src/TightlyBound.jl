@@ -78,8 +78,11 @@ include("Force_Stress.jl")
 
 include("ManageDatabase.jl")
 
+include("MyOptim.jl")
+
 include("Relax.jl")
 using .CrystalMod:print_with_force_stress
+
 
 
 export scf_energy
@@ -162,7 +165,7 @@ Find the lowest energy atomic configuration of crystal `c`.
 - `update_grid=true`: update automatic k-point grid during relaxation
 - `conv_thr = 2e-4 `: Convergence threshold for combo of forces, positions, energy
 """
-function relax_structure(c::crystal; database=missing, smearing = 0.01, grid = missing, mode="vc-relax", nsteps=100, update_grid=true, conv_thr = 2e-4)
+function relax_structure(c::crystal; database=missing, smearing = 0.01, grid = missing, mode="vc-relax", nsteps=50, update_grid=true, conv_thr = 2e-4)
 
     if ismissing(database)
         ManageDatabase.prepare_database(c)

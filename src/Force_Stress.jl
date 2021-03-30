@@ -951,7 +951,7 @@ function get_energy_force_stress_fft(tbc::tb_crys, database; do_scf=false, smear
 
     ct = deepcopy(tbc.crys)
     
-    println("test safe get_energy_force_stress_fft")
+#    println("test safe get_energy_force_stress_fft")
     tooshort, energy_tot = safe_mode_energy(tbc.crys, database)
     
     if tooshort ##########################

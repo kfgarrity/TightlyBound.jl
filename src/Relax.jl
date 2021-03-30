@@ -19,14 +19,19 @@ using Optim
 using LineSearches
 using ..ManageDatabase:prepare_database
 using ..ManageDatabase:database_cached
+using ..MyOptim:conjgrad
+
 export relax_structure
 
+
+
+
 """
-    function relax_structure(crys::crystal, database; smearing = 0.01, grid = missing, mode="vc-relax", nsteps=100, update_grid=true, conv_thr=2e-4)
+    function relax_structure(crys::crystal, database; smearing = 0.01, grid = missing, mode="vc-relax", nsteps=50, update_grid=true, conv_thr=2e-4)
 
 Relax structure. Primary user function is relax_structure in TightlyBound.jl, which calls this one.
 """
-function relax_structure(crys::crystal, database; smearing = 0.01, grid = missing, mode="vc-relax", nsteps=100, update_grid=true, conv_thr = 2e-4, filename="t.axsf")
+function relax_structure(crys::crystal, database; smearing = 0.01, grid = missing, mode="vc-relax", nsteps=50, update_grid=true, conv_thr = 1e-2, filename="t.axsf")
 
     if update_grid==false
         grid = get_grid(crys)
@@ -59,8 +64,8 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
     function fix_strain(s)
         for i = 1:3
             for j = 1:3
-                s[i,j] = min(s[i,j], 0.5)
-                s[i,j] = max(s[i,j], -0.5)
+                s[i,j] = min(s[i,j], 0.60)
+                s[i,j] = max(s[i,j], -0.60)
             end
         end
         return 0.5*(s'+s)
@@ -76,7 +81,7 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
         coords, strain = reshape_vec(x, nat, strain_mode=true)
 
         strain=fix_strain(strain)
-        coords = coords * 1.0
+        coords = coords .% 1.0
 
         A = A0 * (I(3) + strain)
         
@@ -88,51 +93,52 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
         if crys_working == tbc.crys
             #            println("SKIP")
             #we already have energy from calling grad, we don't need to call again.
-            return energy_global
+            return energy_global, true
         end
 
         #        println("FN crys")
 #        println(crys_working)
+#        println("before short ")
         
         tooshort, energy_short = safe_mode_energy(crys_working, database)
 
         if tooshort
-            return energy_short
+            return energy_short, false
         end
 
 
-        if firstiter
-            firstiter = false
-        else
-            if crys_working != tbc.crys
+
+        if crys_working != tbc.crys
 #                println("yes calc xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 #                println(crys_working)
-                tbc = calc_tb_fast(deepcopy(crys_working), database, verbose=false)
-            else
+            tbc = calc_tb_fast(deepcopy(crys_working), database, verbose=false)
+        else
 #                println("nocalc xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 #                println(crys_working)
 #                println(tbc.crys)
                 
-            end
-#            println(crys_working)
-            energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=eden, verbose=false, conv_thr=1e-6)
-            eden = deepcopy(tbcx.eden)
         end
+#            println(crys_working)
+        energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=eden, verbose=false, conv_thr=1e-6)
+        eden = deepcopy(tbcx.eden)
+
 #        println("fn $energy_tot fnffnfnfnffnfnfnfnfnfnfnfnfnfnfffffff")
 
 #        println("ENERGY $energy_tot $energy_global")
         
         energy_global=energy_tot
+#        println("FN end")
 
-        return energy_tot
+        return energy_tot, !error_flag
 
     end
 
     f_cart_global = []
     stress_global = []
 
-    
+#    function grad(x)
     function grad(storage, x)
+
 #        println("CALL GRAD", x)
 
 #        println("typeof x ", typeof(x))
@@ -232,7 +238,8 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
         storage[:] = g
 
         neaten(storage)
-
+        
+        return energy_global, storage
 #        println("ret storage $fcall")
 #        println(storage)
     end
@@ -300,93 +307,106 @@ function relax_structure(crys::crystal, database; smearing = 0.01, grid = missin
 =#
     
     res = missing
+    if false
 
-              #        res = optimize(fn,grad, x0, BFGS(  initial_invH = init, linesearch=LineSearches.MoreThuente() ), opts)
-              #res = optimize(fn,grad, x0, BFGS(initial_invH = init ), opts)
+        #        res = optimize(fn,grad, x0, BFGS(  initial_invH = init, linesearch=LineSearches.MoreThuente() ), opts)
+        #res = optimize(fn,grad, x0, BFGS(initial_invH = init ), opts)
         #        res = optimize(fn,grad, x0, BFGS(initial_invH = init, linesearch=LineSearches.MoreThuente() ), opts)
 
-    
-#    try    
-    #res = optimize(fn,grad, x0, BFGS( linesearch=LineSearches.MoreThuente() ), opts)
+        
+        #    try    
+        #res = optimize(fn,grad, x0, BFGS( linesearch=LineSearches.MoreThuente() ), opts)
 
-#    res = optimize(fn,grad, x0, ConjugateGradient( linesearch=LineSearches.MoreThuente() ) , opts)
+        #    res = optimize(fn,grad, x0, ConjugateGradient( linesearch=LineSearches.MoreThuente() ) , opts)
 
-    res = optimize(fn,grad, x0, ConjugateGradient( linesearch=LineSearches.BackTracking( maxstep=0.05  ) ) , opts)
+        res = optimize(fn,grad, x0, ConjugateGradient( linesearch=LineSearches.BackTracking( maxstep=0.05  ) ) , opts)
 
-#    res = optimize(fn,grad, x0, ConjugateGradient( linesearch=LineSearches.BackTracking( maxstep=0.05) ) , opts)
-#    res = optimize(fn,grad, x0, ConjugateGradient( linesearch=LineSearches.MoreThuente(alphamax=0.05) ) , opts)
-
-
-    minvec = Optim.minimizer(res)    
-
-    coords, strain = reshape_vec(minvec, nat, strain_mode=true)
-    coords= coords .% 1.0
-
-    A = A0 *( I(3) + strain)
-
-    crys = makecrys(A, coords, crys.types, units="Bohr")
-
-    tbc = calc_tb_fast(deepcopy(crys), database)
-    energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=eden, conv_thr=1e-7)
-
-    eden = deepcopy(tbc.eden)
-
-    A0 = deepcopy(crys.A)
-    strain = zeros(3,3)
-    
-    x0 = inv_reshape_vec(crys.coords, strain, crys.nat, strain_mode=true)
-    crys_working = deepcopy(crys)
-
-    fcall = 1000
-    firstiter = true
-
-    println("RELAX Round 2")
-#    res = optimize(fn,grad, x0, ConjugateGradient( linesearch=LineSearches.MoreThuente(alphamax=0.05) ) , opts)
-    res = optimize(fn,grad, x0, ConjugateGradient(  ) , opts)
+        #    res = optimize(fn,grad, x0, ConjugateGradient( linesearch=LineSearches.BackTracking( maxstep=0.05) ) , opts)
+        #    res = optimize(fn,grad, x0, ConjugateGradient( linesearch=LineSearches.MoreThuente(alphamax=0.05) ) , opts)
 
 
-    nat = crys.nat
+        minvec = Optim.minimizer(res)    
+
+        coords, strain = reshape_vec(minvec, nat, strain_mode=true)
+        coords= coords .% 1.0
+
+        A = A0 *( I(3) + strain)
+
+        crys = makecrys(A, coords, crys.types, units="Bohr")
+
+        tbc = calc_tb_fast(deepcopy(crys), database)
+        energy_tot, efermi, e_den, dq, VECTS, VALS, error_flag, tbcx  = scf_energy(tbc, smearing=smearing, grid=grid, e_den0=eden, conv_thr=1e-7)
+
+        eden = deepcopy(tbc.eden)
+
+        A0 = deepcopy(crys.A)
+        strain = zeros(3,3)
+        
+        x0 = inv_reshape_vec(crys.coords, strain, crys.nat, strain_mode=true)
+        crys_working = deepcopy(crys)
+
+        fcall = 1000
+        firstiter = true
+
+        println("RELAX Round 2")
+        #    res = optimize(fn,grad, x0, ConjugateGradient( linesearch=LineSearches.MoreThuente(alphamax=0.05) ) , opts)
+        res = optimize(fn,grad, x0, ConjugateGradient(  ) , opts)
 
 
-#    res = optimize(fn,grad, x0, ConjugateGradient(  ) , opts)
+        nat = crys.nat
 
-    #res = optimize(fn,grad, x0, LBFGS(m=8 ) , opts)
-    
 
-    #    catch e
-#        if e isa InterruptException
-#            println("user interrupt")
-#            return tbc.crys
-#        else
-#            println("unknown error")
-#            return tbc.crys
-#        end
-#    end
-    
-    #res = optimize(fn,grad, x0, BFGS(  initial_invH = init, linesearch=LineSearches.HagerZhang() ), opts)    
+        #    res = optimize(fn,grad, x0, ConjugateGradient(  ) , opts)
 
-    energy = res.minimum
-    
-    # bad : res = optimize(fn,grad, x0, ConjugateGradient(linesearch=LineSearches.BackTracking(order=3) ), opts)    
-    #linesearch=LineSearches.BackTracking(order=2),
-    #LineSearches.MoreThuente()
-    #LineSearches.HagerZhang()
-    #linesearch=LineSearches.BackTracking(order=2)
-    #linesearch=LineSearches.StrongWolfe()
-    
+        #res = optimize(fn,grad, x0, LBFGS(m=8 ) , opts)
+        
 
-    println()
-    println("res")
-    println(res)
+        #    catch e
+        #        if e isa InterruptException
+        #            println("user interrupt")
+        #            return tbc.crys
+        #        else
+        #            println("unknown error")
+        #            return tbc.crys
+        #        end
+        #    end
+        
+        #res = optimize(fn,grad, x0, BFGS(  initial_invH = init, linesearch=LineSearches.HagerZhang() ), opts)    
 
-    minvec = Optim.minimizer(res)    
+        energy = res.minimum
+        
+        # bad : res = optimize(fn,grad, x0, ConjugateGradient(linesearch=LineSearches.BackTracking(order=3) ), opts)    
+        #linesearch=LineSearches.BackTracking(order=2),
+        #LineSearches.MoreThuente()
+        #LineSearches.HagerZhang()
+        #linesearch=LineSearches.BackTracking(order=2)
+        #linesearch=LineSearches.StrongWolfe()
+        
+
+        println()
+        println("res")
+        println(res)
+
+        minvec = Optim.minimizer(res)    
+
+    else
+
+        minvec, energy, grad = conjgrad(fn, grad, x0; maxstep=5.0, niters=nsteps, conv_thr = conv_thr)
+
+    end
+
+
 #    println("minvec")
 #    println(minvec)
 
     coords, strain = reshape_vec(minvec, nat, strain_mode=true)
     coords = coords .% 1.0
+    
+    strain = fix_strain(strain)
+
 
     A = A0 *( I(3) + strain)
+
 
     cfinal = makecrys(A, coords, crys.types, units="Bohr")
 

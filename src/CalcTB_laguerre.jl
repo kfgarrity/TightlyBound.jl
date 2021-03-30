@@ -250,7 +250,7 @@ function read_coefs(filename, directory = missing)
 
     version = 1
     if "version" in keys(d["coefs"])
-        version = parse(Int64, d["coefs"]["maxmin_val_train"])
+        version = parse(Int64, d["coefs"]["version"])
     end
     println("version $version")
     
