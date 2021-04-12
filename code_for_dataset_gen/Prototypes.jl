@@ -227,7 +227,7 @@ function setup_proto_data()
     CalcD["znse_shear"] = ["$STRUCTDIR/binary/znse.in", "vc-relax", "all", "shear", "nscf"]
     CalcD["hbn"] = ["$STRUCTDIR/binary/hbn.in", "vc-relax", "2Dxy", "2D-mid", "nscf"]
     CalcD["znse"] = ["$STRUCTDIR/binary/znse.in", "vc-relax", "all", "vol-mid", "nscf"]
-    CalcD["dimer2"] = ["$STRUCTDIR/binary/dimer.in", "relax", "all", "coords", "nscf"]
+    CalcD["dimer2"] = ["$STRUCTDIR/binary/dimer2.in", "relax", "all", "coords", "nscf"]
 
     CalcD["dimer2_min"] = ["$STRUCTDIR/binary/dimer.in", "none", "all", "coords_min", "nscf"]
     CalcD["tri2_min"] = ["$STRUCTDIR/binary/dimer.in", "none", "all", "coords_min_tri", "nscf"]
@@ -708,7 +708,7 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
 
                 println("START DFT.runSCF")
                 
-                dft_ref = TightlyBound.DFT.runSCF(c, inputstr=name, nprocs=procs, prefix="$name.qe.relax", directory="$dir", tmpdir="/$tmpname/$name.$randi", wannier=false, code="QE", skip=false, calculation=scf, dofree=free, cleanup=true)
+                dft_ref = TightlyBound.DFT.runSCF(c, inputstr=name, nprocs=procs, prefix="$name.qe.relax", directory="$dir", tmpdir="/$tmpname/$name.$randi", wannier=false, code="QE", skip=true, calculation=scf, dofree=free, cleanup=true)
 
                 println("did dft, get new struct")
 
@@ -719,7 +719,7 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                     println(c2)
                     println()
 
-                    dft_ref = TightlyBound.DFT.runSCF(c2, inputstr=name, nprocs=procs, prefix="$name.qe.relax", directory="$dir", tmpdir="/$tmpname/$name.$randi", wannier=false, code="QE", skip=false, calculation=scf, dofree=free, cleanup=true)
+                    dft_ref = TightlyBound.DFT.runSCF(c2, inputstr=name, nprocs=procs, prefix="$name.qe.relax", directory="$dir", tmpdir="/$tmpname/$name.$randi", wannier=false, code="QE", skip=true, calculation=scf, dofree=free, cleanup=true)
                 end
 
                 println("END DFT.runSCF")
@@ -1247,7 +1247,7 @@ function  do_run(pd, T1, T2, T3, tmpname, dir, procs, torun; nscf_only = false, 
                         continue
                     end
 
-                    dft = TightlyBound.DFT.runSCF(c, nprocs=procs, prefix="qe", directory="$d", tmpdir="$d", wannier=false, code="QE", skip=false, cleanup=true)
+                    dft = TightlyBound.DFT.runSCF(c, nprocs=procs, prefix="qe", directory="$d", tmpdir="$d", wannier=false, code="QE", skip=true, cleanup=true)
                     if calc_mode == "nscf"
 
                         try

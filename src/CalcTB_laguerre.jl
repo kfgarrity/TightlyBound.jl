@@ -73,10 +73,10 @@ const sqrt3d2 = sqrt(3)/2.0
 const n_2body = 5
 const n_2body_onsite = 4
 
-const n_2body_S = 7
+const n_2body_S = 6
 
-const n_3body = 7
-const n_3body_same = 5
+const n_3body = 4
+const n_3body_same = 3
 
 const n_3body_onsite = 4
 const n_3body_onsite_same = 4
@@ -312,11 +312,11 @@ function make_coefs(at_list, dim; datH=missing, datS=missing, cutoff=18.01, min_
         end
     end
 
-#    if length(datH) < totH
-#        println("dat convert ", at_list, dim)
-#        datH = fix_format_change(datH, totH, dim, at_list, data_info)
-#    end
-
+    #    if length(datH) < totH
+    #        println("dat convert ", at_list, dim)
+    #        datH = fix_format_change(datH, totH, dim, at_list, data_info)
+    #    end
+    
     dist_frontier2 = Dict()
     if !ismissing(dist_frontier)
         
@@ -523,8 +523,6 @@ function plot_database(database, entry, t=missing)#::coefs)
     legend(fontsize=8, loc=1)
 end
 
-
-
 """
     function get_data_info(at_set, dim)
 
@@ -533,20 +531,20 @@ Figure out the arrangement of data in a `coefs` file.
 Loops over various combinations of orbitals and atoms and assigns them places in `datH` and `datS`, depending on the terms included in the model and the dimensionaly.
 """
 function get_data_info_v2(at_set, dim)
-
+    
     
     data_info = Dict{Any, Array{Int64,1}}()
     orbs = []
     if dim == 2 #2body
-
+        
         at_list = Symbol.([i for i in at_set])
-#        println(at_list)
+        #        println(at_list)
         if length(at_list) == 1
             at_list = [at_list[1], at_list[1]]
         end
         sort!(at_list)
-#        println(at_list)
-
+        #        println(at_list)
+        
         orbs1 = atoms[at_list[1]].orbitals
         orbs2 = atoms[at_list[2]].orbitals
 
@@ -559,7 +557,7 @@ function get_data_info_v2(at_set, dim)
             same_at = false
         end
 
-#        orbs = []
+        #        orbs = []
 
         #2body part
         function get2bdy(n, symb)
@@ -569,7 +567,7 @@ function get_data_info_v2(at_set, dim)
                     if same_at && ((o2 == :s && o1 == :p) || (o2 == :s && o1 == :d) || (o2 == :p && o1 == :d))
                         continue
                     end
-#                    push!(orbs, (o1, o2, symb))
+                    #                    push!(orbs, (o1, o2, symb))
 
                     if [at1, o1, at2, o2, symb] in keys(data_info)
                         continue
@@ -584,19 +582,19 @@ function get_data_info_v2(at_set, dim)
                         data_info[[at1, o1, at2, o2, symb]] = tot+1:tot+n
                         data_info[[at2, o2, at1, o1, symb]] = tot+1:tot+n
                         tot += n
-#                        if same_at
-#                            data_info[[o2, o1, symb]] = data_info[(o1, o2, symb)]
-#                        end
+                        #                        if same_at
+                        #                            data_info[[o2, o1, symb]] = data_info[(o1, o2, symb)]
+                        #                        end
                         
                     elseif (o1 == :p && o2 == :p )
                         data_info[[at1, o1, at2, o2, symb]] = tot+1:tot+n*2
                         data_info[[at2, o2, at1, o1, symb]] = tot+1:tot+n*2
                         tot += n*2
 
-#                    elseif (o1 == :p && o2 == :p )
-#                        data_info[[at1, o1, at2, o2, symb]] = tot+1:tot+n*2
-#                        data_info[[at2, o2, at1, o1, symb]] = tot+1:tot+n*2
-#                        tot += n*2
+                        #                    elseif (o1 == :p && o2 == :p )
+                        #                        data_info[[at1, o1, at2, o2, symb]] = tot+1:tot+n*2
+                        #                        data_info[[at2, o2, at1, o1, symb]] = tot+1:tot+n*2
+                        #                        tot += n*2
 
                     elseif (o1 == :s && o2 == :d ) || (o1 == :d && o2 == :s )
                         data_info[[at1, o1, at2, o2, symb]] = tot+1:tot+n
@@ -623,7 +621,7 @@ function get_data_info_v2(at_set, dim)
 
         totH = get2bdy(n_2body, :H)
         totS = get2bdy(n_2body_S, :S)
-#        println("totH $totH totS $totS")
+        #        println("totH $totH totS $totS")
         #onsite part
         function getonsite(atX,orbsX, tot, n)
             for o1 in orbsX
@@ -637,10 +635,10 @@ function get_data_info_v2(at_set, dim)
                     end
 
 
-#                    push!(orbs, (o1, o2, :O))
+                    #                    push!(orbs, (o1, o2, :O))
                     if o1 == :s && o2 == :s
                         data_info[[atX, o1, o2, :O]] = tot+1:tot+n
-#                        println("data_info"[, (atX, o1, o2, :O], tot+1:tot+n)
+                        #                        println("data_info"[, (atX, o1, o2, :O], tot+1:tot+n)
                         tot += n
                     elseif (o1 == :s && o2 == :p )
                         data_info[[atX, o1, o2, :O]] = tot+1:tot+n
@@ -664,7 +662,7 @@ function get_data_info_v2(at_set, dim)
                         data_info[[atX, o1, o2, :O]] = tot+1:tot+n*2
                         data_info[[atX, o2, o1, :O]] = data_info[[atX, o1, o2, :O]]
                         tot += n*2
-
+                        
                     end
                 end
             end
@@ -672,14 +670,14 @@ function get_data_info_v2(at_set, dim)
         end
 
 
-#PUREONSITE
-#        if same_at #true onsite terms
-#           for o in orbs1
-##                println("true onsite ", o)
-#                data_info[[at1, o, :A]] = [totH+1]
-#                totH += 1
-#            end
-#        end
+        #PUREONSITE
+        #        if same_at #true onsite terms
+        #           for o in orbs1
+        ##                println("true onsite ", o)
+        #                data_info[[at1, o, :A]] = [totH+1]
+        #                totH += 1
+        #            end
+        #        end
 
 
         totHO = getonsite(at1, orbs1, totH, n_2body_onsite)
@@ -711,9 +709,9 @@ function get_data_info_v2(at_set, dim)
                        [at_list[1], at_list[2], at_list[2]] ]
 
             perm_on = [[at_list[1], at_list[2], at_list[2]] ,
-                        [at_list[1], at_list[1], at_list[2]] ,
-                        [at_list[2], at_list[1], at_list[1]] ,
-                        [at_list[2], at_list[1], at_list[2]] ]
+                       [at_list[1], at_list[1], at_list[2]] ,
+                       [at_list[2], at_list[1], at_list[1]] ,
+                       [at_list[2], at_list[1], at_list[2]] ]
             
         elseif length(at_list) == 3
 
@@ -750,14 +748,14 @@ function get_data_info_v2(at_set, dim)
             else
                 same_at = false
             end
-
+            
             for o1 in orbs1
                 for o2 in orbs2
                     if same_at && ((o2 == :s && o1 == :p) || (o2 == :s && o1 == :d) || (o2 == :p && o1 == :d))
                         continue
                     end
                     
-#                    push!(orbs, (o1, o2, symb))
+                    #                    push!(orbs, (o1, o2, symb))
 
                     if [at1, o1, at2, o2, at3,  symb] in keys(data_info)
                         continue
@@ -768,72 +766,73 @@ function get_data_info_v2(at_set, dim)
                         data_info[[at2, o2, at1, o1, at3,  symb]] = collect(tot+1:tot+n)
                     else                                                  #[1 2 3 4 5 6 7 8  9  10 11 12 13 14 15 16 17 18]
                         data_info[[at1, o1, at2, o2, at3,  symb]] = collect(tot+1:tot+n)
-#                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1 4 6 2 5 3 7 10 12 8  11 9  13 16 18 14 17 15]' #switch 2 4 and 3 6
-#                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1 4 6 2 5 3 7 10 12 8  11 9  ]' #switch 2 4 and 3 6
-#                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1 3 2 4 5 7 6 8 9]' #switch 2 4 and 3 6
-#                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1 3 2 4 5 7 6]' #switch 2 4 and 3 6
-#                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1 3 2  4 6 5]' #switch 2 4 and 3 6
-#                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1 3 2 4 6 5  7 9 8 ]' #switch 2 4 and 3 6
-                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1, 3, 2, 4, 5, 7, 6  ] #switch 2 4 and 3 6
+                        #                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1 4 6 2 5 3 7 10 12 8  11 9  13 16 18 14 17 15]' #switch 2 4 and 3 6
+                        #                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1 4 6 2 5 3 7 10 12 8  11 9  ]' #switch 2 4 and 3 6
+                        #                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1 3 2 4 5 7 6 8 9]' #switch 2 4 and 3 6
+                        #                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1 3 2 4 5 7 6]' #switch 2 4 and 3 6
+                        #                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1 3 2  4 6 5]' #switch 2 4 and 3 6
+                        #                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1 3 2 4 6 5  7 9 8 ]' #switch 2 4 and 3 6
+                        #                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1, 3, 2, 4, 5, 7, 6  ] #switch 2 4 and 3 6
+                        data_info[[at2, o2, at1, o1, at3,  symb]] = tot .+ [1, 3, 2, 4 ] #switch 2 4 and 3 6
                     end
                     
-#                    println([at1, o1, at2, o2, at3,  symb], tot, " ",  n, " " , data_info[[at1, o1, at2, o2, at3,  symb]] )
+                    #                    println([at1, o1, at2, o2, at3,  symb], tot, " ",  n, " " , data_info[[at1, o1, at2, o2, at3,  symb]] )
                     tot += n
 
-#                    if same_at
-#                        data_info[[o2, o1, symb]] = data_info[[o1, o2, symb]]
-#                    end
-                        
+                    #                    if same_at
+                    #                        data_info[[o2, o1, symb]] = data_info[[o1, o2, symb]]
+                    #                    end
+                    
                     
                 end
             end
             return tot
         end
 
-#        if at_list[2] == at_list[3]
-#            same_at_on = true
-#        else
-#            same_at_on = false
- #       end
+        #        if at_list[2] == at_list[3]
+        #            same_at_on = true
+        #        else
+        #            same_at_on = false
+        #       end
         
 
         function get3bdy_onsite(n, same_at,symb, start, at1, at2, at3)
-#            if at2 == at3  #|| at1 == at2 || at1 == at3
-#                same_at = true
-#            else
-#                same_at = false
-#            end
+            #            if at2 == at3  #|| at1 == at2 || at1 == at3
+            #                same_at = true
+            #            else
+            #                same_at = false
+            #            end
 
-            orbs1 = atoms[at1].orbitals
+            #            orbs1 = atoms[at1].orbitals
 
-#            println("get3bdy_onsite $at1 $at2 $at3 $n")
+            #            println("get3bdy_onsite $at1 $at2 $at3 $n")
 
             tot=start
-            for o1 in orbs1
-#                data_info[[at1, o1,at2, at3,  symb]] = collect(tot+1:tot+n]
-#                data_info[[at1, o1,at3, at2,  symb]] = collect(tot+1:tot+n)
+            #            for o1 in orbs1
+            #                data_info[[at1, o1,at2, at3,  symb]] = collect(tot+1:tot+n]
+            #                data_info[[at1, o1,at3, at2,  symb]] = collect(tot+1:tot+n)
 
-#                push!(orbs, (at1, o1,at2, at3,  symb))
-#                push!(orbs, (at1, o1,at3, at2,  symb))
+            #                push!(orbs, (at1, o1,at2, at3,  symb))
+            #                push!(orbs, (at1, o1,at3, at2,  symb))
 
-                if [at1, o1,at2, at3,  symb] in keys(data_info)
-                    continue
-                end
-
-                if same_at
-                    data_info[[at1, o1,at2, at3,  symb]] = collect(tot+1:tot+n)
-                    data_info[[at1, o1,at3, at2,  symb]] = collect(tot+1:tot+n)
-                else
-                    data_info[[at1, o1,at2, at3,  symb]] = collect(tot+1:tot+n)
-#                    data_info[[at1, o1,at3, at2,  symb]] = collect(tot+1:tot+n)
-                    data_info[[at1, o1,at3, at2,  symb]] = tot .+ [1, 3, 2, 4]
-
-#                    data_info[[at1, o1,at2, at3,  symb]] = collect(tot+1:tot+n)
-#                    data_info[[at1, o1,at3, at2,  symb]] = tot .+ [1 3 2 4]'
-                end
-                tot += n                               #       1 2 3 4 5 6 7 8
-
+            if [at1, at2, at3,  symb] in keys(data_info)
+                return tot
             end
+            
+            if same_at
+                data_info[[at1, at2, at3,  symb]] = collect(tot+1:tot+n)
+                data_info[[at1, at3, at2,  symb]] = collect(tot+1:tot+n)
+            else
+                data_info[[at1, at2, at3,  symb]] = collect(tot+1:tot+n)
+                #                    data_info[[at1, o1,at3, at2,  symb]] = collect(tot+1:tot+n)
+                data_info[[at1, at3, at2,  symb]] = tot .+ [1, 3, 2, 4]
+                
+                #                    data_info[[at1, o1,at2, at3,  symb]] = collect(tot+1:tot+n)
+                #                    data_info[[at1, o1,at3, at2,  symb]] = tot .+ [1 3 2 4]'
+            end
+            tot += n                               #       1 2 3 4 5 6 7 8
+
+
             return tot
         end
         
@@ -847,18 +846,18 @@ function get_data_info_v2(at_set, dim)
             end
         end
 
-#        println("data_info between")
-#        println(data_info)
+        #        println("data_info between")
+        #        println(data_info)
 
         for p in perm_on
-#            if  (p[1] == p[2] ||  p[2] == p[3] || p[1] == p[3])
+            #            if  (p[1] == p[2] ||  p[2] == p[3] || p[1] == p[3])
             if p[2] == p[3]
                 tot_size = get3bdy_onsite(n_3body_onsite_same,true, :O, tot_size, p[1], p[2], p[3]) #all diff
             else
                 tot_size = get3bdy_onsite(n_3body_onsite,false, :O, tot_size, p[1], p[2], p[3]) #
             end
         end
-    
+        
         totHO = tot_size
 
     else
@@ -2308,9 +2307,9 @@ function calc_tb_fast(crys::crystal, database=missing; reference_tbc=missing, ve
                     if use_threebody_onsite
                     #if false
                         cut2 = array_floats3[counter, 14]
+                        o = calc_threebody_onsite(t1,t2,t3,dist,dist31,dist32, database, set_maxmin=set_maxmin, memory=memoryV)
                         for o1 = orb2ind[a1]
-                            a1a,t1,s1 = ind2orb[o1]
-                            o = calc_threebody_onsite(t1,t2,t3,s1,dist,dist31,dist32, database, set_maxmin=set_maxmin, memory=memoryV)
+#                            a1a,t1,s1 = ind2orb[o1]
                             @inbounds H_thread[o1, o1, c_zero, id] += o  * cut2
                         end
                     elseif !warned_onsite && use_threebody_onsite
@@ -3278,9 +3277,12 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
                 end
             end
             if use_threebody_onsite  #3bdy onsite!!!!!!!!!!!
+                
+                h = fit_threebody_onsite(t1,t2,t3,dist,dist31,dist32)
+
                 for o1 = orb2ind[a1]
-                    a1a,t1,s1 = ind2orb[o1]
-                    sum1 = summarize_orb(s1)
+#                    a1a,t1,s1 = ind2orb[o1]
+#                    sum1 = summarize_orb(s1)
 
 #                    if s1 != :s 
 #                        continue
@@ -3288,10 +3290,9 @@ function calc_tb_prepare_fast(reference_tbc::tb_crys; use_threebody=false, use_t
 
                     ind = ind_conversion[(o1,o1,c_zero)]
 
-                    h = fit_threebody_onsite(t1,t2,t3,s1,dist,dist31,dist32)
                                     
                     coef = threebody_arrays[at_set3][2]
-                    ih = coef.inds[[t1,sum1,t2,t3,:O]]
+                    ih = coef.inds[[t1,t2,t3,:O]]
                     threebody_arrays[at_set3][1][ind,ih] += h[:] * cut2
                     #threebody_arrays[at_set3][1][ind,ih] += [h] * cut2
 
@@ -4210,11 +4211,13 @@ function three_body_H(dist0, dist1, dist2, same_atom, ind=missing; memory0=missi
         if  isa(dist1, Array)
 #            Vt = [a[:,1].*b[:,1]  (a[:,1].*b[:,2]+ a[:,2].*b[:,1])  a[:,2].*b[:,2] (a[:,1].*b[:,3]+ a[:,3].*b[:,1])  zero[:,1].*a[:,1].*b[:,1]  zero[:,1].*(a[:,1].*b[:,2]+a[:,2].*b[:,1]) ]
 #            Vt = [a[:,1].*b[:,1]  (a[:,1].*b[:,2]+ a[:,2].*b[:,1])  a[:,2].*b[:,2] (a[:,1].*b[:,3]+ a[:,3].*b[:,1]) zero[:,1].*a[:,1].*b[:,1]   ]
-            Vt = [a[:,1].*b[:,1]  (a[:,1].*b[:,2]+ a[:,2].*b[:,1])  a[:,2].*b[:,2] (a[:,1].*b[:,3]+ a[:,3].*b[:,1]) zero[:,1].*a[:,1].*b[:,1]      ]
+#            Vt = [a[:,1].*b[:,1]  (a[:,1].*b[:,2]+ a[:,2].*b[:,1])  a[:,2].*b[:,2] (a[:,1].*b[:,3]+ a[:,3].*b[:,1]) zero[:,1].*a[:,1].*b[:,1]      ]
 #            Vt = [a[:,1].*b[:,1]  (a[:,1].*b[:,2]+ a[:,2].*b[:,1])  a[:,2].*b[:,2] (a[:,1].*b[:,3]+ a[:,3].*b[:,1]) zero[:,1].*a[:,1].*b[:,1]   zero[:,1].*(a[:,1].*b[:,2]+a[:,2].*b[:,1]) zero[:,2].*(a[:,1].*b[:,1])   ]
+
+            Vt = [a[:,1].*b[:,1]  (a[:,1].*b[:,2]+ a[:,2].*b[:,1])  zero[:,1].*a[:,1].*b[:,1]      ]
             V = Vt
-        else
-            try
+        else 
+           try
 #                Vt = [a[1].*b[1]  (a[1].*b[2]+a[2].*b[1])  a[2].*b[2] (a[1].*b[3]+ a[3].*b[1])  zero[1].*a[1].*b[1] zero[1].*(a[1].*b[2]+a[2].*b[1]) ]
 #                V = Vt
                 if ismissing(memoryV)
@@ -4222,9 +4225,10 @@ function three_body_H(dist0, dist1, dist2, same_atom, ind=missing; memory0=missi
                 end
                 memoryV[1] = a[1].*b[1]
                 memoryV[2] =  (a[1].*b[2]+a[2].*b[1])
-                memoryV[3] =   a[2].*b[2] 
-                memoryV[4] =  (a[1].*b[3]+ a[3].*b[1])
-                memoryV[5] =  zero[1].*a[1].*b[1]
+                memoryV[3] =  zero[1].*a[1].*b[1]
+
+#                memoryV[3] =   a[2].*b[2] 
+#                memoryV[4] =  (a[1].*b[3]+ a[3].*b[1])
 #                memoryV[6] = zero[1].*(a[1].*b[2]+a[2].*b[1])
 #                memoryV[7] = zero[2].*(a[1].*b[1])
 
@@ -4237,7 +4241,9 @@ function three_body_H(dist0, dist1, dist2, same_atom, ind=missing; memory0=missi
         if  isa(dist1, Array)
 #            Vt = [a[:,1].*b[:,1]  a[:,1].*b[:,2]    a[:,2].*b[:,1] a[:,2].*b[:,2]  a[:,1].*b[:,3]    a[:,3].*b[:,1]   zero[:,1].*a[:,1].*b[:,1]   zero[:,1].*a[:,1].*b[:,2]  zero[:,1].*a[:,2].*b[:,1]]
 
-            Vt = [a[:,1].*b[:,1]  a[:,1].*b[:,2]    a[:,2].*b[:,1] a[:,2].*b[:,2]   zero[:,1].*a[:,1].*b[:,1] a[:,3].*b[:,1] a[:,1].*b[:,3]]
+#            Vt = [a[:,1].*b[:,1]  a[:,1].*b[:,2]    a[:,2].*b[:,1] a[:,2].*b[:,2]   zero[:,1].*a[:,1].*b[:,1] a[:,3].*b[:,1] a[:,1].*b[:,3]]
+            Vt = [a[:,1].*b[:,1]  a[:,1].*b[:,2]    a[:,2].*b[:,1]    zero[:,1].*a[:,1].*b[:,1] ]
+
 #            Vt = [a[:,1].*b[:,1]  a[:,1].*b[:,2]    a[:,2].*b[:,1] a[:,2].*b[:,2]   zero[:,1].*a[:,1].*b[:,1] ]
             V = Vt
         else
@@ -4250,13 +4256,14 @@ function three_body_H(dist0, dist1, dist2, same_atom, ind=missing; memory0=missi
                 memoryV[1] =  a[1].*b[1]
                 memoryV[2] =  a[1].*b[2]
                 memoryV[3] =  a[2].*b[1]
-                memoryV[4] =  a[2].*b[2]
-                memoryV[5] =  zero[1].*a[1].*b[1]
+                memoryV[4] =  zero[1].*a[1].*b[1]
+
+#                memoryV[4] =  a[2].*b[2]
                 
 #                memoryV[6] =  
 
-                memoryV[6] =  a[3].*b[1]
-                memoryV[7] =  a[1].*b[3]
+#                memoryV[6] =  a[3].*b[1]
+#                memoryV[7] =  a[1].*b[3]
 
 #                memoryV[7] =  zero[1].*a[1].*b[1]
 #                memoryV[8] =  zero[1].*a[1].*b[2]
@@ -4930,16 +4937,16 @@ end
 
 calculate threebody onsite interactions
 """
-function calc_threebody_onsite(t1,t2,t3,orb1,dist12,dist13,dist23, database; set_maxmin=false, memory=missing)
+function calc_threebody_onsite(t1,t2,t3,dist12,dist13,dist23, database; set_maxmin=false, memory=missing)
 
     c = database[(t1,t2,t3)]
 
 
-    o1 = summarize_orb(orb1)
+#    o1 = summarize_orb(orb1)
 
 #    o2 = summarize_orb(orb2)    
 
-    indO = c.inds[[t1,o1,t2,t3,:O]]
+    indO = c.inds[[t1,t2,t3,:O]]
 
     #    sameat = (t2 == t3 || t1 == t2 || t1 == t3)
     sameat = (t2 == t3)
@@ -4957,7 +4964,7 @@ end
 
 Fit three body onsite interactions.
 """
-function fit_threebody_onsite(t1,t2,t3,orb1,dist12,dist13,dist23)
+function fit_threebody_onsite(t1,t2,t3,dist12,dist13,dist23)
 
 #    o1 = summarize_orb(orb1)
 #    o2 = summarize_orb(orb2)    
@@ -5143,6 +5150,8 @@ function renormalize_S(tbc, database, cutoff=17.99)
     return tbc_renorm
     
 end
+
+
 
 
 

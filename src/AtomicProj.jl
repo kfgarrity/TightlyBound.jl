@@ -265,7 +265,7 @@ Starting from a converged QE scf calculation...
 - `only_kspace=false` Do not create real-space tb. Usually true in current code, as I can fit directly from k-space tb only.
 - `screening = 1.0` If use a screening factor to reduce value of U in Ewald calculation. Usually leave at 1.0.
 """
-function projwfx_workf(dft::dftout; directory="./", nprocs=1, freeze=true, writefile="projham.xml",writefilek="projham_K.xml", skip_og=true, skip_proj=true, shift_energy=true, cleanup=true, skip_nscf=true, localized_factor = 0.15, only_kspace=false, screening = 1.0)
+function projwfx_workf(dft::dftout; directory="./", nprocs=1, freeze=true, writefile="projham.xml",writefilek="projham_K.xml", skip_og=true, skip_proj=true, shift_energy=true, cleanup=true, skip_nscf=true, localized_factor = 0.15, only_kspace=false, screening = 1.0, min_nscf=false)
 """
 
 Steps:
@@ -341,6 +341,14 @@ Steps:
         crys = dft.crys
         tot_charge = dft.tot_charge
         grid=dft.bandstruct.kgrid
+
+        if min_nscf
+            println("minimize kgrid")
+            if dft.bandstruct.nks > 100
+                grid = min.(grid, 4)
+            end
+        end
+                
 
         if only_kspace
             calc = "nscf-sym"

@@ -6,7 +6,7 @@ TESTDIR = joinpath(dirname(pathof(TightlyBound)), "..", "test")
 TEMPLATEDIR = joinpath(dirname(pathof(TightlyBound)), "..", "template_inputs")
 STRUCTDIR = joinpath(dirname(pathof(TightlyBound)), "..", "reference_structures")
 
-DATSDIR1 = joinpath(dirname(pathof(TightlyBound)), "..", "dats", "pbesol", "v1.1")
+DATSDIR1 = joinpath(dirname(pathof(TightlyBound)), "..", "dats", "pbesol", "v1.2")
 
 #DATSDIR1 = joinpath(dirname(pathof(TightlyBound)), "..", "dats", "pbesol", "v0.9")
 

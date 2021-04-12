@@ -501,7 +501,7 @@ function make_random_crystal(types)
     end
     println("total_vol $total_vol")
     
-    for i = 1:30
+    for i = 1:100
 
         A = zeros(3,3)
         c = rand(nat, 3)
@@ -528,12 +528,12 @@ function make_random_crystal(types)
         
         crys = makecrys(A, c, types, units="Bohr")
         
-        within_fit = calc_tb_fast(crys, database_cached, check_only=true)
+        within_fit = calc_tb_fast(crys*0.97, database_cached, check_only=true)
         if within_fit
-            return crys * 1.05
+            return crys * 1.07
         end
 
-        total_vol = total_vol * 1.05
+        total_vol = total_vol * 1.02
         
     end
     println("failed to generate crystal")

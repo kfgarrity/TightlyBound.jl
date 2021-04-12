@@ -602,7 +602,7 @@ Linear fitting (not recursive). Used as starting point of recursive fitting.
 function do_fitting_linear(list_of_tbcs; kpoints = missing, dft_list = missing,  fit_threebody=true, fit_threebody_onsite=true, do_plot = true, starting_database=missing, mode=:kspace, return_database=true, NLIM=100, refit_database=missing)
 
     if ismissing(kpoints) && !ismissing(dft_list)
-        kpoints, KWEIGHTS, nk_max = get_k(dft_list, length(dft_list), NLIM=NLIM)
+        kpoints, KWEIGHTS, nk_max = get_k(dft_list, length(dft_list), list_of_tbcs, NLIM=NLIM)
     end
     if ismissing(kpoints)
         mode=:rspace
@@ -1601,7 +1601,7 @@ Decide which k-points to include in fitting, as we limit the total number to `NL
 
 Uses some randomness, but puts high symmetry points at front of line.
 """
-function get_k(dft_list, ncalc; NLIM = 100)
+function get_k(dft_list, ncalc, list_of_tbcs; NLIM = 100)
 
     if ismissing(dft_list)
         println("using entered kpoints instead of DFT list!!!!!!!!!!!")
@@ -1626,6 +1626,13 @@ function get_k(dft_list, ncalc; NLIM = 100)
 
             kpts = dft_list[n].bandstruct.kpts
             wghts = dft_list[n].bandstruct.kweights
+
+#            println("get k $n ", typeof(list_of_tbcs[n]), " " , typeof(list_of_tbcs[n]) == tb_crys_kspace{Float64})
+            if typeof(list_of_tbcs[n]) == tb_crys_kspace{Float64} #superceeding
+#                println("modk qqqqqqqqqqqqqqqqqqqqqqqqqqqqwq")
+                kpts = list_of_tbcs[n].tb.K
+                wghts = list_of_tbcs[n].tb.kweights
+            end
 
 #randomly downselect kpoints of number kpoints > 150            
             if size(kpts)[1] > NLIM
@@ -1723,7 +1730,7 @@ function do_fitting_recursive(list_of_tbcs ; weights_list = missing, dft_list=mi
 
     
     
-    KPOINTS, KWEIGHTS, nk_max = get_k(dft_list, length(dft_list), NLIM=NLIM)
+    KPOINTS, KWEIGHTS, nk_max = get_k(dft_list, length(dft_list), list_of_tbcs, NLIM=NLIM)
 
     
     if ismissing(prepare_data)
@@ -1982,8 +1989,12 @@ function do_fitting_recursive_main(list_of_tbcs, prepare_data; weights_list=miss
 #    println("prepare reference eigs")
     c=0
     NVAL = zeros(Float64, length(list_of_tbcs))
+    NAT = zeros(Int64, length(list_of_tbcs))
     @time for (tbc, kpoints, kweights, d ) in zip(list_of_tbcs, KPOINTS, KWEIGHTS, dft_list)
         c+=1
+
+        NAT[c] = tbc.crys.nat
+
         nw = ind_BIG[c, 3]
         nk = size(kpoints)[1]
 
@@ -2677,13 +2688,15 @@ function do_fitting_recursive_main(list_of_tbcs, prepare_data; weights_list=miss
     solve_scf_mode = false
 
 
-    
 
     function do_iters(chX, NITERS; leave_out=-1)
 
         err_old_en = 1.0e6
 
         mix = 0.01
+
+
+
         
         for iters = 1:NITERS #inner loop
 
@@ -2837,9 +2850,13 @@ function do_fitting_recursive_main(list_of_tbcs, prepare_data; weights_list=miss
 
         
 
+        good =  (abs.(ENERGIES - ENERGIES_working) ./ NAT) .< 0.05
+
+        println("good")
+        println(good)
         println("make database")
 
-        database = make_database(chX2, csX2,  KEYS, HIND, SIND,DMIN_TYPES,DMIN_TYPES3, scf=scf, starting_database=starting_database, tbc_list = list_of_tbcs)
+        database = make_database(chX2, csX2,  KEYS, HIND, SIND,DMIN_TYPES,DMIN_TYPES3, scf=scf, starting_database=starting_database, tbc_list = list_of_tbcs[good])
 
         return database, chX
 
