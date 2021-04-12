@@ -493,6 +493,8 @@ Called by makecrys, doesn't need to be called directly.
 """
 function parseQEinput(lines)
 
+#    println("parseQE")
+
     posind = -1
     Aind = -1
     types = String[]
@@ -539,7 +541,7 @@ function parseQEinput(lines)
                 Aind = 0
                 if length(sp) > 1
                     if sp[2] == "angstrom" || sp[2] == "Angstrom" || sp[2] == "(angstrom)"
-                        units = 0.529177
+                        units = Ang
                     else 
                         println("warning alat or other CELL_PARAMETERS not supported !!!!!!!!!!!!!!!!!!!!!!!")
                     end
@@ -550,7 +552,7 @@ function parseQEinput(lines)
         end 
     end
 
-    A = A * units
+    A = A / units
 
     
 
@@ -645,16 +647,32 @@ function write_poscar(crys, filename)
 
     tstr = ""
     numstr = ""
-    for t in crys.types
+
+    ut = Set(crys.types)
+    for t in ut
         tstr = tstr * t * " " 
-        numstr = numstr * "1 "
+        count = sum( t .== crys.types)
+        numstr = numstr * "$count "
     end
+
+#    tstr = ""
+#    numstr = ""
+ #   for t in crys.types
+ #       tstr = tstr * t * " " 
+ #       numstr = numstr * "1 "
+ #   end
+
+
     write(fil,tstr*'\n')
     write(fil,numstr*'\n')
  
     write(fil,"Direct\n")
-    for at in 1:crys.nat
-        write(fil, "$(crys.coords[at,1])  $(crys.coords[at,2]) $(crys.coords[at,3])\n")
+    for t in ut
+        for at in 1:crys.nat
+            if crys.types[at] == t
+                write(fil, "$(crys.coords[at,1])  $(crys.coords[at,2]) $(crys.coords[at,3])\n")
+            end
+        end
     end
     close(fil)
     
