@@ -362,7 +362,10 @@ function makecrys(lines::Array{String,1})
     elseif intype == "MYFORMAT"
 
         A, coords, types = parseMYFORMATinput(lines)
-        
+        if global_length_units=="Å"
+            A = A / Ang
+        end
+
     end
 
 
