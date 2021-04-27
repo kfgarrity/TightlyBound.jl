@@ -1,4 +1,4 @@
-B65;6003;1c&control
+&control
     calculation = 'vc-relax'
     restart_mode='from_scratch',
     prefix = 'qe3'
@@ -13,7 +13,7 @@ B65;6003;1c&control
  /
 &system
     ibrav=  0, 
-    nat=  2 
+    nat=  1 
     ntyp= 1
     ecutwfc= 45,
     ecutrho= 250,

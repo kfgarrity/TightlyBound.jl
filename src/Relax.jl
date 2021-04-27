@@ -489,11 +489,15 @@ end
 
 Make a random crystal with types t
 "
-function make_random_crystal(types)
+function make_random_crystal(types; database=missing)
 
     nat = length(types)
 
-    prepare_database(types)
+    db = database
+    if ismissing(database)
+        prepare_database(types)
+        db = database_cached
+    end
 
     total_vol = 0.0
     for t in types
@@ -501,7 +505,7 @@ function make_random_crystal(types)
     end
     println("total_vol $total_vol")
     
-    for i = 1:100
+    for i = 1:200
 
         A = zeros(3,3)
         c = rand(nat, 3)
@@ -528,7 +532,7 @@ function make_random_crystal(types)
         
         crys = makecrys(A, c, types, units="Bohr")
         
-        within_fit = calc_tb_fast(crys*0.97, database_cached, check_only=true)
+        within_fit = calc_tb_fast(crys*0.97, db, check_only=true)
         if within_fit
             return crys * 1.07
         end
