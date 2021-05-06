@@ -4,13 +4,15 @@ using LinearAlgebra
 
 function conjgrad(fn, grad, x0; maxstep=2.0, niters=50, conv_thr = 1e-2)
 
-    println("CG START")
+#    println("CG START")
     x = deepcopy(x0)
     storage = zeros(size(x))
 
+    xold = deepcopy(x)
+
 #    println("x0 ", x)
 
-    println("CG RUN GRAD1")
+#    println("CG RUN GRAD1")
     #iter 1
     f, g = grad(storage, x)
 
@@ -24,7 +26,7 @@ function conjgrad(fn, grad, x0; maxstep=2.0, niters=50, conv_thr = 1e-2)
     
     step_size = maxstep/10.0
 
-    println("CG RUN LS1")
+#    println("CG RUN LS1")
 
     x, step_size = linesearch(x, dx, fn, f, step_size)
     step_size = min(step_size, maxstep)
@@ -33,15 +35,18 @@ function conjgrad(fn, grad, x0; maxstep=2.0, niters=50, conv_thr = 1e-2)
 
     for i = 1:niters
         
-        f, g = grad(storage, x)
 
+        if abs.(xold - x) > 1e-7  #only update grad if x changes
+            f, g = grad(storage, x)
+            xold = deepcopy(x)
+        end
 
         if sqrt(sum(g.^2)) < conv_thr && f < 0.1
             println("yes conv")
             return x, f, g
         end
 
-        println("MY CONJGRAD $i ", f, " sg ", sqrt(sum(g.^2)), " step_size $step_size --------------------")
+#        println("MY CONJGRAD $i ", f, " sg ", sqrt(sum(g.^2)), " step_size $step_size --------------------")
 
 
         dx1[:] = dx[:]
