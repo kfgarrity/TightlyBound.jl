@@ -4,7 +4,7 @@
 
 
 
-####################### Wannier90 specific 
+#######################
 module DOS
 """
 DOS
@@ -16,26 +16,19 @@ using Base.Threads
 using ..CrystalMod:get_grid
 using ..TB:calc_energy_fft
 using ..TB:tb_crys
+using ..TB:tb_crys_kspace
 using ..CrystalMod:crystal
 using ..CrystalMod:orbital_index
 using ..TB:summarize_orb
-
+using ..TB:get_energy_electron_density_kspace
 using ..TightlyBound:convert_energy
 using ..TightlyBound:convert_dos
 using ..TightlyBound:global_energy_units
 
-"""
-    function projection(tbc::tb_crys, vects, sk3, grid; ptype=missing)
 
-Figures out the projections.
-`ptype` can be `:atomic` or `:orbs` for atom projection or orbital projection (:s,:p,:d)
-Default is to choose `:atomic` except for elemental systems.
-"""
-function projection(tbc::tb_crys, vects, sk3, grid; ptype=missing)    
+function get_projtype(tbc, ptype=missing)
 
     ind2orb, orb2ind, etotal, nval = orbital_index(tbc.crys)
-
-    nk = size(vects)[1]
     
     if ismissing(ptype)
         if length(Set(tbc.crys.types)) != 1
@@ -91,6 +84,24 @@ function projection(tbc::tb_crys, vects, sk3, grid; ptype=missing)
 
         end
     end
+
+    return names, PROJ, pwan
+
+end
+
+
+"""
+    function projection(tbc::tb_crys, vects, sk3, grid; ptype=missing)
+
+Figures out the projections.
+`ptype` can be `:atomic` or `:orbs` for atom projection or orbital projection (:s,:p,:d)
+Default is to choose `:atomic` except for elemental systems.
+"""
+function projection(tbc::tb_crys, vects, sk3, grid; ptype=missing)    
+
+    names, PROJ, pwan = get_projtype(tbc, ptype)
+
+    nk = size(vects)[1]
 
     temp = zeros(Complex{Float64}, tbc.tb.nwan, tbc.tb.nwan)
     proj = zeros(nk, tbc.tb.nwan, length(PROJ))
@@ -175,6 +186,40 @@ function projection(tbc::tb_crys, vects, sk3, grid; ptype=missing)
 end
             
         
+
+function projection(tbcK::tb_crys_kspace, vects, SK; ptype=missing)    
+
+    names, PROJ, pwan = get_projtype(tbcK, ptype)
+
+    nk = size(vects)[1]
+
+    temp = zeros(Complex{Float64}, tbcK.tb.nwan, tbcK.tb.nwan)
+    proj = zeros(nk, tbcK.tb.nwan, length(PROJ))
+
+#    sk5 = zeros(Complex{Float64}, tbcK.tb.nwan, tbcK.tb.nwan)
+    sk = zeros(Complex{Float64}, tbcK.tb.nwan, tbcK.tb.nwan)    
+    c=0
+
+    for k = 1:nk
+        c += 1
+        sk[:,:] = ( 0.5 * (SK[ :, :,k] + SK[ :, :, k]'))
+        for (pind, proj_inds) in enumerate(PROJ)
+            for p in proj_inds
+                for a = 1:tbcK.tb.nwan
+                    for j = 1:tbcK.tb.nwan
+                        t = vects[c,p,a]*conj(vects[c,j,a])
+                        proj[c,a, pind] += 0.5*real( (t*sk[j,p]  + conj(t)* conj(sk[j,p])))
+                    end
+                end
+            end
+        end
+    end
+
+    return proj, names, pwan
+    
+    
+end
+            
     
     
 
@@ -215,7 +260,7 @@ function gaussian_dos(tbc::tb_crys; grid=missing, smearing=0.02, npts=missing, p
     r = vmax - vmin
 
     if ismissing(npts)
-        npts = Int64(round(r * 100 ))
+        npts = Int64(round(r * 150 ))
     end
     
     energies = collect(vmin - r*0.02 : r*1.04 / npts    : vmax + r*0.02 + 1e-7)
@@ -251,6 +296,93 @@ function gaussian_dos(tbc::tb_crys; grid=missing, smearing=0.02, npts=missing, p
             end
         end
         pdos = pdos / smearing / (2.0*pi)^0.5 / nk
+    end
+
+    
+
+    println("Int DOS " , sum(dos) * (energies[2]-energies[1]) )
+
+    ind = energies .< 0
+
+    println("Int DOS occ " , sum(dos[ind]) * (energies[2]-energies[1]) )
+    for p in 1:nproj
+        println("Int pDOS occ $p : " , sum(pdos[ind, p]) * (energies[2]-energies[1]) )
+    end
+    
+    energies = convert_energy(energies)
+    dos = convert_dos(dos)
+    pdos = convert_dos(pdos)
+    
+    plot_dos(energies, dos, pdos, names, do_display=do_display)
+
+
+    
+    return energies, dos, pdos, names
+
+    
+end
+
+
+function gaussian_dos(tbcK::tb_crys_kspace; smearing=0.03, npts=missing, proj_type=missing, do_display=true)
+
+
+    bandenergy, eden, vects, vals, efermi, error_flag = get_energy_electron_density_kspace(tbcK.tb, tbcK.nelec, smearing=0.01)
+
+
+#    etot, efermi, vals, vects, hk3, sk3 = calc_energy_fft(tbc, grid=grid, smearing=smearing, return_more_info=true)
+
+#    println("precheck ", sum(vects[1,:,:]' * sk3[:,:,1,1,1] * vects[1,:,:]))
+    
+    #prelim
+    vals = vals .- efermi
+
+    nk = size(vals)[1]
+    
+    vmin = minimum(vals) - 0.1
+    vmax = maximum(vals) + 0.1
+
+    println("v $vmin $vmax ")
+
+#    vmax = min(maximum(vals), 5.0)
+    r = vmax - vmin
+
+    if ismissing(npts)
+        npts = Int64(round(r * 150 ))
+    end
+    
+    energies = collect(vmin - r*0.02 : r*1.04 / npts    : vmax + r*0.02 + 1e-7)
+    
+    dos = zeros(length(energies))
+
+    if ismissing(proj_type) ||  proj_type != "none" 
+        do_proj=true
+        proj, names, pwan =  projection(tbcK, vects, tbcK.tb.Sk, ptype=proj_type)
+        nproj = size(proj)[3]
+
+        pdos = zeros(length(energies),nproj)
+
+    else
+        do_proj=false
+        nproj=0
+        pdos=missing
+        names=missing
+    end
+    
+    W = repeat(tbcK.tb.kweights, 1, tbcK.tb.nwan)
+
+    
+    for (c,e) in enumerate(energies)
+        dos[c] = sum(exp.( -0.5 * (vals[:,:] .- e).^2 / smearing^2 ) .* W ) 
+    end
+    dos = dos / smearing / (2.0*pi)^0.5 / 2
+    
+    if do_proj
+        for i = 1:nproj
+            for (c,e) in enumerate(energies)
+                pdos[c, i] = sum(proj[:,:,i] .*  exp.( -0.5 * (vals[:,:] .- e).^2 / smearing^2 ) .* W)  
+            end
+        end
+        pdos = pdos / smearing / (2.0*pi)^0.5 / 2
     end
 
     
@@ -414,7 +546,7 @@ function dos(tbc::tb_crys; grid=missing, npts=missing, proj_type=missing, do_dis
     r = vmax - vmin
 
     if ismissing(npts)
-        npts = Int64(round(r * 100 ))
+        npts = Int64(round(r * 150 ))
     end
 
     
@@ -702,6 +834,7 @@ function plot_dos(energies, dos, pdos, names; filename=missing, do_display=true)
 
     xl1 = minimum(energies)
     xl2 = min(10.0, maximum(energies))
+#    xl2 = ( maximum(energies))
 
     xlims!(xl1, xl2)
     

@@ -243,6 +243,7 @@ mutable struct tb_crys_kspace{T}
     scf::Bool
     gamma::Array{T, 2}
     eden::Array{Float64,1}
+    energy::Float64
 
 end
 
@@ -908,7 +909,7 @@ function make_tb_crys_kspace(hamk::tb_k,crys::crystal, nelec::Float64, dftenergy
         gamma = electrostatics_getgamma(crys, screening=screening) #do this once and for all
     end
 
-    return tb_crys_kspace{T}(hamk,crys,nelec, dftenergy, scf, gamma, eden)
+    return tb_crys_kspace{T}(hamk,crys,nelec, dftenergy, scf, gamma, eden, -999.0)
 end
 
 
@@ -1435,6 +1436,12 @@ function calc_bands(tbc::tb_crys, kpoints::Array{Float64,2})
 #        h1 == missing
 #    end
     return calc_bands(tbc.tb, kpoints)
+end
+
+function calc_bands(tbc::tb_crys_kspace, kpoints::Array{Float64,2})
+
+    return calc_bands(tbc.tb, kpoints)
+
 end
 
 """

@@ -16,12 +16,14 @@ using Base.Threads
 using ..CrystalMod:get_grid
 using ..TB:calc_energy_fft
 using ..TB:tb_crys
+using ..TB:tb_crys_kspace
 using ..CrystalMod:crystal
 using ..CrystalMod:orbital_index
 using ..TB:summarize_orb
 
 using ..Atomdata:atoms
 using ..BandTools:calc_fermi
+using ..BandTools:band_energy
 
 
 using ..TightlyBound:convert_energy
@@ -97,16 +99,53 @@ Must do scf calculation before plotting.
 function plot_bandstr(h::tb_crys; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0 0 ;0 0 0.5], names = missing, npts=30, efermi = missing, color="blue", MarkerSize=missing, yrange=missing, plot_hk=false, align = "vbm", proj_types = missing, proj_orbs = missing, proj_nums=missing, clear_previous=true, do_display=true)
 
 
+    proj_inds = setup_proj(h.crys, h.tb.nwan, proj_types, proj_orbs, proj_nums)
+
+    if h.scf && (h.energy - -999.0) < 1e-5
+        println("WARNING - you have to do scf_energy before plotting to get accurate results")
+    end
+    if ismissing(efermi)
+        efermi = h.efermi
+    end
+    plot_bandstr(h.tb; kpath=kpath, names = names, npts=npts, efermi = efermi, color=color, MarkerSize=MarkerSize, yrange=yrange, plot_hk=plot_hk, align=align, proj_inds=proj_inds, clear_previous=clear_previous, do_display=do_display)
+    
+end
+
+
+function plot_bandstr(h::tb_crys_kspace; efermi = missing, color="blue", MarkerSize=missing, yrange=missing, plot_hk=false, align = "vbm", proj_types = missing, proj_orbs = missing, proj_nums=missing, clear_previous=true, do_display=true)
+
+    kpath=h.tb.K
+
+    proj_inds = setup_proj(h.crys, h.tb.nwan, proj_types, proj_orbs, proj_nums)
+
+    if ismissing(efermi)
+        VALS = calc_bands(h, kpath)
+        energy, efermi, occs = band_energy(VALS, h.tb.kweights, h.nelec, 0.01, returnboth=true)
+    end
+
+    plot_bandstr(h.tb; kpath=kpath, npts = 1, efermi = efermi, color=color, MarkerSize=MarkerSize, yrange=yrange, plot_hk=plot_hk, align=align, proj_inds=proj_inds, clear_previous=clear_previous, do_display=do_display)
+    
+end
+
+
+
+"""
+    function setup_proj(crys, nwan, proj_types, proj_orbs, proj_nums)
+
+Figure out projection indexes
+"""
+function setup_proj(crys, nwan, proj_types, proj_orbs, proj_nums)
+
     if !ismissing(proj_types) || !ismissing(proj_orbs) || !ismissing(proj_nums)
         
         if ismissing(proj_types)
-            proj_types = h.crys.types
+            proj_types = crys.types
         end
         if ismissing(proj_orbs)
             proj_orbs = [:s, :p, :d, :f]
         end
         if ismissing(proj_nums)
-            proj_nums = collect(1:h.crys.nat)
+            proj_nums = collect(1:crys.nat)
         end
         if typeof(proj_types) == String || typeof(proj_types) == Symbol
             proj_types = [proj_types]
@@ -120,10 +159,10 @@ function plot_bandstr(h::tb_crys; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5
 
         proj_types = Symbol.(proj_types)
         
-        ind2orb, orb2ind, etotal, nval = orbital_index(h.crys)
+        ind2orb, orb2ind, etotal, nval = orbital_index(crys)
         
         proj_inds = Int64[]
-        for n = 1:h.tb.nwan
+        for n = 1:nwan
             at,t, orb = ind2orb[n]
             sorb = summarize_orb(orb)
             if (t in proj_types) && (orb in proj_orbs || sorb in proj_orbs) && (at in proj_nums)
@@ -134,15 +173,8 @@ function plot_bandstr(h::tb_crys; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5
     else
         proj_inds = missing
     end
+    return proj_inds
 
-    if h.scf && (h.energy - -999.0) < 1e-5
-        println("WARNING - you have to do scf_energy before plotting to get accurate results")
-    end
-    if ismissing(efermi)
-        efermi = h.efermi
-    end
-    plot_bandstr(h.tb; kpath=kpath, names = names, npts=npts, efermi = efermi, color=color, MarkerSize=MarkerSize, yrange=yrange, plot_hk=plot_hk, align=align, proj_inds=proj_inds, clear_previous=clear_previous, do_display=do_display)
-    
 end
 
 
@@ -200,7 +232,7 @@ end
 
 Plots using `tb`
 """
-function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0 0 ;0 0 0.5], names = missing, npts=30, efermi = missing, color="blue", MarkerSize=missing, yrange=missing, plot_hk=false, align="vbm", proj_inds=missing, clear_previous=true, do_display=true)
+function plot_bandstr(h; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0 0 ;0 0 0.5], names = missing, npts=30, efermi = missing, color="blue", MarkerSize=missing, yrange=missing, plot_hk=false, align="vbm", proj_inds=missing, clear_previous=true, do_display=true)
 #function plot_bandstr( kpath; names = missing, npts=30, efermi = missing)
 
                 
@@ -322,6 +354,7 @@ function plot_bandstr(h::tb; kpath=[0.5 0 0 ; 0 0 0; 0.5 0.5 0.5; 0 0.5 0.5; 0 0
         vals = calc_bands(h, K)
     end
 
+
     if global_energy_units == "eV"
         units = "eV"
     else
@@ -430,7 +463,7 @@ end
 
 
 """
-    function plot_compare_dft(tbc::tb_crys, bs; tbc2=missing)
+    function plot_compare_dft(tbc, bs; tbc2=missing)
     
 Plots a band structure comparison between a tight-binding crystal object (`tb_crys`) and a
 band structure directly from dft (either a `dftout` or `bs` object). 
@@ -439,7 +472,7 @@ The k-points are fixed by the `bs` object.
 
 `tbc2` is an optional second `tbc_crys`.
 """
-function plot_compare_dft(tbc::tb_crys, bs; tbc2=missing)
+function plot_compare_dft(tbc, bs; tbc2=missing)
 
     if typeof(bs) == dftout
         bs = bs.bandstruct

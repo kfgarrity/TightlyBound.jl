@@ -36,7 +36,7 @@ function conjgrad(fn, grad, x0; maxstep=2.0, niters=50, conv_thr = 1e-2)
     for i = 1:niters
         
 
-        if abs.(xold - x) > 1e-7  #only update grad if x changes
+        if sum(abs.(xold - x)) > 1e-7  #only update grad if x changes
             f, g = grad(storage, x)
             xold = deepcopy(x)
         end

@@ -452,9 +452,9 @@ function setup_proto_data()
 
 
 
-    core_binary = [    "cscl",     "znse_shear",     "hbn",     "rocksalt",  "rocksalt_inv",   "znse",     "dimer2", "dimer2_min", "tri2_min", "square2", "hcp_v2", "rocksalt_shape", "rocksalt_2lay", "cscl_layers", "fcc_12", "fcc_21", "bcc_13", "bcc_31", "rocksalt_dense", "hcp_v2_dense", "znse_dense",  "distort", "227", "znseAABB", "trimer_ab2", "trimer2_ab2", "trimer_ba2", "trimer2_ba2"]
+    core_binary = [    "cscl",          "hbn",     "rocksalt",  "rocksalt_inv",   "znse",     "dimer2", "dimer2_min", "tri2_min", "square2", "hcp_v2", "rocksalt_shape", "rocksalt_2lay", "cscl_layers", "fcc_12", "fcc_21", "bcc_13", "bcc_31", "rocksalt_dense", "hcp_v2_dense", "znse_dense",  "distort", "227", "znseAABB"]
 
-    A0 = [   "as_orth",    "ga_tet",    "ge_wurtz",    "pb_r3m",    "beta_sn",   "ga",    "bi",    "te",    "in",    "i2",    "li_p6mmm",    "hcp_shape",     "diamond_shear",   "n" ] #"bcc_tet.in",  same as POSCAR_ga_tet   #"as_221",  is simple cubic
+    A0 = [   "as_orth",    "ga_tet",    "ge_wurtz",    "pb_r3m",    "beta_sn",   "ga",    "bi",    "te",    "in",    "i2",    "li_p6mmm",    "hcp_shape",   "n" ] #"bcc_tet.in",  same as POSCAR_ga_tet   #"as_221",  is simple cubic
     
     A1B1 = ["hbn_real", "sis_2d", "ges", "sns", "wurtz"] #nias #
     A1B2 = ["mgcl2", "mgcl2_tet", "caf2", "sis2", "tio2_rutile", "co2",  "mgf2",  "ticl2", "gei2", "anatase"]   # "sns2" duplictes ticl2 #"mgf2_v2" is rutile
