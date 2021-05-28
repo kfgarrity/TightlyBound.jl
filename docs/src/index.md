@@ -1,6 +1,8 @@
 # TightlyBound.jl Documentation
 
 
+Old version
+
 **A three-body tight binding program written in Julia**
 
 *Primary Author: Kevin F. Garrity, [NIST](https://www.nist.gov/people/kevin-garrity)*
