@@ -1,6 +1,5 @@
 push!(LOAD_PATH,"../src/")
-using Pkg
-Pkg.add(path="../")
+
 using Documenter, TightlyBound
 
 #makedocs(sitename="TightlyBound.jl Documentation")
