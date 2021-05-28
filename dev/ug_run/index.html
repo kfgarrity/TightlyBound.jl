@@ -59,7 +59,7 @@ CHECK FRONTIER - everything fine
 onsite
 -----
 
-  9.216392 seconds (20.10 M allocations: 985.858 MiB, 3.89% gc time)
+  8.648640 seconds (20.10 M allocations: 985.846 MiB, 4.84% gc time)
 ------
 Do SCF
 Mixing mode: pulay
@@ -106,7 +106,7 @@ show(stdout, &quot;text/plain&quot;, stress)</code></pre><pre class="documenter-
 
 Calculate Force, Stress (no scf)
 get_energy_force_stress_fft
- 20.222345 seconds (53.13 M allocations: 2.722 GiB, 5.03% gc time)
+ 19.983472 seconds (53.13 M allocations: 2.722 GiB, 5.65% gc time)
 done
 ----
 energy -10.435780403797825
@@ -178,7 +178,7 @@ YES convergence in 2 iters, energy -10.43577127628824 eV   dq = [-1.158, 1.158]
 END SCF ------------------
 
 get_energy_force_stress_fft
-  0.991414 seconds (8.07 M allocations: 760.596 MiB, 15.41% gc time)
+  1.001651 seconds (8.07 M allocations: 760.596 MiB, 16.13% gc time)
 
 FCALL 1 en:  -0.7670147629134475 (Ryd)  fsum:  9.151554143759647e-13  ssum:  0.0024154458928289813    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -236,7 +236,7 @@ YES convergence in 9 iters, energy -10.82196984867345 eV   dq = [-0.962, 0.962]
 END SCF ------------------
 
 get_energy_force_stress_fft
-  0.796214 seconds (6.21 M allocations: 613.427 MiB, 14.42% gc time)
+  0.807696 seconds (6.21 M allocations: 613.427 MiB, 15.41% gc time)
 
 FCALL 2 en:  -0.7953998241219673 (Ryd)  fsum:  1.0945571679957521e-8  ssum:  0.0001814240815339415    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -274,7 +274,7 @@ YES convergence in 6 iters, energy -10.82197200842898 eV   dq = [-0.962, 0.962]
 END SCF ------------------
 
 get_energy_force_stress_fft
-  0.765739 seconds (6.20 M allocations: 612.743 MiB, 13.17% gc time)
+  0.766084 seconds (6.20 M allocations: 612.743 MiB, 14.30% gc time)
 
 FCALL 3 en:  -0.7953999828610132 (Ryd)  fsum:  1.094554787792258e-8  ssum:  0.0001814239207339607    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -327,7 +327,7 @@ YES convergence in 7 iters, energy -10.825948565747247 eV   dq = [-0.981, 0.981]
 END SCF ------------------
 
 get_energy_force_stress_fft
-  0.774325 seconds (6.21 M allocations: 614.460 MiB, 14.05% gc time)
+  0.775987 seconds (6.21 M allocations: 614.460 MiB, 14.69% gc time)
 
 FCALL 4 en:  -0.7956922543269097 (Ryd)  fsum:  5.977063176417146e-8  ssum:  1.763216694782519e-7    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -359,4 +359,4 @@ Stress
 3×3 Array{Float64,2}:
  9.34671e-6  2.7777e-8   2.7777e-8
  2.7777e-8   9.34671e-6  2.7777e-8
- 2.7777e-8   2.7777e-8   9.34671e-6</pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p><p>Force/Stress defaults are eV/Ang and eV/Ang^3.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Friday 28 May 2021 00:58">Friday 28 May 2021</span>. Using Julia version 1.5.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ 2.7777e-8   2.7777e-8   9.34671e-6</pre><p>Energy is lower, stress is near zero, forces are zero by symmetry in Zinc Blende structure.</p><p>Force/Stress defaults are eV/Ang and eV/Ang^3.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><a class="docs-footer-nextpage" href="../ug_fit/">Fit Coefficients »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Friday 28 May 2021 00:59">Friday 28 May 2021</span>. Using Julia version 1.5.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
